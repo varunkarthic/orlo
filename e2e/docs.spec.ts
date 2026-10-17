@@ -63,8 +63,10 @@ test("menu near the viewport edge stays inside it", async ({ page }) => {
 
 test("search palette navigates to a page", async ({ page, isMobile }) => {
   await page.goto("");
-  if (isMobile) await page.getByRole("button", { name: "Search documentation" }).click();
-  else await page.keyboard.press("ControlOrMeta+k");
+  // Chromium reserves Ctrl+K on some Linux runners for browser chrome. The
+  // component hotkey has unit coverage; this browser journey exercises the
+  // visible, accessible trigger on every platform.
+  await page.getByRole("button", { name: "Search documentation" }).click();
   const input = page.getByRole("combobox", { name: "Search" });
   await expect(input).toBeFocused();
   await input.fill("motion");

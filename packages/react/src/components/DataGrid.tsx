@@ -142,7 +142,7 @@ export function DataGrid<T>({ label, columns, rows, rowKey, selectable, selectio
   const pinned = (c: number) => (cols[c]?.pin || (selectable && c === 0) ? { position: "sticky" as const, insetInlineStart: c === 0 ? 0 : colWidths[0], zIndex: 1 } : undefined);
 
   return (
-    <div className="orlo-grid" data-scrolled-x={scroll.left > 0 || undefined}>
+    <div className="orlo-grid" data-scrolled-x={scroll.left > 0 || undefined} suppressHydrationWarning>
       <div ref={box} role="grid" aria-label={label} aria-rowcount={sorted.length + 1} aria-colcount={cols.length} aria-multiselectable={selectable || undefined} aria-busy={loading || undefined}
         className="orlo-grid__viewport" style={{ blockSize: height }} onKeyDown={onKey} onScroll={(e) => setScroll({ top: e.currentTarget.scrollTop, left: e.currentTarget.scrollLeft })}>
         <div role="rowgroup" className="orlo-grid__head" style={{ inlineSize: total }}>
