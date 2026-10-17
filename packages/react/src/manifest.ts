@@ -16,6 +16,8 @@ export type ManifestEntry = {
  */
 export const manifest: ManifestEntry[] = [
   { name: "Button", slug: "button", family: "Actions", maturity: "beta", summary: "Solid, subtle, ghost and danger buttons with a geometry-preserving loading state.", tested: ["unit"] },
+  { name: "AsyncButton", slug: "async-button", family: "Actions", maturity: "beta", summary: "Morphs into progress, then into success with a next step or an error with retry.", tested: ["unit", "browser"] },
+  { name: "ButtonGroup", slug: "button-group", family: "Actions", maturity: "beta", summary: "Attached or spaced set of related buttons.", tested: [] },
   { name: "IconButton", slug: "icon-button", family: "Actions", maturity: "beta", summary: "Icon-only button whose label is required and becomes its accessible name.", tested: [] },
   { name: "CopyButton", slug: "copy-button", family: "Actions", maturity: "beta", summary: "Copies text, confirms in place and announces the result.", tested: [] },
   { name: "SegmentedControl", slug: "segmented-control", family: "Actions", maturity: "beta", summary: "A few mutually exclusive options with a travelling selection surface.", tested: ["unit", "keyboard"] },
@@ -25,7 +27,7 @@ export const manifest: ManifestEntry[] = [
   { name: "Checkbox", slug: "checkbox", family: "Forms", maturity: "beta", summary: "Native checkbox, styled, with an indeterminate state.", tested: ["unit"] },
   { name: "RadioGroup", slug: "radio-group", family: "Forms", maturity: "beta", summary: "Native radios in a fieldset, vertical or horizontal.", tested: [] },
   { name: "Switch", slug: "switch", family: "Forms", maturity: "beta", summary: "Immediate on/off setting with a springing thumb.", tested: ["unit"] },
-  { name: "Slider", slug: "slider", family: "Forms", maturity: "beta", summary: "Native range input with a formatted, announced value.", tested: [] },
+  { name: "Slider", slug: "slider", family: "Forms", maturity: "beta", summary: "Track press springs the thumb; drags follow the pointer and settle with momentum.", tested: ["unit", "browser"] },
   { name: "Tabs", slug: "tabs", family: "Navigation", maturity: "beta", summary: "Roving-focus tabs with one shared indicator and unmounted inactive panels.", tested: ["unit", "keyboard"] },
   { name: "Menu", slug: "menu", family: "Navigation", maturity: "beta", summary: "Action menu with arrows, typeahead, edge flipping and focus return.", tested: ["unit", "keyboard"] },
   { name: "CommandPalette", slug: "command-palette", family: "Navigation", maturity: "beta", summary: "⌘K search-and-jump dialog with fuzzy ranking. Powers this site's search.", tested: [] },
@@ -95,6 +97,8 @@ export const manifest: ManifestEntry[] = [
   { name: "Carousel", slug: "carousel", family: "Media", maturity: "beta", summary: "Native scroll-snap slides; autoplay off by default and pausable.", tested: [] },
   { name: "BeforeAfter", slug: "before-after", family: "Media", maturity: "beta", summary: "Drag or arrow-key comparison of two images.", tested: [] },
   { name: "Lightbox", slug: "lightbox", family: "Media", maturity: "beta", summary: "Gallery that opens full-screen with swipe and keyboard.", tested: [] },
+  { name: "Icon", slug: "icon", family: "Specialty", maturity: "beta", summary: "Around 270 original icons in three weights.", tested: ["unit"] },
+  { name: "AnimatedIcon", slug: "animated-icon", family: "Specialty", maturity: "beta", summary: "Icons whose motion carries meaning: draw, morph, ring, burst.", tested: [] },
   { name: "Knob", slug: "knob", family: "Specialty", maturity: "beta", summary: "Rotary slider for studio-style tools; drag, arrows, double-click reset.", tested: [] },
   { name: "HoldToConfirm", slug: "hold-to-confirm", family: "Specialty", maturity: "beta", summary: "Press and hold to confirm irreversible actions; release cancels.", tested: [] },
   { name: "SignaturePad", slug: "signature-pad", family: "Specialty", maturity: "beta", summary: "Pressure-aware drawing with undo and a typed alternative.", tested: [] },

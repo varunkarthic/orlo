@@ -32,7 +32,7 @@ function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
   const present = useIsPresent();
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
-  const { transition, distance, effective } = useOrloMotion();
+  const { transition, distance, effective, blur } = useOrloMotion();
   const drag = useDragControls();
   const { dir } = usePortalContext();
   const sign = (dir ?? (typeof document !== "undefined" ? document.documentElement.dir : "")) === "rtl" ? -1 : 1;
@@ -45,7 +45,7 @@ function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
   const isSheet = props.kind === "sheet";
   const side = isSheet ? props.side ?? "end" : undefined;
   const offset = side === "bottom" ? { y: "100%" } : side === "start" ? { x: `${-100 * sign}%` } : side === "end" ? { x: `${100 * sign}%` } : { y: distance(12), scale: effective === "full" ? 0.98 : 1 };
-  const hidden = isSheet && effective !== "full" ? { opacity: 0 } : { opacity: isSheet ? 1 : 0, ...offset };
+  const hidden = isSheet && effective !== "full" ? { opacity: 0 } : { opacity: isSheet ? 1 : 0, ...offset, ...(isSheet ? {} : { filter: blur(6) }) };
   const onDragEnd = (_: unknown, info: PanInfo) => {
     const h = ref.current?.offsetHeight ?? 400;
     if (info.offset.y > h * 0.3 || info.velocity.y > 600) onClose();
@@ -64,7 +64,7 @@ function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
         data-size={props.kind === "dialog" ? props.size ?? "md" : undefined}
         tabIndex={-1}
         initial={hidden}
-        animate={{ opacity: 1, x: 0, y: 0, scale: 1, transition: transition(isSheet ? "overlay" : "reveal") }}
+        animate={{ opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)", transition: { ...transition(isSheet ? "overlay" : "reveal"), filter: transition("fade") } }}
         exit={{ ...hidden, transition: transition("dismiss") }}
         drag={side === "bottom" && dismissible ? "y" : false}
         dragControls={drag}

@@ -44,7 +44,7 @@ function PopoverPanel({ id, anchor, label, placement, onClose, children }: { id:
   const ref = useRef<HTMLDivElement>(null);
   const narrow = useMediaQuery("(max-width: 519px)");
   const pos = useAnchoredPosition(anchor, ref, present && !narrow, placement);
-  const { transition, distance } = useOrloMotion();
+  const { transition, distance, blur } = useOrloMotion();
   useFocusScope(ref, present, { trap: false });
   useDismiss({ open: present, id, onDismiss: onClose, refs: [ref, anchor] });
   const style = narrow ? undefined : { left: pos?.x ?? -9999, top: pos?.y ?? -9999, maxHeight: pos?.maxHeight, transformOrigin: pos?.origin };
@@ -59,8 +59,8 @@ function PopoverPanel({ id, anchor, label, placement, onClose, children }: { id:
       className="orlo-popover"
       data-docked={narrow || undefined}
       style={{ ...style, pointerEvents: present ? undefined : "none" }}
-      initial={{ opacity: 0, scale: narrow ? 1 : 0.97, y: narrow ? distance(24) : dy }}
-      animate={{ opacity: 1, scale: 1, y: 0, transition: transition("overlay") }}
+      initial={{ opacity: 0, scale: narrow ? 1 : 0.97, y: narrow ? distance(24) : dy, filter: blur(4) }}
+      animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)", transition: { ...transition("overlay"), filter: transition("fade") } }}
       exit={{ opacity: 0, scale: narrow ? 1 : 0.97, transition: transition("dismiss") }}
     >
       {children}

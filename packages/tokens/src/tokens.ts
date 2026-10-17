@@ -42,19 +42,51 @@ export const tints = {
 
 /** 4px base scale. */
 export const space = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40, 12: 48, 16: 64 } as const;
-export const radius = { sm: 4, md: 8, lg: 12, xl: 20, full: 9999 } as const;
+export const radius = { xs: 4, sm: 6, md: 10, lg: 14, xl: 20, "2xl": 28, full: 9999 } as const;
 
 export const type = {
   family: {
-    sans: '"Inter Variable", Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-    mono: 'ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace',
+    sans: '"Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif',
+    display: '"Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif',
+    mono: '"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
+    /** Script-specific fallbacks appended per language (see styles: :lang()). */
+    cjk: '"PingFang SC", "Hiragino Sans", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif',
+    arabic: '"SF Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif',
+    devanagari: '"Kohinoor Devanagari", "Noto Sans Devanagari", "Nirmala UI", sans-serif',
   },
-  // fluid: clamp(min, preferred, max)
+  /** Major-third-ish scale; display sizes are fluid between 360 px and 1440 px viewports. */
   size: {
-    xs: "0.75rem", sm: "0.875rem", md: "1rem", lg: "1.25rem",
-    xl: "clamp(1.5rem, 1.2rem + 1.2vw, 2rem)", "2xl": "clamp(2rem, 1.4rem + 2.4vw, 3.25rem)",
+    "2xs": "0.6875rem", xs: "0.75rem", sm: "0.875rem", md: "1rem", lg: "1.125rem", xl: "1.375rem",
+    "2xl": "clamp(1.625rem, 1.4rem + 1vw, 2.125rem)", "3xl": "clamp(2rem, 1.55rem + 2vw, 3rem)",
+    "4xl": "clamp(2.5rem, 1.7rem + 3.6vw, 4.25rem)", "5xl": "clamp(3rem, 1.8rem + 5.4vw, 6rem)",
   },
-  leading: { tight: 1.15, snug: 1.35, normal: 1.55 },
+  leading: { none: 1, tight: 1.1, snug: 1.3, normal: 1.55, relaxed: 1.7 },
+  tracking: { tighter: "-0.035em", tight: "-0.02em", normal: "0", wide: "0.02em", caps: "0.06em" },
+  weight: { regular: 400, medium: 500, semibold: 600, bold: 700 },
+  measure: { narrow: "45ch", base: "68ch", wide: "85ch" },
+} as const;
+
+/**
+ * Elevation: layered, warm-tinted shadows (a tight contact shadow plus a soft ambient one).
+ * Dark mode relies more on surface tone and less on shadow, which barely reads on dark canvases.
+ */
+export const shadow = {
+  light: [
+    "none",
+    "0 1px 2px rgb(44 30 20 / 0.06), 0 1px 1px rgb(44 30 20 / 0.04)",
+    "0 2px 4px rgb(44 30 20 / 0.06), 0 4px 12px -2px rgb(44 30 20 / 0.08)",
+    "0 4px 8px -2px rgb(44 30 20 / 0.08), 0 12px 28px -6px rgb(44 30 20 / 0.14)",
+    "0 8px 16px -4px rgb(44 30 20 / 0.10), 0 24px 48px -12px rgb(44 30 20 / 0.22)",
+    "0 12px 24px -6px rgb(44 30 20 / 0.12), 0 40px 80px -20px rgb(44 30 20 / 0.32)",
+  ],
+  dark: [
+    "none",
+    "0 1px 2px rgb(0 0 0 / 0.4)",
+    "0 2px 6px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(255 255 255 / 0.03)",
+    "0 6px 16px -4px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.04)",
+    "0 12px 32px -8px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.05)",
+    "0 24px 64px -16px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.06)",
+  ],
 } as const;
 
 /** Control geometry per density. `touch` meets >= 44px; `compact` stays >= 24px (WCAG 2.2 AA 2.5.8). */

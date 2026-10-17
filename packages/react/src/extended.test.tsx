@@ -196,3 +196,51 @@ describe("catalogue integrity", () => {
     expect(html).toContain("orlo-calendar");
   });
 });
+
+describe("Slider v2", () => {
+  it("keyboard steps and exposes slider semantics", async () => {
+    const spy = vi.fn();
+    wrap(<Orlo.Slider label="Volume" defaultValue={50} onValueChange={spy} />);
+    const s = screen.getByRole("slider", { name: "Volume" });
+    s.focus();
+    await userEvent.keyboard("{ArrowRight}{PageUp}{End}");
+    expect(spy.mock.calls.map((c) => c[0])).toEqual([51, 61, 100]);
+    expect(s).toHaveAttribute("aria-valuenow", "100");
+  });
+});
+
+describe("AsyncButton", () => {
+  it("goes pending → success, then error → retry", async () => {
+    let fail = false;
+    wrap(<Orlo.AsyncButton action={() => (fail ? Promise.reject(new Error("x")) : Promise.resolve())} successLabel="Saved" errorLabel="Failed — retry" resetAfter={50}>Save</Orlo.AsyncButton>);
+    const b = screen.getByRole("button", { name: /Save/ });
+    await userEvent.click(b);
+    await waitFor(() => expect(b).toHaveAttribute("data-state", "success"));
+    expect(b).toHaveTextContent("Saved");
+    await waitFor(() => expect(b).toHaveAttribute("data-state", "idle"));
+    fail = true;
+    await userEvent.click(b);
+    await waitFor(() => expect(b).toHaveAttribute("data-state", "error"));
+    expect(screen.getByRole("status")).toHaveTextContent("Failed — retry");
+  });
+  it("aborts on cancel", async () => {
+    let aborted = false;
+    wrap(<Orlo.AsyncButton cancellable action={(_, signal) => new Promise((_, rej) => signal.addEventListener("abort", () => { aborted = true; rej(new Error()); }))}>Export</Orlo.AsyncButton>);
+    const b = screen.getByRole("button");
+    await userEvent.click(b);
+    expect(b).toHaveAttribute("data-state", "pending");
+    await userEvent.click(b);
+    expect(aborted).toBe(true);
+    expect(b).toHaveAttribute("data-state", "idle");
+  });
+});
+
+describe("Icons", () => {
+  it("are decorative by default and labelled on request", () => {
+    const { container } = render(<><Orlo.Icon name="Search" /><Orlo.Icon name="Heart" label="Favourite" /></>);
+    expect(container.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByRole("img", { name: "Favourite" })).toBeInTheDocument();
+    expect(Orlo.iconNames.length).toBeGreaterThan(250);
+    for (const n of Orlo.iconNames) expect(n).toMatch(/^[A-Z][A-Za-z0-9]*$/);
+  });
+});

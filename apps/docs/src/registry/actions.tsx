@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, IconButton, CopyButton, SegmentedControl, ToggleButton, ToggleGroup, SplitButton, Fab, SpeedDial, Tooltip, Icons, Stack, useToast } from "@orlo/react";
+import { AsyncButton, ButtonGroup, Button, IconButton, CopyButton, SegmentedControl, ToggleButton, ToggleGroup, SplitButton, Fab, SpeedDial, Tooltip, Icons, Stack, useToast } from "@orlo/react";
 import { controlSpecs, type Doc } from "./types.ts";
 
 function LoadingButton() {
@@ -10,12 +10,41 @@ function FabDemo() { const { toast } = useToast(); return <Stack direction="row"
 function SpeedDemo() { const { toast } = useToast(); return <div style={{ paddingBlockStart: 200 }}><SpeedDial label="Create" actions={[{ label: "Document", icon: <Icons.File size={18} />, onSelect: () => toast({ title: "New document" }) }, { label: "Folder", icon: <Icons.Folder size={18} />, onSelect: () => toast({ title: "New folder" }) }, { label: "Upload", icon: <Icons.Upload size={18} />, onSelect: () => toast({ title: "Upload" }) }]} /></div>; }
 function SplitDemo() { const { toast } = useToast(); return <SplitButton onClick={() => toast({ title: "Merged" })} items={[{ label: "Squash and merge", onSelect: () => toast({ title: "Squashed" }) }, { label: "Rebase and merge", onSelect: () => toast({ title: "Rebased" }) }]}>Merge</SplitButton>; }
 
+const wait = (ms: number, signal: AbortSignal) => new Promise<void>((res, rej) => { const t = setTimeout(res, ms); signal.addEventListener("abort", () => { clearTimeout(t); rej(new Error("aborted")); }); });
+let flaky = 0;
+
 export const actions: Record<string, Doc> = {
+  "async-button": {
+    demo: () => <Stack direction="row" gap={3} wrap align="center">
+      <AsyncButton action={(_, s) => wait(1400, s)}>Save changes</AsyncButton>
+      <AsyncButton variant="tonal" action={async (report, s) => { for (let i = 1; i <= 20; i++) { await wait(90, s); report(i / 20); } }} successLabel="Uploaded" next={{ label: "View file", onClick: () => {} }}>Upload</AsyncButton>
+      <AsyncButton variant="subtle" action={async (_, s) => { await wait(1100, s); if (flaky++ % 2 === 0) throw new Error("network"); }} errorLabel="Couldn’t send — retry" successLabel="Sent">Send invite</AsyncButton>
+      <AsyncButton variant="subtle" cancellable action={(_, s) => wait(4000, s)} pendingLabel="Exporting">Export (cancellable)</AsyncButton>
+    </Stack>,
+    code: `<AsyncButton action={async (report, signal) => { await save(signal); }}
+  successLabel="Saved" errorLabel="Couldn’t save — retry"
+  next={{ label: "View", onClick: open }}>Save changes</AsyncButton>`,
+    props: [["action", "(report, signal) => Promise", "Resolve = success, reject = error. report(0–1) makes the ring determinate."], ["successLabel / errorLabel / pendingLabel", "ReactNode", ""], ["next", "{ label, onClick }", "Offer a next step after success."], ["cancellable", "boolean", "Press again while pending to abort."], ["morph", "boolean", "Shrink into a ring while pending. Default true."], ["resetAfter", "number", "ms before success returns to idle."]],
+    notes: ["Width and shape spring between states (`morph` spring); labels crossfade as a block with a slight blur so no glyph is ever half-clipped.", "Pending shrinks the button into a ring: indeterminate until the action reports progress, then determinate.", "Success never appears before the promise resolves. Failure says what failed and offers retry in place.", "Every state is announced politely; the ring has an accessible name with the percentage."],
+    useWhen: ["Actions with a visible network round-trip where the outcome matters."], avoidWhen: ["Instant local actions: a plain Button is quieter."],
+    keyboard: [["Enter / Space", "Run, cancel (when cancellable), retry, or take the next step"]], semantics: ["Native button; aria-busy while pending; a polite status region announces each outcome."],
+    edge: ["Unmount mid-request aborts the signal", "Double press while pending is ignored (or cancels when cancellable)", "Very fast success still shows the confirmation"],
+  },
+  "button-group": {
+    demo: () => <Stack gap={4}><ButtonGroup label="Text alignment"><Button variant="subtle">Left</Button><Button variant="subtle">Center</Button><Button variant="subtle">Right</Button></ButtonGroup><ButtonGroup label="Pagination" attached={false}><Button variant="ghost">Previous</Button><Button>Next</Button></ButtonGroup></Stack>,
+    code: `<ButtonGroup label="Text alignment">
+  <Button variant="subtle">Left</Button>
+  <Button variant="subtle">Center</Button>
+</ButtonGroup>`,
+    notes: ["Attached groups share borders and round only the outer corners; a focused button rises above its neighbours so the ring is never clipped."], semantics: ["role=group with an accessible label; each button stays its own tab stop."],
+  },
   button: {
     demo: () => <><Button>Continue</Button><Button variant="subtle">Cancel</Button><Button variant="ghost">Skip</Button><Button variant="danger">Delete</Button><LoadingButton /></>,
     variants: [
       { title: "Emphasis", body: "One solid button per view for the primary action. Subtle for secondary, ghost for tertiary.", demo: () => <><Button>Primary</Button><Button variant="subtle">Secondary</Button><Button variant="ghost">Tertiary</Button></> },
-      { title: "With icons", demo: () => <><Button><Icons.Plus size={18} /> New file</Button><Button variant="subtle">Next <Icons.ChevronRight size={18} /></Button></> },
+      { title: "Variants", demo: () => <><Button>Solid</Button><Button variant="tonal">Tonal</Button><Button variant="subtle">Subtle</Button><Button variant="ghost">Ghost</Button><Button variant="danger">Danger</Button></> },
+      { title: "Sizes", demo: () => <><Button size="sm">Small</Button><Button>Medium</Button><Button size="lg">Large</Button></> },
+      { title: "With icons", demo: () => <><Button start={<Icons.Plus size={18} />}>New file</Button><Button variant="subtle" end={<Icons.ChevronRight size={18} />}>Next</Button></> },
       { title: "States", body: "Disabled and loading look different on purpose: one is unavailable, the other is busy.", demo: () => <><Button disabled>Disabled</Button><Button loading>Loading</Button><Button variant="danger" disabled>Delete</Button></> },
       { title: "Long labels", body: "Labels wrap instead of overflowing; geometry stays stable.", demo: () => <div style={{ maxInlineSize: 220 }}><Button style={{ inlineSize: "100%" }}>Accept the revised terms and continue to checkout</Button></div> },
     ],

@@ -1,74 +1,33 @@
 import type { SVGProps } from "react";
+import type React from "react";
+import { iconDefs, type IconName } from "./icon-defs.ts";
 
-type P = SVGProps<SVGSVGElement> & { size?: number };
-const base = (size = 20, rest: SVGProps<SVGSVGElement>) => ({
-  width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.75,
-  strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true, focusable: false, ...rest,
-});
-const icon = (d: string) => ({ size, ...rest }: P) => <svg {...base(size, rest)}><path d={d} /></svg>;
+export type IconWeight = "light" | "regular" | "bold";
+const strokes: Record<IconWeight, number> = { light: 1.25, regular: 1.75, bold: 2.25 };
 
-/** Orlo's own 24px icon set: 1.75 stroke, round joins, optically centred. Decorative by default. */
-export const Icons = {
-  Check: icon("M5 12.5l4.5 4.5L19 7.5"),
-  X: icon("M6 6l12 12M18 6L6 18"),
-  ChevronDown: icon("M6 9.5l6 6 6-6"),
-  ChevronRight: icon("M9.5 6l6 6-6 6"),
-  ChevronLeft: icon("M14.5 6l-6 6 6 6"),
-  Copy: icon("M9 9h10v10H9zM5 15V5h10"),
-  Search: icon("M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5"),
-  Info: icon("M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8h.01"),
-  Alert: icon("M12 3.5l9.5 16.5h-19zM12 10v4.5M12 17.5h.01"),
-  Image: icon("M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4"),
-  Menu: icon("M4 7h16M4 12h16M4 17h16"),
-  Minus: icon("M6 12h12"),
-  Plus: icon("M12 6v12M6 12h12"),
-  Sun: icon("M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"),
-  Moon: icon("M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"),
-  Sort: icon("M8 9l4-4 4 4M8 15l4 4 4-4"),
-  ArrowUp: icon("M12 19V5M6 11l6-6 6 6"),
-  ArrowDown: icon("M12 5v14M6 13l6 6 6-6"),
-  Inbox: icon("M3 13l3-8h12l3 8v6H3zM3 13h5l1.5 2.5h5L16 13h5"),
-  More: icon("M5 12h.01M12 12h.01M19 12h.01"),
-  Home: icon("M4 11l8-7 8 7v9h-5v-6H9v6H4z"),
-  Compass: icon("M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15.5 8.5l-2 5-5 2 2-5z"),
-  Layers: icon("M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"),
-  Palette: icon("M12 21a9 9 0 1 1 9-9c0 2-1.5 3-3.5 3H16a2 2 0 0 0-1.5 3.3A1.6 1.6 0 0 1 12 21zM7.5 11h.01M10 7h.01M15 7.5h.01"),
-  Grid: icon("M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"),
-  Code: icon("M8.5 7L3.5 12l5 5M15.5 7l5 5-5 5"),
-  Star: icon("M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.9 6.8 19.6l1-5.8L3.5 9.7l5.9-.8z"),
-  Calendar: icon("M4 6h16v14H4zM4 10h16M8 3.5V7M16 3.5V7"),
-  Clock: icon("M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7.5V12l3 2"),
-  Upload: icon("M12 15.5V4M7 8.5l5-5 5 5M4 15v5h16v-5"),
-  Download: icon("M12 4v11.5M7 10.5l5 5 5-5M4 15v5h16v-5"),
-  Eye: icon("M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"),
-  EyeOff: icon("M3 3l18 18M10.6 5.6A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16 16 0 0 1-3 3.7M6.6 6.6C3.9 8.4 2.5 12 2.5 12S6 18.5 12 18.5c1.6 0 3-.4 4.2-1M9.9 9.9a3 3 0 0 0 4.2 4.2"),
-  Trash: icon("M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"),
-  Edit: icon("M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"),
-  Grip: icon("M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"),
-  Folder: icon("M3.5 6.5h6l2 2h9v10h-17z"),
-  File: icon("M6 3.5h8l4 4V20.5H6zM14 3.5v4h4"),
-  Play: icon("M8 5.5v13l10-6.5z"),
-  Pause: icon("M8 5.5v13M16 5.5v13"),
-  Filter: icon("M4 5h16l-6 7.5V19l-4 1.5v-8z"),
-  Bell: icon("M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5h4"),
-  Settings: icon("M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-1.9 1.1l-.3 2h-3.8l-.3-2a7 7 0 0 1-1.9-1.1l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-3l-1.6-1.2 2-3.4 1.9.7a7 7 0 0 1 1.9-1.1l.3-2h3.8l.3 2a7 7 0 0 1 1.9 1.1l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 3z"),
-  User: icon("M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20.5a7.5 7.5 0 0 1 15 0"),
-  Lock: icon("M6 11h12v9.5H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3"),
-  Heart: icon("M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.5 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"),
-  External: icon("M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"),
-  Refresh: icon("M20 12a8 8 0 1 1-2.3-5.6M20 4v4.5h-4.5"),
-  Undo: icon("M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"),
-  Redo: icon("M15 14l5-5-5-5M20 9H10a6 6 0 0 0 0 12h3"),
-  WifiOff: icon("M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 4.5-2.5M19 13a10 10 0 0 0-2.3-1.6M2 9.5a15 15 0 0 1 4-2.4M22 9.5A15 15 0 0 0 11 5.5M12 20h.01"),
-  ZoomIn: icon("M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5M11 8v6M8 11h6"),
-  ZoomOut: icon("M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5M8 11h6"),
-  Expand: icon("M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"),
-  Sparkle: icon("M12 3.5l1.8 5.2 5.2 1.8-5.2 1.8L12 17.5l-1.8-5.2L5 10.5l5.2-1.8z"),
-  Shapes: icon("M7 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM14 13h7v7h-7zM3 20l4-7 4 7z"),
-  Type: icon("M5 6V4h14v2M12 4v16M9 20h6"),
-  Move: icon("M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"),
-  Accessibility: icon("M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5 9l7 1.5L19 9M12 10.5V15M12 15l-3 6M12 15l3 6"),
-  Book: icon("M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 5v16"),
-  Check2: icon("M4 12.5l4.5 4.5L20 5.5"),
+export type IconProps = Omit<SVGProps<SVGSVGElement>, "name"> & {
+  name: IconName;
+  size?: number;
+  weight?: IconWeight;
+  /** Keeps visual stroke width constant regardless of size. */
+  absoluteStroke?: boolean;
+  /** Accessible name. Omit for decorative icons (the default). */
+  label?: string;
 };
-export type IconName = keyof typeof Icons;
+
+/** Orlo icon. Decorative unless `label` is given, in which case it becomes role="img" with that name. */
+export function Icon({ name, size = 20, weight = "regular", absoluteStroke, label, ...rest }: IconProps) {
+  const sw = absoluteStroke ? (strokes[weight] * 24) / size : strokes[weight];
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"
+      focusable={false} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} {...rest}>
+      <path d={iconDefs[name]} />
+    </svg>
+  );
+}
+
+type P = Omit<IconProps, "name">;
+/** Every icon as a component: <Icons.Search size={16} />. */
+export const Icons = Object.fromEntries((Object.keys(iconDefs) as IconName[]).map((n) => [n, (props: P) => <Icon name={n} {...props} />])) as Record<IconName, (p: P) => React.JSX.Element>;
+export const iconNames = Object.keys(iconDefs) as IconName[];
+export type { IconName };

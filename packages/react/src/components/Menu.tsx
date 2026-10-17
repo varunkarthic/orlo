@@ -43,7 +43,7 @@ function MenuPanel({ id, anchor, items, label, placement, start, onClose }: { id
   const present = useIsPresent();
   const ref = useRef<HTMLDivElement>(null);
   const pos = useAnchoredPosition(anchor, ref, present, placement, 4);
-  const { transition, distance } = useOrloMotion();
+  const { transition, distance, blur } = useOrloMotion();
   const typed = useRef({ text: "", at: 0 });
   useDismiss({ open: present, id, onDismiss: () => onClose(), refs: [ref, anchor] });
   useEffect(() => {
@@ -79,8 +79,8 @@ function MenuPanel({ id, anchor, items, label, placement, start, onClose }: { id
       className="orlo-menu"
       onKeyDown={onKey}
       style={{ left: pos?.x ?? -9999, top: pos?.y ?? -9999, maxHeight: pos?.maxHeight, transformOrigin: pos?.origin, pointerEvents: present ? undefined : "none" }}
-      initial={{ opacity: 0, scale: 0.97, y: pos?.side === "top" ? distance(4) : -distance(4) }}
-      animate={{ opacity: 1, scale: 1, y: 0, transition: transition("overlay") }}
+      initial={{ opacity: 0, scale: 0.97, y: pos?.side === "top" ? distance(4) : -distance(4), filter: blur(4) }}
+      animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)", transition: { ...transition("overlay"), filter: transition("fade") } }}
       exit={{ opacity: 0, scale: 0.98, transition: transition("dismiss") }}
     >
       {items.map((it, i) =>

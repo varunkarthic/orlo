@@ -1,6 +1,7 @@
-export { OrloProvider, useImagePolicy, type OrloProviderProps, type ImagePolicy } from "./provider.tsx";
+export { OrloProvider, useImagePolicy, useMaterialStyle, type OrloProviderProps, type ImagePolicy } from "./provider.tsx";
 // Actions
-export { Button, type ButtonProps } from "./components/Button.tsx";
+export { Button, ButtonGroup, type ButtonProps } from "./components/Button.tsx";
+export { AsyncButton, type AsyncButtonProps, type AsyncState } from "./components/AsyncButton.tsx";
 export { IconButton, CopyButton, type IconButtonProps } from "./components/Misc.tsx";
 export { SegmentedControl, type SegmentedControlProps } from "./components/SegmentedControl.tsx";
 // Forms
@@ -39,7 +40,8 @@ export { OrloImage, type OrloImageProps } from "./components/OrloImage.tsx";
 export { useImageState, type ImageState } from "./components/useImageState.ts";
 // Brand, icons, positioning
 export { Wordmark, Mark } from "./components/Brand.tsx";
-export { Icons, type IconName } from "./internal/icons.tsx";
+export { Icons, Icon, iconNames, type IconName, type IconProps, type IconWeight } from "./internal/icons.tsx";
+export { AnimatedIcon, type AnimatedIconName, type AnimatedIconProps } from "./internal/animated-icons.tsx";
 export { computePosition, type Placement } from "./internal/position.ts";
 export { manifest, families, type ManifestEntry, type Maturity } from "./manifest.ts";
 // Extended catalogue

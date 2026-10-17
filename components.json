@@ -13,6 +13,27 @@
       "docs": "components/button/"
     },
     {
+      "name": "AsyncButton",
+      "slug": "async-button",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Morphs into progress, then into success with a next step or an error with retry.",
+      "tested": [
+        "unit",
+        "browser"
+      ],
+      "docs": "components/async-button/"
+    },
+    {
+      "name": "ButtonGroup",
+      "slug": "button-group",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Attached or spaced set of related buttons.",
+      "tested": [],
+      "docs": "components/button-group/"
+    },
+    {
       "name": "IconButton",
       "slug": "icon-button",
       "family": "Actions",
@@ -108,8 +129,11 @@
       "slug": "slider",
       "family": "Forms",
       "maturity": "beta",
-      "summary": "Native range input with a formatted, announced value.",
-      "tested": [],
+      "summary": "Track press springs the thumb; drags follow the pointer and settle with momentum.",
+      "tested": [
+        "unit",
+        "browser"
+      ],
       "docs": "components/slider/"
     },
     {
@@ -775,6 +799,26 @@
       "summary": "Gallery that opens full-screen with swipe and keyboard.",
       "tested": [],
       "docs": "components/lightbox/"
+    },
+    {
+      "name": "Icon",
+      "slug": "icon",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Around 270 original icons in three weights.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/icon/"
+    },
+    {
+      "name": "AnimatedIcon",
+      "slug": "animated-icon",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Icons whose motion carries meaning: draw, morph, ring, burst.",
+      "tested": [],
+      "docs": "components/animated-icon/"
     },
     {
       "name": "Knob",

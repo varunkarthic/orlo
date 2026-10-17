@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Knob, HoldToConfirm, SignaturePad, ShortcutRecorder, ReorderableList, Heatmap, JsonTree, DiffViewer, CodeBlock, Countdown, Marquee, Stack, useToast, Badge } from "@orlo/react";
+import { Icon, iconNames, AnimatedIcon, Button, Knob, HoldToConfirm, SignaturePad, ShortcutRecorder, ReorderableList, Heatmap, JsonTree, DiffViewer, CodeBlock, Countdown, Marquee, Stack, useToast, Badge } from "@orlo/react";
 import type { Doc } from "./types.ts";
 
 function KnobDemo() { const [a, setA] = useState(64); return <Stack direction="row" gap={6} wrap><Knob label="Gain" value={a} onValueChange={setA} format={(v) => `${v}%`} /><Knob label="Pan" min={-50} max={50} defaultValue={0} format={(v) => (v === 0 ? "C" : v < 0 ? `L${-v}` : `R${v}`)} /><Knob label="Cutoff" min={20} max={20000} step={10} defaultValue={4000} size={56} format={(v) => (v >= 1000 ? `${(v / 1000).toFixed(1)} kHz` : `${v} Hz`)} /></Stack>; }
@@ -10,7 +10,26 @@ const before = `export function greet(name) {\n  console.log("Hello " + name);\n
 const after = `export function greet(name: string) {\n  if (!name) return false;\n  console.log(\`Hello \${name}\`);\n  return true;\n}`;
 function CountdownDemo() { const [to] = useState(() => new Date(Date.now() + 3 * 60e3 + 12e3)); return <Countdown to={to} label="Offer ends" />; }
 
+function AnimatedDemo() {
+  const [on, setOn] = useState(false);
+  const names = ["menu", "play", "heart", "copy", "plus", "chevron", "bell", "refresh", "upload", "sparkle"] as const;
+  return <Stack gap={4}><Stack direction="row" gap={5} wrap align="center">{names.map((n) => <span key={n} style={{ display: "grid", justifyItems: "center", gap: 6, fontSize: 12, color: "var(--orlo-color-fg-muted)" }}><AnimatedIcon name={n} size={28} active={on} />{n}</span>)}<span style={{ display: "grid", justifyItems: "center", gap: 6, fontSize: 12, color: "var(--orlo-color-fg-muted)" }}><AnimatedIcon key={String(on)} name="check" size={28} />check</span><span style={{ display: "grid", justifyItems: "center", gap: 6, fontSize: 12, color: "var(--orlo-color-fg-muted)" }}><AnimatedIcon name="dots" size={28} />dots</span></Stack><div><Button variant="subtle" onClick={() => setOn((o) => !o)}>Toggle all</Button></div></Stack>;
+}
+
 export const specialty: Record<string, Doc> = {
+  icon: {
+    demo: () => <Stack direction="row" gap={4} wrap align="center">{(["Search", "Calendar", "Settings", "Heart", "Cloud", "Sparkles", "Database", "Rocket", "Translate", "Accessibility"] as const).map((n) => <Icon key={n} name={n} size={28} />)}<Icon name="Star" size={28} weight="light" /><Icon name="Star" size={28} weight="bold" /></Stack>,
+    code: `<Icon name="Calendar" size={20} weight="regular" />
+<Icons.Search label="Search" />  // label makes it informative (role=img)`,
+    props: [["name", "IconName", `${iconNames.length} names.`], ["size", "number", "px. Default 20."], ["weight", '"light" | "regular" | "bold"', "Stroke 1.25 / 1.75 / 2.25."], ["absoluteStroke", "boolean", "Constant stroke regardless of size."], ["label", "string", "Accessible name; decorative when omitted."]],
+    notes: [`${iconNames.length} original icons built from shared primitives on a 24 px grid: one circle construction, one corner radius, round caps.`, "Decorative by default (aria-hidden). Give a label only when the icon is the sole carrier of meaning.", "Browse and copy them all on Styles → Icons."],
+  },
+  "animated-icon": {
+    demo: () => <AnimatedDemo />, code: `<AnimatedIcon name="menu" active={open} />
+<AnimatedIcon name="check" />  // draws itself on mount`,
+    notes: ["Two-state icons morph between shapes rather than swapping (menu ⇄ close, play ⇄ pause).", "Under reduced motion they switch instantly; looping icons (spinner, refresh) slow down instead of stopping, so activity stays visible."],
+    props: [["name", "AnimatedIconName", "check, spinner, alert, menu, play, heart, bell, copy, plus, chevron, refresh, upload, dots, sparkle"], ["active", "boolean", "Second state."], ["size", "number", ""], ["label", "string", ""]],
+  },
   knob: { demo: () => <KnobDemo />, code: `<Knob label="Gain" value={gain} onValueChange={setGain} format={(v) => \`\${v}%\`} />`, notes: ["Drag up/down (Shift for fine control), arrow keys, Page Up/Down, Home/End.", "Double-click resets to the default.", "Semantically a slider, so assistive tech already knows how to operate it."], keyboard: [["↑ / → · ↓ / ←", "Step"], ["Page Up / Page Down", "10% of range"], ["Home / End", "Min / max"]], useWhen: ["Dense, studio-style tools where many continuous values sit side by side."], avoidWhen: ["Ordinary forms: use Slider."] },
   "hold-to-confirm": { demo: () => <HoldDemo />, code: `<HoldToConfirm onConfirm={deleteWorkspace}>Hold to delete workspace</HoldToConfirm>`, notes: ["Press and hold with pointer, Space or Enter; releasing early drains the fill back.", "The required hold time is announced, not just drawn.", "Long-press callouts and context menus are suppressed on the button."], useWhen: ["Irreversible actions where a dialog would be too heavy."], avoidWhen: ["Users with motor impairments may struggle with timed holds; offer an alternative route (e.g. a confirm dialog) in settings."], keyboard: [["Hold Space / Enter", "Confirm"]] },
   "signature-pad": { demo: () => <div style={{ inlineSize: "min(100%, 26rem)" }}><SignaturePad label="Signature" /></div>, code: `<SignaturePad label="Signature" onValueChange={(v) => setSig(v)} />  // drawn PNG or typed text`, notes: ["Pressure-aware strokes using coalesced pointer events for smooth lines.", "Strokes are stored as data and redrawn crisply on resize and theme change.", "“Type instead” is an equivalent path for anyone who can't draw."], semantics: ["Canvas is an img with a live description of its contents."] },

@@ -10,10 +10,10 @@ html { scroll-padding-top: 5rem; }
 /* ---------- Top bar ---------- */
 .topbar {
   position: sticky; inset-block-start: 0; z-index: var(--orlo-layer-sticky); display: flex; align-items: center; gap: 12px;
-  block-size: var(--topbar); padding-inline: 16px; background: color-mix(in oklab, var(--orlo-color-canvas) 90%, transparent);
-  border-block-end: 1px solid var(--orlo-color-border); backdrop-filter: saturate(1.4) blur(12px);
+  block-size: var(--topbar); padding-inline: 16px; border-block-end: 1px solid var(--orlo-color-border);
 }
-@media (prefers-reduced-transparency: reduce) { .topbar { background: var(--orlo-color-canvas); backdrop-filter: none; } }
+[data-orlo-material="solid"] .topbar { background: var(--orlo-color-canvas); }
+.tint-input { inline-size: 100%; block-size: 36px; border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-md); background: none; padding: 2px; cursor: pointer; }
 .topbar__logo { color: var(--orlo-color-fg); display: inline-flex; padding: 6px; border-radius: 8px; margin-inline-start: 10px; }
 .topbar__tag { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--orlo-color-accent-text); border: 1px solid color-mix(in oklab, var(--orlo-color-accent-text) 40%, transparent); padding: 1px 6px; border-radius: 4px; }
 .topbar__end { display: flex; align-items: center; gap: 6px; margin-inline-start: auto; }

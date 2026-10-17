@@ -42,6 +42,8 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 
 ## Components
 - [Button](components/button/): Solid, subtle, ghost and danger buttons with a geometry-preserving loading state.
+- [AsyncButton](components/async-button/): Morphs into progress, then into success with a next step or an error with retry.
+- [ButtonGroup](components/button-group/): Attached or spaced set of related buttons.
 - [IconButton](components/icon-button/): Icon-only button whose label is required and becomes its accessible name.
 - [CopyButton](components/copy-button/): Copies text, confirms in place and announces the result.
 - [SegmentedControl](components/segmented-control/): A few mutually exclusive options with a travelling selection surface.
@@ -51,7 +53,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Checkbox](components/checkbox/): Native checkbox, styled, with an indeterminate state.
 - [RadioGroup](components/radio-group/): Native radios in a fieldset, vertical or horizontal.
 - [Switch](components/switch/): Immediate on/off setting with a springing thumb.
-- [Slider](components/slider/): Native range input with a formatted, announced value.
+- [Slider](components/slider/): Track press springs the thumb; drags follow the pointer and settle with momentum.
 - [Tabs](components/tabs/): Roving-focus tabs with one shared indicator and unmounted inactive panels.
 - [Menu](components/menu/): Action menu with arrows, typeahead, edge flipping and focus return.
 - [CommandPalette](components/command-palette/): ⌘K search-and-jump dialog with fuzzy ranking. Powers this site's search.
@@ -121,6 +123,8 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Carousel](components/carousel/): Native scroll-snap slides; autoplay off by default and pausable.
 - [BeforeAfter](components/before-after/): Drag or arrow-key comparison of two images.
 - [Lightbox](components/lightbox/): Gallery that opens full-screen with swipe and keyboard.
+- [Icon](components/icon/): Around 270 original icons in three weights.
+- [AnimatedIcon](components/animated-icon/): Icons whose motion carries meaning: draw, morph, ring, burst.
 - [Knob](components/knob/): Rotary slider for studio-style tools; drag, arrows, double-click reset.
 - [HoldToConfirm](components/hold-to-confirm/): Press and hold to confirm irreversible actions; release cancels.
 - [SignaturePad](components/signature-pad/): Pressure-aware drawing with undo and a typed alternative.

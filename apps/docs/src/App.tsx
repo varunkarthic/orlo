@@ -10,8 +10,8 @@ import "./docs.css";
 
 type Theme = "system" | "light" | "dark";
 type Density = "comfortable" | "compact" | "touch";
-type Prefs = { theme: Theme; motion: MotionMode; images: "on" | "off"; density: Density | "auto"; dir: "ltr" | "rtl" };
-const DEFAULTS: Prefs = { theme: "system", motion: "system", images: "on", density: "auto", dir: "ltr" };
+type Prefs = { theme: Theme; motion: MotionMode; scheme: "standard" | "expressive"; images: "on" | "off"; density: Density | "auto"; dir: "ltr" | "rtl"; material: "solid" | "glass" | "tinted"; tint: string; transparency: "system" | "reduced" };
+const DEFAULTS: Prefs = { theme: "system", motion: "system", scheme: "standard", images: "on", density: "auto", dir: "ltr", material: "glass", tint: "#A8370A", transparency: "system" };
 const read = (): Partial<Prefs> => { try { return JSON.parse(localStorage.getItem("orlo-prefs") ?? "{}"); } catch { return {}; } };
 const write = (p: Prefs) => { try { localStorage.setItem("orlo-prefs", JSON.stringify(p)); localStorage.setItem("orlo-theme", p.theme); } catch { /* storage blocked */ } };
 
@@ -67,9 +67,9 @@ export function App({ route }: { route: string }) {
   );
 
   return (
-    <OrloProvider theme={prefs.theme} motion={prefs.motion} images={prefs.images} density={prefs.density === "auto" ? undefined : prefs.density} dir={prefs.dir}>
+    <OrloProvider theme={prefs.theme} motion={prefs.motion} motionScheme={prefs.scheme} images={prefs.images} density={prefs.density === "auto" ? undefined : prefs.density} dir={prefs.dir} material={prefs.material} tint={prefs.tint} reduceTransparency={prefs.transparency === "reduced"}>
       <a className="skip" href="#main">Skip to content</a>
-      <header className="topbar">
+      <header className="topbar orlo-material">
         <Sheet side="start" title="Orlo" trigger={<IconButton label="Open navigation" className="only-narrow"><Icons.Menu /></IconButton>}>
           <nav aria-label="Sections" className="mobile-sections">{rail}</nav>
           {section !== "home" && drawer}
@@ -86,7 +86,11 @@ export function App({ route }: { route: string }) {
             <Stack gap={4} style={{ inlineSize: "min(19rem, 100%)" }}>
               <strong>Preferences</strong>
               <Pref label="Theme" value={prefs.theme} onChange={(v) => set("theme")(v as Theme)} options={["system", "light", "dark"]} />
+              <Pref label="Material" value={prefs.material} onChange={(v) => set("material")(v as Prefs["material"])} options={["solid", "glass", "tinted"]} />
+              {prefs.material === "tinted" && <label className="pref"><span className="orlo-field__label">Tint</span><input type="color" className="tint-input" value={prefs.tint} onChange={(e) => set("tint")(e.target.value.toUpperCase())} aria-label="Tint colour" /></label>}
+              <Pref label="Transparency" value={prefs.transparency} onChange={(v) => set("transparency")(v as Prefs["transparency"])} options={["system", "reduced"]} />
               <Pref label="Motion" value={prefs.motion} onChange={(v) => set("motion")(v as MotionMode)} options={["system", "reduced", "off", "full"]} />
+              <Pref label="Spring" value={prefs.scheme} onChange={(v) => set("scheme")(v as Prefs["scheme"])} options={["standard", "expressive"]} />
               <Pref label="Images" value={prefs.images} onChange={(v) => set("images")(v as "on" | "off")} options={["on", "off"]} />
               <Pref label="Density" value={prefs.density} onChange={(v) => set("density")(v as Prefs["density"])} options={["auto", "compact", "comfortable", "touch"]} />
               <Pref label="Direction" value={prefs.dir} onChange={(v) => set("dir")(v as "ltr" | "rtl")} options={["ltr", "rtl"]} />

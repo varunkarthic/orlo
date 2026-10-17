@@ -1,6 +1,18 @@
 // Generates dist/orlo.css from src/tokens.ts (Node >= 22.6 strips types natively).
 import { mkdirSync, writeFileSync } from "node:fs";
-import { primitive, semantic, tints, space, radius, type, density, layer, motionCss } from "./src/tokens.ts";
+import { primitive, semantic, tints, space, radius, type, density, layer, motionCss, shadow } from "./src/tokens.ts";
+import { springs, simulate } from "../motion/src/presets.ts";
+
+/** CSS linear() easing sampled from the real spring simulation, so CSS transitions move like Motion springs. */
+const linearEase = (sp) => {
+  const pts = simulate(sp, { ms: 1400 });
+  const settle = pts.findLastIndex(([, x]) => Math.abs(x - 1) > 0.002) + 1;
+  const total = pts[Math.min(settle, pts.length - 1)][0];
+  const stops = []; const n = 28;
+  for (let i = 0; i <= n; i++) { const t = (i / n) * total; const p = pts.find(([ms]) => ms >= t) ?? pts.at(-1); stops.push(+p[1].toFixed(4)); }
+  stops[stops.length - 1] = 1;
+  return { ease: `linear(${stops.join(", ")})`, ms: Math.round(total) };
+};
 
 const vars = (o, prefix) => Object.entries(o).map(([k, v]) => `  --orlo-${prefix}-${k}: ${v};`).join("\n");
 const px = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, v === 0 ? "0" : `${v / 16}rem`]));
@@ -18,6 +30,16 @@ ${vars({ ...px(radius), full: "9999px" }, "radius")}
   --orlo-font-mono: ${type.family.mono};
 ${vars(type.size, "text")}
 ${vars(type.leading, "leading")}
+${vars(type.tracking, "tracking")}
+${vars(type.weight, "weight")}
+${vars(type.measure, "measure")}
+  --orlo-font-display: ${type.family.display};
+  --orlo-font-cjk: ${type.family.cjk};
+  --orlo-font-arabic: ${type.family.arabic};
+  --orlo-font-devanagari: ${type.family.devanagari};
+${Object.entries(springs.standard).flatMap(([fam, speeds]) => Object.entries(speeds).map(([sp, v]) => { const e = linearEase(v); return `  --orlo-ease-${fam}-${sp}: ${e.ease};\n  --orlo-duration-${fam}-${sp}: ${e.ms}ms;`; })).join("\n")}
+  --orlo-material-blur: 0px;
+  --orlo-material-saturation: 1;
 ${vars(layer, "layer")}
 ${vars(motionCss, "motion")}
 ${dens(density.comfortable)}
@@ -26,18 +48,24 @@ ${dens(density.comfortable)}
 :root, [data-orlo-theme="light"] {
 ${vars(semantic.light, "color")}
 ${tint(tints.light)}
+${shadow.light.map((v, i) => `  --orlo-shadow-${i}: ${v};`).join("\n")}
+  --orlo-material-bg: var(--orlo-color-surface-raised);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-orlo-theme="light"]) {
 ${vars(semantic.dark, "color")}
 ${tint(tints.dark)}
+${shadow.dark.map((v, i) => `    --orlo-shadow-${i}: ${v};`).join("\n")}
+    --orlo-material-bg: var(--orlo-color-surface-raised);
     color-scheme: dark;
   }
 }
 [data-orlo-theme="dark"] {
 ${vars(semantic.dark, "color")}
 ${tint(tints.dark)}
+${shadow.dark.map((v, i) => `  --orlo-shadow-${i}: ${v};`).join("\n")}
+  --orlo-material-bg: var(--orlo-color-surface-raised);
   color-scheme: dark;
 }
 [data-orlo-density="compact"] {
