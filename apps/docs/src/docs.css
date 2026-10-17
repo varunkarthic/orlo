@@ -257,3 +257,18 @@ table.keys td:first-child { white-space: nowrap; }
 .devicelab__frame[data-kind="laptop"] iframe { border-radius: 4px; }
 .devicelab__safe { position: absolute; inset-inline: 12px; display: grid; place-items: center; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; background: repeating-linear-gradient(45deg, rgb(255 0 80 / 0.22) 0 6px, rgb(255 0 80 / 0.1) 6px 12px); pointer-events: none; border-radius: 22px 22px 0 0; }
 .devicelab__safe[style*="inset-block-end"] { border-radius: 0 0 22px 22px; }
+/* Motion page */
+.token-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); margin-block-end: 12px; }
+.token { display: grid; gap: 8px; padding: 14px !important; }
+.token__head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.token__head .orlo-hint { font-size: var(--orlo-text-xs); }
+.token__track { position: relative; block-size: 14px; border-radius: 999px; background: var(--orlo-color-border); }
+.token__dot { position: absolute; inset-block-start: -1px; inset-inline-start: 0; inline-size: 16px; block-size: 16px; border-radius: 50%; background: var(--orlo-color-accent); }
+.token__meta { display: flex; gap: 8px; justify-content: space-between; font-size: var(--orlo-text-xs); color: var(--orlo-color-fg-muted); font-variant-numeric: tabular-nums; }
+.curve { inline-size: 100%; max-inline-size: 36rem; block-size: auto; color: var(--orlo-color-accent); }
+.curve__line { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linejoin: round; }
+.curve__target { stroke: var(--orlo-color-border-control); stroke-dasharray: 3 4; }
+.fling { position: relative; block-size: 72px; max-inline-size: 100%; border-radius: 16px; border: 1px dashed var(--orlo-color-border-control); overflow: hidden; touch-action: pan-y; }
+.fling__snap { position: absolute; inset-block: 14px; inline-size: 2px; margin-inline-start: -1px; background: var(--orlo-color-border-control); border-radius: 2px; }
+.fling__puck { position: absolute; inset-block-start: 8px; inset-inline-start: 0; inline-size: 56px; block-size: 56px; border-radius: 16px; background: var(--orlo-color-accent); box-shadow: var(--orlo-shadow-3); cursor: grab; }
+.fling__puck:active { cursor: grabbing; }

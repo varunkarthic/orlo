@@ -25,14 +25,14 @@ for (const [f, name] of [["orlo-wordmark-black.svg", "wordmark-black"], ["orlo-w
 }
 for (const [f, name] of [["orlo-mark-black.svg", "mark-black"], ["orlo-mark-white.svg", "mark-white"]]) await shot(fit(svg(f), 512, 512), 512, 512, `${name}-512.png`);
 
-// Favicons (light tile; the SVG favicon adapts to dark tab bars on its own)
-const tile = svg("favicon.svg").replace(/<style>.*<\/style>/s, "<style>.t{fill:#1C1B18}.m{fill:#F7F5F0}</style>");
+// Favicons: transparent background. Raster fallbacks can't follow the tab bar's theme, so they use the
+// mid-tone persimmon ring, legible on both light and dark tab bars. The SVG favicon adapts on its own.
+const ring = svg("favicon.svg").replace(/<style>.*<\/style>/s, "<style>path{fill:#C2410C}</style>");
 const icoParts = [];
-for (const s of [16, 32, 48]) icoParts.push([s, await shot(fit(tile, s, s), s, s, `favicon-${s}.png`)]);
-for (const s of [192, 512]) await shot(fit(tile, s, s), s, s, `icon-${s}.png`);
-// Apple touch icon: opaque, square (iOS applies its own mask)
-const opaque = tile.replace('rx="14"', 'rx="0"');
-await shot(fit(opaque, 180, 180), 180, 180, "apple-touch-icon.png", false);
+for (const s of [16, 32, 48]) icoParts.push([s, await shot(fit(ring, s, s, s <= 16 ? 0 : 1), s, s, `favicon-${s}.png`)]);
+for (const s of [192, 512]) await shot(fit(ring, s, s, s * 0.06), s, s, `icon-${s}.png`);
+// Apple touch icon: iOS requires an opaque square and applies its own mask, so this one keeps a background.
+await shot(`<div style="width:180px;height:180px;background:#F7F5F0;display:grid;place-items:center">${svg("favicon.svg").replace(/<style>.*<\/style>/s, "<style>path{fill:#1C1B18}</style>").replace("<svg ", '<svg style="width:62%;height:62%" ')}</div>`, 180, 180, "apple-touch-icon.png", false);
 // Maskable icon: content inside the 80% safe zone
 await shot(`<div style="width:512px;height:512px;background:#1C1B18;display:grid;place-items:center">${svg("orlo-mark-white.svg").replace("<svg ", '<svg style="width:52%;height:52%" ')}</div>`, 512, 512, "icon-maskable-512.png", false);
 
