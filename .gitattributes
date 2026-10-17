@@ -1,0 +1,37 @@
+* text=auto eol=lf
+
+# Source
+*.ts   text diff=typescript
+*.tsx  text diff=typescript
+*.js   text
+*.mjs  text
+*.json text
+*.css  text diff=css
+*.html text diff=html
+*.md   text diff=markdown
+*.yml  text
+*.yaml text
+*.svg  text
+
+# Binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.avif binary
+*.woff binary
+*.woff2 binary
+*.mp4  binary
+*.webm binary
+
+# Lockfiles: don't diff or merge textually
+package-lock.json -diff merge=binary linguist-generated
+
+# Generated output
+packages/tokens/dist/** linguist-generated
+apps/docs/dist/** linguist-generated
+
+# Linguist
+docs/** linguist-documentation

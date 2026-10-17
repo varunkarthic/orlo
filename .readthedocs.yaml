@@ -1,0 +1,16 @@
+# Read the Docs: custom static build of the Orlo React docs site.
+# Reference: https://docs.readthedocs.com/platform/stable/build-customization.html
+version: 2
+
+build:
+  os: ubuntu-24.04
+  tools:
+    nodejs: "22"
+  jobs:
+    install:
+      - npm ci
+    build:
+      html:
+        - npm run build:rtd
+        - mkdir -p "$READTHEDOCS_OUTPUT/html"
+        - cp -R apps/docs/dist/. "$READTHEDOCS_OUTPUT/html/"
