@@ -1,14 +1,14 @@
 # Component coverage
 
-Maturity: `planned → prototype → tested → beta → stable`.
+All 91 implemented components are `beta`; the authoritative list is `components.json`, generated from `packages/react/src/manifest.ts`.
 
-| Family | Built (beta) | Planned |
-|---|---|---|
-| Actions | Button | IconButton, SegmentedControl, ToggleButton, SplitButton, CopyButton |
-| Forms | TextField | TextArea, Checkbox, Radio, Switch, Select, Combobox, Slider, date/time pickers, FileInput |
-| Navigation | – | Tabs, Breadcrumbs, Sidebar, Pagination, menus, CommandMenu |
-| Overlays | – | Dialog, Popover, Tooltip, Sheet, Toast |
-| Feedback | Alert, Spinner, Skeleton | Progress, Banner, EmptyState |
-| Data | Badge, Card | Table, List, Avatar, Tree |
-| Media | OrloImage | Avatar, Gallery, Carousel, Lightbox |
-| Charts, productivity, AI, commerce patterns | – | see brief §9 |
+## Planned (not built, not installable)
+| Family | Planned |
+|---|---|
+| Navigation | Submenus in Menu, MegaMenu, Menubar, Sidebar shell |
+| Data | Virtualised Table/DataGrid, editable cells, column resize, Kanban board |
+| Charts | Line, Area, Bar, Donut, Scatter, with accessible table alternatives |
+| Media | Video/audio shells, zoom viewer |
+| Productivity | Toolbar overflow, Inspector panel, Dock |
+| AI patterns | Streaming response, citation markers, tool-execution status |
+| Commerce | Pricing card, quantity picker, checkout steps |

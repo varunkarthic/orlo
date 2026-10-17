@@ -10,7 +10,7 @@ export function DetailsLab() {
   const p = t / 100;
   return (
     <>
-      <p className="eyebrow">Labs</p>
+      <p className="eyebrow">Foundations</p>
       <h1>Details Lab</h1>
       <p className="lead">The same situation handled carelessly and handled deliberately. Scrub the timeline to inspect the frames in between.</p>
 

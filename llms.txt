@@ -1,0 +1,134 @@
+# Orlo
+
+> A design framework for React. Nothing is an afterthought.
+
+Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and components (@orlo/react). All components are beta.
+
+## Docs
+- [Overview](start/): What Orlo is and how to begin.
+- [Installation](start/installation/): Add Orlo to a React app.
+- [Theme Studio](start/theme-studio/): Generate an accessible theme from one colour.
+- [Examples](start/examples/): Real screens built only from Orlo.
+- [About the name](start/about/): Orlo, the hem, and why the edges matter.
+- [Overview](foundations/): 
+- [Principles](foundations/principles/): The rubric every component is judged against.
+- [Accessibility](foundations/accessibility/): Targets, testing and known limits.
+- [Adaptive design](foundations/adaptive/): Space, input, zoom, direction and preference.
+- [Interaction states](foundations/interaction-states/): Hover, focus, press, disabled and more.
+- [Layering](foundations/layering/): Who owns the space when surfaces overlap.
+- [Async states](foundations/async-states/): Loading, failure, empty, offline and retry.
+- [Edge cases](foundations/edge-cases/): The details lab: flawed beside fixed.
+- [Writing](foundations/writing/): Words for errors, empty states and actions.
+- [Design tokens](foundations/tokens/): Primitive, semantic and component layers.
+- [Overview](styles/): 
+- [Color](styles/color/): Palette, roles and measured contrast.
+- [Typography](styles/typography/): Type scale, rhythm and numerals.
+- [Shape](styles/shape/): Radii, strokes and corners.
+- [Elevation](styles/elevation/): Surfaces, shadows and scrims.
+- [Motion](styles/motion/): Springs, presets and the MotionLab.
+- [Icons](styles/icons/): Orlo's own 24px icon set.
+- [Density](styles/density/): Comfortable, compact and touch.
+- [All components](components/): 
+- [Overview](develop/): 
+- [Provider](develop/provider/): Theme, motion, images, density, direction.
+- [Motion API](develop/motion/): useOrloMotion and presets in code.
+- [Positioning & layers](develop/positioning/): computePosition and the layer stack.
+- [Theming API](develop/theming/): Tokens, createTheme and overrides.
+- [Server rendering](develop/ssr/): Hydration, portals and no-JS output.
+- [Testing](develop/testing/): How Orlo is verified, and how to test with it.
+- [Hosting on Read the Docs](develop/read-the-docs/): How this site is built and served.
+- [For AI agents](develop/agents/): Rules for coding agents using Orlo.
+- [Logo & usage](brand/): Wordmark, mark, favicons and rules.
+
+## Components
+- [Button](components/button/): Solid, subtle, ghost and danger buttons with a geometry-preserving loading state.
+- [IconButton](components/icon-button/): Icon-only button whose label is required and becomes its accessible name.
+- [CopyButton](components/copy-button/): Copies text, confirms in place and announces the result.
+- [SegmentedControl](components/segmented-control/): A few mutually exclusive options with a travelling selection surface.
+- [TextField](components/text-field/): Labelled input with a reserved message line and announced errors.
+- [TextArea](components/text-area/): Multi-line input that grows with content and can count characters.
+- [Select](components/select/): Single-select listbox with typeahead and keyboard support while open or closed.
+- [Checkbox](components/checkbox/): Native checkbox, styled, with an indeterminate state.
+- [RadioGroup](components/radio-group/): Native radios in a fieldset, vertical or horizontal.
+- [Switch](components/switch/): Immediate on/off setting with a springing thumb.
+- [Slider](components/slider/): Native range input with a formatted, announced value.
+- [Tabs](components/tabs/): Roving-focus tabs with one shared indicator and unmounted inactive panels.
+- [Menu](components/menu/): Action menu with arrows, typeahead, edge flipping and focus return.
+- [CommandPalette](components/command-palette/): ⌘K search-and-jump dialog with fuzzy ranking. Powers this site's search.
+- [Breadcrumbs](components/breadcrumbs/): Trail to the current page, marked with aria-current.
+- [Pagination](components/pagination/): Page list that always keeps first, last and neighbours in view.
+- [Dialog](components/dialog/): Modal with focus trap, inert page, single scroll lock and focus return.
+- [AlertDialog](components/alert-dialog/): Confirmation that needs an explicit choice.
+- [Sheet](components/sheet/): Edge panel; the bottom variant drags to dismiss from its handle only.
+- [Popover](components/popover/): Anchored non-modal panel that flips, shifts and docks on narrow screens.
+- [Tooltip](components/tooltip/): Short description on hover or keyboard focus, never on touch.
+- [Toast](components/toast/): Transient notifications that pause on hover, focus and hidden tabs.
+- [Accordion](components/accordion/): Measured height animation; collapsed content is unmounted.
+- [Card](components/card/): Container-query-aware surface.
+- [Stack](components/stack/): Flex layout on the space scale.
+- [Divider](components/divider/): Separator, optionally labelled.
+- [Badge](components/badge/): Compact status label; tone never carries meaning alone.
+- [Avatar](components/avatar/): Photo or initials on a stable tint, plus groups with overflow.
+- [Table](components/table/): Sortable semantic table with sticky header and empty state.
+- [AnimatedNumber](components/animated-number/): Locale-formatted number that tweens; screen readers hear the settled value.
+- [Kbd](components/kbd/): Keyboard key.
+- [Alert](components/alert/): Inline status message whose exit removes it from the tab order.
+- [Progress](components/progress/): Determinate or honest indeterminate progress.
+- [Spinner](components/spinner/): Indeterminate activity with an accessible label.
+- [Skeleton](components/skeleton/): Geometry-reserving placeholder; static under reduced motion.
+- [EmptyState](components/empty-state/): Designed nothing-here-yet state with a next step.
+- [OrloImage](components/image/): Image lifecycle with bounded retry, designed failure and a no-image mode.
+- [ToggleButton](components/toggle-button/): A button that stays on, for formatting and view options.
+- [ToggleGroup](components/toggle-group/): Toolbar of toggles with one tab stop and arrow-key movement.
+- [SplitButton](components/split-button/): Primary action with a menu of related alternatives.
+- [Fab](components/fab/): Floating action; extended label collapses while scrolling down.
+- [SpeedDial](components/speed-dial/): A floating action that fans out a few labelled actions.
+- [PasswordField](components/password-field/): Reveal that keeps the caret, Caps Lock warning and strength feedback.
+- [NumberField](components/number-field/): Locale-aware spinbutton with clamping and hold-to-repeat steppers.
+- [SearchField](components/search-field/): Debounced, IME-safe search with clear and busy states.
+- [Combobox](components/combobox/): Editable autocomplete with local or remote filtering.
+- [TagInput](components/tag-input/): Tokens from text; paste splits, duplicates explain themselves.
+- [PinInput](components/pin-input/): One-time code boxes with paste-to-fill and autofill.
+- [RadioCards](components/radio-cards/): Large, explanatory choices backed by native radios.
+- [RangeSlider](components/range-slider/): Two thumbs that cannot cross; track press moves the nearest.
+- [Rating](components/rating/): Star rating radiogroup with exact fractional read-only display.
+- [Calendar](components/calendar/): Locale-aware month grid with full keyboard and range mode.
+- [DatePicker](components/date-picker/): Field that opens a calendar popover and returns focus.
+- [TimeField](components/time-field/): Segmented time entry in the locale’s 12- or 24-hour form.
+- [ColorPicker](components/color-picker/): Area, hue, hex, swatches, eyedropper and a live contrast readout.
+- [FileDropzone](components/file-dropzone/): Shows accept/reject before release and explains every rejection.
+- [NavigationRail](components/navigation-rail/): Vertical rail of top-level destinations with a travelling pill.
+- [BottomNavigation](components/bottom-navigation/): Phone navigation bar that respects the safe area.
+- [Steps](components/steps/): Progress through a known sequence, never colour alone.
+- [TableOfContents](components/table-of-contents/): On-this-page links with scrollspy; works without JavaScript.
+- [ContextMenu](components/context-menu/): Right-click, Shift+F10 or long-press; kept on screen.
+- [HoverCard](components/hover-card/): Rich preview after hover intent or keyboard focus.
+- [Tour](components/tour/): Skippable spotlight walkthrough that skips missing targets.
+- [TreeView](components/tree-view/): Hierarchy with the full WAI-ARIA tree keyboard model.
+- [ReadMore](components/read-more/): Whole-line truncation with a toggle only when needed.
+- [Splitter](components/splitter/): Resizable panes with a keyboard-operable separator.
+- [ScrollArea](components/scroll-area/): Scroll region with edge shadows and keyboard focus.
+- [Chip](components/chip/): Filter, assist and removable input chips.
+- [DataList](components/data-list/): Key–value pairs as a description list that adapts to its container.
+- [Timeline](components/timeline/): Chronological events with machine-readable times.
+- [Sparkline](components/sparkline/): Inline trend that breaks at gaps and carries a data table.
+- [Meter](components/meter/): Value in a range with semantic zones, as bar or gauge.
+- [Highlight](components/highlight/): Accent-insensitive match highlighting.
+- [RelativeTime](components/relative-time/): “3 minutes ago” that stays current, with the exact time on hand.
+- [Banner](components/banner/): Page-level message that pushes content instead of covering it.
+- [OfflineIndicator](components/offline-indicator/): Calm offline banner and a brief back-online confirmation.
+- [ProgressRing](components/progress-ring/): Compact circular progress, determinate or indeterminate.
+- [Carousel](components/carousel/): Native scroll-snap slides; autoplay off by default and pausable.
+- [BeforeAfter](components/before-after/): Drag or arrow-key comparison of two images.
+- [Lightbox](components/lightbox/): Gallery that opens full-screen with swipe and keyboard.
+- [Knob](components/knob/): Rotary slider for studio-style tools; drag, arrows, double-click reset.
+- [HoldToConfirm](components/hold-to-confirm/): Press and hold to confirm irreversible actions; release cancels.
+- [SignaturePad](components/signature-pad/): Pressure-aware drawing with undo and a typed alternative.
+- [ShortcutRecorder](components/shortcut-recorder/): Records key combos and warns about browser-reserved ones.
+- [ReorderableList](components/reorderable-list/): Drag or keyboard reordering with spoken positions.
+- [Heatmap](components/heatmap/): Calendar activity grid with keyboard exploration.
+- [JsonTree](components/json-tree/): Collapsible JSON explorer with labelled types.
+- [DiffViewer](components/diff-viewer/): Line diff with +/− gutters and a spoken summary.
+- [CodeBlock](components/code-block/): Code with copy, line numbers, highlights and wrap.
+- [Countdown](components/countdown/): Live timer that announces only meaningful moments.
+- [Marquee](components/marquee/): Ambient scroller that pauses on hover, focus and reduced motion.

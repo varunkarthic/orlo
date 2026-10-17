@@ -20,7 +20,7 @@ export function StateLab() {
   const track = (k: string) => (s: ImageState) => setStates((p) => (p[k] === s ? p : { ...p, [k]: s }));
   return (
     <>
-      <p className="eyebrow">Labs</p>
+      <p className="eyebrow">Foundations</p>
       <h1>State Lab</h1>
       <p className="lead">Forced failures and delays, all simulated locally. Nothing here touches the network.</p>
       <p><Button variant="subtle" onClick={() => setRun((n) => n + 1)}>Replay image loads</Button></p>

@@ -1,84 +1,123 @@
-<p align="center"><img src="assets/brand/wordmark-light.svg#gh-light-mode-only" alt="Orlo" height="64"><img src="assets/brand/wordmark-dark.svg#gh-dark-mode-only" alt="" height="64"></p>
+<p align="center">
+  <img src="assets/brand/orlo-wordmark-black.svg#gh-light-mode-only" alt="Orlo" height="72">
+  <img src="assets/brand/orlo-wordmark-white.svg#gh-dark-mode-only" alt="Orlo" height="72">
+</p>
 
-# Orlo
+<p align="center"><strong>Nothing is an afterthought.</strong><br>A design framework for React.</p>
 
-**Nothing is an afterthought.**
+<p align="center"><img src="docs/media/home-light.png#gh-light-mode-only" alt="The Orlo documentation home page: a large headline beside a collage of live components" width="900"><img src="docs/media/home-dark.png#gh-dark-mode-only" alt="The Orlo documentation home page in dark mode" width="900"></p>
 
-Orlo is a design framework for React, built around the idea that a great interface is shaped as much by what happens *between* moments as by what appears on screen. Every press, transition, boundary, loading state and recovery moment is part of the design.
+Orlo is built on the idea that an interface is shaped as much by what happens *between* moments as by what appears on screen. The press, the frame between two states, the image that never arrives, the focus that has to come back: Orlo designs those on purpose.
 
-The name is inspired by the Italian word *orlo*: an edge, rim or hem. Pronounced **OR-loh**. A hem is the careful finish that holds the whole together, even when it is barely noticed. The mark is an O whose rim is left deliberately open.
+The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is the finish that holds the whole together, even when nobody notices it.
 
-> **Status: pre-release.** Eight components exist at `beta`. Nothing is stable, nothing is published to npm, and no hosted documentation URL has been verified yet. The table below is the source of truth.
+> **Status: beta, pre-release.** 91 components exist and are tested in code. None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
 
 ## What makes it different
 
-**Finished edges.** The hard part of an interface is the part nobody screenshots: the frame between two states, the image that never arrives, the paragraph a growing card cuts in half. Orlo designs those on purpose. The [Details Lab](apps/docs/src/pages/DetailsLab.tsx) shows the half-clipped text problem flawed beside fixed.
+**Everything is built in.** Every component, plus positioning, focus scopes, scroll locking, the layer stack, the icon set and the theme generator, is written for Orlo. The only runtime dependencies are React and the [Motion](https://motion.dev) animation engine. It is not a wrapper around another component library.
 
-**Motion with a reason.** One spring-based grammar (`press`, `reveal`, `overlay`, `shared`, …) rather than per-component tweening. Presets are checked analytically: every standard preset stays under 5% overshoot and settles inside 700 ms, enforced by a unit test. Under reduced motion, travel becomes a short fade; `off` is instant. Interrupted animations redirect from their current velocity.
+**Finished edges.** The Details Lab puts each careless version beside the deliberate one: half-clipped text under a growing card, focus sent to a trigger that no longer exists, repeated-click races.
 
-**Failure is designed.** `OrloImage` reserves its geometry, decodes before it reveals, retries a bounded number of times, and falls back to a fixed-size placeholder with an explicit retry, never a broken-image icon. `images="off"` turns every managed image into a designed replacement and makes no requests.
+<img src="docs/media/details-lab.png" alt="Details Lab: a flawed card slicing through text beside Orlo's version with a scrim" width="800">
 
-**Quiet, accessible by default.** Hover styles only on hover-capable pointers. Touch density for coarse pointers. Errors are never colour alone. Contrast ratios are computed from the tokens and tested.
+**One motion grammar.** Components ask for a purpose (`press`, `reveal`, `overlay`, `shared`) and Orlo supplies a spring. A test enforces that every preset stays under 5% overshoot and settles within 700 ms. Interrupt an animation and it redirects from its current velocity. Reduced motion turns movement into a fade, and `off` makes changes instant.
 
-**Tokens, not magic numbers.** Primitive → semantic → component. One TypeScript source generates the CSS custom properties; light, dark, density and forced-colour variants are layered, with no flash of the wrong theme.
+**Failure is designed.** Images reserve their space before loading, decode before they appear, retry a limited number of times and fall back to a designed placeholder. `images="off"` makes every managed image a placeholder and stops all image requests.
 
-## Principles
+**Accessibility lives in behaviour.** Orlo follows the WAI-ARIA keyboard patterns for menus, tabs, trees, grids, comboboxes and sliders. Modals make the page inert, lock scrolling once and return focus to a valid element. Colour is never the only signal. Token contrast and axe-core checks run in CI.
 
-1. Every transition has a reason.
-2. Nothing is half-finished: inspect entry, midpoint, exit, interruption, failure.
-3. Content stays in control of the effect.
-4. Quiet by default; expressive motion is opt-in.
-5. Touch, keyboard, pen and screen reader are first-class.
-6. Accessible is beautiful.
+**Locale-aware.** The calendar's week start, digits and names come from `Intl`. Number fields parse "1.234,5" in German. Arrow keys and layouts mirror in right-to-left text. The tag input, combobox and command palette ignore keystrokes during IME composition.
 
-## Components
+## The catalogue
 
-| Component | Maturity | Verified |
-|---|---|---|
-| Button, TextField, Alert, OrloImage | beta | unit tests |
-| Badge, Card, Spinner, Skeleton | beta | none yet |
+| Family | Components |
+|---|---|
+| Actions | Button, IconButton, CopyButton, SegmentedControl, ToggleButton, ToggleGroup, SplitButton, Fab, SpeedDial |
+| Forms | TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Slider, PasswordField, NumberField, SearchField, Combobox, TagInput, PinInput, RadioCards, RangeSlider, Rating |
+| Pickers | Calendar, DatePicker, TimeField, ColorPicker, FileDropzone |
+| Navigation | Tabs, Menu, CommandPalette, Breadcrumbs, Pagination, NavigationRail, BottomNavigation, Steps, TableOfContents |
+| Overlays | Dialog, AlertDialog, Sheet, Popover, Tooltip, Toast, ContextMenu, HoverCard, Tour |
+| Disclosure & layout | Accordion, TreeView, ReadMore, Card, Stack, Divider, Splitter, ScrollArea |
+| Data display | Badge, Avatar, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime |
+| Feedback | Alert, Progress, Spinner, Skeleton, EmptyState, Banner, OfflineIndicator, ProgressRing |
+| Media | OrloImage, Carousel, BeforeAfter, Lightbox |
+| Specialty | Knob, HoldToConfirm, SignaturePad, ShortcutRecorder, ReorderableList, Heatmap, JsonTree, DiffViewer, CodeBlock, Countdown, Marquee |
 
-Dialog, Tooltip, Tabs, Switch, menus, tables, pickers and the rest of the planned inventory are **planned**. They are tracked in [`docs/research/component-coverage.md`](docs/research/component-coverage.md) and are not installable.
+The machine-readable list is [`components.json`](components.json).
+
+## Documentation
+
+The docs are an Orlo application in their own right:
+- **Five tabs per component.** Overview, Specs, Guidelines, Accessibility and Code, with live anatomy callouts and spec values read from the stylesheet.
+- **Sections.** Foundations, Styles and Develop.
+- **Tools.** A MotionLab, a Theme Studio and ⌘K search.
+- **Static hosting.** Every route is prerendered as a separate HTML file, so the site runs on Read the Docs without a server ([`.readthedocs.yaml`](.readthedocs.yaml)).
+
+<img src="docs/media/component-dialog.png" alt="Dialog documentation page with tabs, live example and table of contents" width="800">
 
 ## Use it
 
-Not on npm yet. From a clone:
+Orlo is not on npm yet. From a clone:
 
 ```bash
 npm install
 npm run dev          # docs + live demos at http://localhost:5173
-npm test             # tokens contrast, motion presets, image lifecycle
-npm run build:rtd    # static site → apps/docs/dist
+npm test             # unit and component tests
+npm run build:rtd    # static site -> apps/docs/dist
+npm run e2e          # Playwright + axe against the built site
 ```
 
 ```tsx
-import { OrloProvider, Button, OrloImage } from "@orlo/react";
+import { OrloProvider, Button, Dialog, TextField, useToast } from "@orlo/react";
 import "@orlo/tokens/css";
 import "@orlo/react/styles.css";
 
-<OrloProvider theme="system" motion="system" images="on">
-  <OrloImage src="/harbour.jpg" alt="Harbour at dusk" ratio="4 / 3" />
-  <Button loading={saving} onClick={save}>Save changes</Button>
-</OrloProvider>
+export function App() {
+  return (
+    <OrloProvider theme="system" motion="system" images="on">
+      <Dialog title="Rename project" trigger={<Button>Rename…</Button>}
+        footer={(close) => <Button onClick={close}>Save</Button>}>
+        <TextField label="Project name" />
+      </Dialog>
+    </OrloProvider>
+  );
+}
+```
+
+To theme Orlo from a single colour:
+
+```ts
+import { createTheme, themeToCss } from "@orlo/tokens";
+const css = themeToCss(createTheme("#1F5FA8"), ":root"); // accent roles meet WCAG AA in light and dark
 ```
 
 ## Repository
 
 ```
-packages/tokens   design tokens → CSS custom properties
-packages/motion   springs, presets, reduced-motion policy (wraps Motion)
-packages/react    components and provider
-apps/docs         statically prerendered docs + labs (Read the Docs custom build)
-assets/brand      wordmark and mark (SVG)
-docs/             research notes, decisions, project status
+packages/tokens   design tokens -> CSS custom properties, contrast + theme generator
+packages/motion   spring presets, metrics, reduced-motion policy (wraps Motion)
+packages/react    components, provider, positioning, focus and layer primitives, icons
+apps/docs         prerendered documentation (Read the Docs custom build)
+assets/brand      logo SVGs and PNG/ICO exports
+docs/             research notes, decisions, status, README media
+e2e/              Playwright + axe tests
 ```
 
-Documentation is built as plain static HTML per route (no server needed) and configured for Read the Docs in [`.readthedocs.yaml`](.readthedocs.yaml). See [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md) for what is verified today.
+## Verification
 
-## Inspirations
+| Check | Status |
+|---|---|
+| Unit and component tests (Vitest) | passing in CI |
+| Playwright end-to-end tests: deep links, focus, menus at edges, search, overflow | passing in CI |
+| axe-core on key pages, desktop and mobile | passing in CI |
+| Manual screen-reader testing | **not yet done** |
+| Visual regression snapshots | not yet automated |
 
-Motion physics and principles are studied from Apple's Human Interface Guidelines and Material 3 Expressive; implementation builds on [Motion for React](https://motion.dev/docs/react) and, as components arrive, [Base UI](https://base-ui.com). Orlo borrows ideas, not visual identities, and is **not affiliated with Apple, Google, Framer, MUI or any other vendor**. Details and licences: [`docs/research/`](docs/research).
+Current details are in [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
 
-## Contributing and licence
+## Credits
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Agents: read [AGENTS.md](AGENTS.md). Licensed under the [MIT License](LICENSE).
+Orlo's motion principles draw on Apple's Human Interface Guidelines and Material 3 Expressive. It is **not affiliated with Apple, Google, Framer or any other vendor**. Sources and licences are listed in [`docs/research/`](docs/research).
+
+Agents should read [AGENTS.md](AGENTS.md) and [ORLO_DESIGN_RULES.md](ORLO_DESIGN_RULES.md). Licensed under the [MIT License](LICENSE).

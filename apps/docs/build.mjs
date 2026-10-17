@@ -8,7 +8,7 @@ const root = dirname(fileURLToPath(import.meta.url));
 await build({ root, logLevel: "warn" });
 await build({ root, logLevel: "warn", build: { ssr: "src/entry-server.tsx", outDir: "dist-ssr", emptyOutDir: true, rollupOptions: { output: { entryFileNames: "entry-server.mjs" } } }, ssr: { noExternal: [/^@orlo\//] } });
 
-const { render, routes, missingDocs } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.mjs")).href);
+const { render, routes, missingDocs, manifest, pages } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.mjs")).href);
 if (missingDocs.length) throw new Error(`Components without docs: ${missingDocs.join(", ")}`);
 const template = readFileSync(join(root, "dist/index.html"), "utf8");
 
@@ -34,5 +34,12 @@ writeFileSync(join(root, "dist", "404.html"), `<!doctype html><html lang="en"><h
 <body><main><svg viewBox="0 0 100 100" width="48" height="48" aria-hidden="true"><path d="M79.5 29.4A36 36 0 1 1 66.9 18.2" fill="none" stroke="currentColor" stroke-width="14"/></svg>
 <h1>This page has an open edge.</h1><p>The address doesn’t match any page in the Orlo documentation. It may have moved.</p>
 <p><a href="/">Go to the documentation home</a></p></main></body></html>`);
+// Machine-readable files for AI agents and tooling, generated from the same manifest the site uses.
+const components = { name: "orlo", generated: new Date().toISOString().slice(0, 10), components: manifest.map(({ name, slug, family, maturity, summary, tested }) => ({ name, slug, family, maturity, summary, tested, docs: `components/${slug}/` })) };
+writeFileSync(join(root, "dist", "components.json"), JSON.stringify(components, null, 2));
+writeFileSync(join(root, "..", "..", "components.json"), JSON.stringify({ ...components, generated: undefined }, null, 2) + "\n");
+const llms = ["# Orlo", "", "> A design framework for React. Nothing is an afterthought.", "", "Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and components (@orlo/react). All components are beta.", "", "## Docs", ...pages.filter((p) => p.path && !p.path.startsWith("components/")).map((p) => `- [${p.title}](${p.path}/): ${p.summary ?? ""}`), "", "## Components", ...manifest.map((c) => `- [${c.name}](components/${c.slug}/): ${c.summary}`), ""].join("\n");
+writeFileSync(join(root, "dist", "llms.txt"), llms);
+writeFileSync(join(root, "..", "..", "llms.txt"), llms);
 rmSync(join(root, "dist-ssr"), { recursive: true, force: true });
 console.log(`docs: prerendered ${routes.length} routes`);

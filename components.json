@@ -1,0 +1,883 @@
+{
+  "name": "orlo",
+  "components": [
+    {
+      "name": "Button",
+      "slug": "button",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Solid, subtle, ghost and danger buttons with a geometry-preserving loading state.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/button/"
+    },
+    {
+      "name": "IconButton",
+      "slug": "icon-button",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Icon-only button whose label is required and becomes its accessible name.",
+      "tested": [],
+      "docs": "components/icon-button/"
+    },
+    {
+      "name": "CopyButton",
+      "slug": "copy-button",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Copies text, confirms in place and announces the result.",
+      "tested": [],
+      "docs": "components/copy-button/"
+    },
+    {
+      "name": "SegmentedControl",
+      "slug": "segmented-control",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "A few mutually exclusive options with a travelling selection surface.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/segmented-control/"
+    },
+    {
+      "name": "TextField",
+      "slug": "text-field",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Labelled input with a reserved message line and announced errors.",
+      "tested": [],
+      "docs": "components/text-field/"
+    },
+    {
+      "name": "TextArea",
+      "slug": "text-area",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Multi-line input that grows with content and can count characters.",
+      "tested": [],
+      "docs": "components/text-area/"
+    },
+    {
+      "name": "Select",
+      "slug": "select",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Single-select listbox with typeahead and keyboard support while open or closed.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/select/"
+    },
+    {
+      "name": "Checkbox",
+      "slug": "checkbox",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Native checkbox, styled, with an indeterminate state.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/checkbox/"
+    },
+    {
+      "name": "RadioGroup",
+      "slug": "radio-group",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Native radios in a fieldset, vertical or horizontal.",
+      "tested": [],
+      "docs": "components/radio-group/"
+    },
+    {
+      "name": "Switch",
+      "slug": "switch",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Immediate on/off setting with a springing thumb.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/switch/"
+    },
+    {
+      "name": "Slider",
+      "slug": "slider",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Native range input with a formatted, announced value.",
+      "tested": [],
+      "docs": "components/slider/"
+    },
+    {
+      "name": "Tabs",
+      "slug": "tabs",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "Roving-focus tabs with one shared indicator and unmounted inactive panels.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/tabs/"
+    },
+    {
+      "name": "Menu",
+      "slug": "menu",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "Action menu with arrows, typeahead, edge flipping and focus return.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/menu/"
+    },
+    {
+      "name": "CommandPalette",
+      "slug": "command-palette",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "⌘K search-and-jump dialog with fuzzy ranking. Powers this site's search.",
+      "tested": [],
+      "docs": "components/command-palette/"
+    },
+    {
+      "name": "Breadcrumbs",
+      "slug": "breadcrumbs",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "Trail to the current page, marked with aria-current.",
+      "tested": [],
+      "docs": "components/breadcrumbs/"
+    },
+    {
+      "name": "Pagination",
+      "slug": "pagination",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "Page list that always keeps first, last and neighbours in view.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/pagination/"
+    },
+    {
+      "name": "Dialog",
+      "slug": "dialog",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Modal with focus trap, inert page, single scroll lock and focus return.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/dialog/"
+    },
+    {
+      "name": "AlertDialog",
+      "slug": "alert-dialog",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Confirmation that needs an explicit choice.",
+      "tested": [],
+      "docs": "components/alert-dialog/"
+    },
+    {
+      "name": "Sheet",
+      "slug": "sheet",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Edge panel; the bottom variant drags to dismiss from its handle only.",
+      "tested": [],
+      "docs": "components/sheet/"
+    },
+    {
+      "name": "Popover",
+      "slug": "popover",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Anchored non-modal panel that flips, shifts and docks on narrow screens.",
+      "tested": [],
+      "docs": "components/popover/"
+    },
+    {
+      "name": "Tooltip",
+      "slug": "tooltip",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Short description on hover or keyboard focus, never on touch.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/tooltip/"
+    },
+    {
+      "name": "Toast",
+      "slug": "toast",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Transient notifications that pause on hover, focus and hidden tabs.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/toast/"
+    },
+    {
+      "name": "Accordion",
+      "slug": "accordion",
+      "family": "Disclosure",
+      "maturity": "beta",
+      "summary": "Measured height animation; collapsed content is unmounted.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/accordion/"
+    },
+    {
+      "name": "Card",
+      "slug": "card",
+      "family": "Layout",
+      "maturity": "beta",
+      "summary": "Container-query-aware surface.",
+      "tested": [],
+      "docs": "components/card/"
+    },
+    {
+      "name": "Stack",
+      "slug": "stack",
+      "family": "Layout",
+      "maturity": "beta",
+      "summary": "Flex layout on the space scale.",
+      "tested": [],
+      "docs": "components/stack/"
+    },
+    {
+      "name": "Divider",
+      "slug": "divider",
+      "family": "Layout",
+      "maturity": "beta",
+      "summary": "Separator, optionally labelled.",
+      "tested": [],
+      "docs": "components/divider/"
+    },
+    {
+      "name": "Badge",
+      "slug": "badge",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Compact status label; tone never carries meaning alone.",
+      "tested": [],
+      "docs": "components/badge/"
+    },
+    {
+      "name": "Avatar",
+      "slug": "avatar",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Photo or initials on a stable tint, plus groups with overflow.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/avatar/"
+    },
+    {
+      "name": "Table",
+      "slug": "table",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Sortable semantic table with sticky header and empty state.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/table/"
+    },
+    {
+      "name": "AnimatedNumber",
+      "slug": "animated-number",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Locale-formatted number that tweens; screen readers hear the settled value.",
+      "tested": [],
+      "docs": "components/animated-number/"
+    },
+    {
+      "name": "Kbd",
+      "slug": "kbd",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Keyboard key.",
+      "tested": [],
+      "docs": "components/kbd/"
+    },
+    {
+      "name": "Alert",
+      "slug": "alert",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Inline status message whose exit removes it from the tab order.",
+      "tested": [],
+      "docs": "components/alert/"
+    },
+    {
+      "name": "Progress",
+      "slug": "progress",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Determinate or honest indeterminate progress.",
+      "tested": [],
+      "docs": "components/progress/"
+    },
+    {
+      "name": "Spinner",
+      "slug": "spinner",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Indeterminate activity with an accessible label.",
+      "tested": [],
+      "docs": "components/spinner/"
+    },
+    {
+      "name": "Skeleton",
+      "slug": "skeleton",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Geometry-reserving placeholder; static under reduced motion.",
+      "tested": [],
+      "docs": "components/skeleton/"
+    },
+    {
+      "name": "EmptyState",
+      "slug": "empty-state",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Designed nothing-here-yet state with a next step.",
+      "tested": [],
+      "docs": "components/empty-state/"
+    },
+    {
+      "name": "OrloImage",
+      "slug": "image",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Image lifecycle with bounded retry, designed failure and a no-image mode.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/image/"
+    },
+    {
+      "name": "ToggleButton",
+      "slug": "toggle-button",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "A button that stays on, for formatting and view options.",
+      "tested": [],
+      "docs": "components/toggle-button/"
+    },
+    {
+      "name": "ToggleGroup",
+      "slug": "toggle-group",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Toolbar of toggles with one tab stop and arrow-key movement.",
+      "tested": [],
+      "docs": "components/toggle-group/"
+    },
+    {
+      "name": "SplitButton",
+      "slug": "split-button",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Primary action with a menu of related alternatives.",
+      "tested": [],
+      "docs": "components/split-button/"
+    },
+    {
+      "name": "Fab",
+      "slug": "fab",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "Floating action; extended label collapses while scrolling down.",
+      "tested": [],
+      "docs": "components/fab/"
+    },
+    {
+      "name": "SpeedDial",
+      "slug": "speed-dial",
+      "family": "Actions",
+      "maturity": "beta",
+      "summary": "A floating action that fans out a few labelled actions.",
+      "tested": [],
+      "docs": "components/speed-dial/"
+    },
+    {
+      "name": "PasswordField",
+      "slug": "password-field",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Reveal that keeps the caret, Caps Lock warning and strength feedback.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/password-field/"
+    },
+    {
+      "name": "NumberField",
+      "slug": "number-field",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Locale-aware spinbutton with clamping and hold-to-repeat steppers.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/number-field/"
+    },
+    {
+      "name": "SearchField",
+      "slug": "search-field",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Debounced, IME-safe search with clear and busy states.",
+      "tested": [],
+      "docs": "components/search-field/"
+    },
+    {
+      "name": "Combobox",
+      "slug": "combobox",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Editable autocomplete with local or remote filtering.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/combobox/"
+    },
+    {
+      "name": "TagInput",
+      "slug": "tag-input",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Tokens from text; paste splits, duplicates explain themselves.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/tag-input/"
+    },
+    {
+      "name": "PinInput",
+      "slug": "pin-input",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "One-time code boxes with paste-to-fill and autofill.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/pin-input/"
+    },
+    {
+      "name": "RadioCards",
+      "slug": "radio-cards",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Large, explanatory choices backed by native radios.",
+      "tested": [],
+      "docs": "components/radio-cards/"
+    },
+    {
+      "name": "RangeSlider",
+      "slug": "range-slider",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Two thumbs that cannot cross; track press moves the nearest.",
+      "tested": [],
+      "docs": "components/range-slider/"
+    },
+    {
+      "name": "Rating",
+      "slug": "rating",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Star rating radiogroup with exact fractional read-only display.",
+      "tested": [],
+      "docs": "components/rating/"
+    },
+    {
+      "name": "Calendar",
+      "slug": "calendar",
+      "family": "Pickers",
+      "maturity": "beta",
+      "summary": "Locale-aware month grid with full keyboard and range mode.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/calendar/"
+    },
+    {
+      "name": "DatePicker",
+      "slug": "date-picker",
+      "family": "Pickers",
+      "maturity": "beta",
+      "summary": "Field that opens a calendar popover and returns focus.",
+      "tested": [],
+      "docs": "components/date-picker/"
+    },
+    {
+      "name": "TimeField",
+      "slug": "time-field",
+      "family": "Pickers",
+      "maturity": "beta",
+      "summary": "Segmented time entry in the locale’s 12- or 24-hour form.",
+      "tested": [],
+      "docs": "components/time-field/"
+    },
+    {
+      "name": "ColorPicker",
+      "slug": "color-picker",
+      "family": "Pickers",
+      "maturity": "beta",
+      "summary": "Area, hue, hex, swatches, eyedropper and a live contrast readout.",
+      "tested": [],
+      "docs": "components/color-picker/"
+    },
+    {
+      "name": "FileDropzone",
+      "slug": "file-dropzone",
+      "family": "Pickers",
+      "maturity": "beta",
+      "summary": "Shows accept/reject before release and explains every rejection.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/file-dropzone/"
+    },
+    {
+      "name": "NavigationRail",
+      "slug": "navigation-rail",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "Vertical rail of top-level destinations with a travelling pill.",
+      "tested": [],
+      "docs": "components/navigation-rail/"
+    },
+    {
+      "name": "BottomNavigation",
+      "slug": "bottom-navigation",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "Phone navigation bar that respects the safe area.",
+      "tested": [],
+      "docs": "components/bottom-navigation/"
+    },
+    {
+      "name": "Steps",
+      "slug": "steps",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "Progress through a known sequence, never colour alone.",
+      "tested": [],
+      "docs": "components/steps/"
+    },
+    {
+      "name": "TableOfContents",
+      "slug": "table-of-contents",
+      "family": "Navigation",
+      "maturity": "beta",
+      "summary": "On-this-page links with scrollspy; works without JavaScript.",
+      "tested": [],
+      "docs": "components/table-of-contents/"
+    },
+    {
+      "name": "ContextMenu",
+      "slug": "context-menu",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Right-click, Shift+F10 or long-press; kept on screen.",
+      "tested": [],
+      "docs": "components/context-menu/"
+    },
+    {
+      "name": "HoverCard",
+      "slug": "hover-card",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Rich preview after hover intent or keyboard focus.",
+      "tested": [],
+      "docs": "components/hover-card/"
+    },
+    {
+      "name": "Tour",
+      "slug": "tour",
+      "family": "Overlays",
+      "maturity": "beta",
+      "summary": "Skippable spotlight walkthrough that skips missing targets.",
+      "tested": [],
+      "docs": "components/tour/"
+    },
+    {
+      "name": "TreeView",
+      "slug": "tree-view",
+      "family": "Disclosure",
+      "maturity": "beta",
+      "summary": "Hierarchy with the full WAI-ARIA tree keyboard model.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/tree-view/"
+    },
+    {
+      "name": "ReadMore",
+      "slug": "read-more",
+      "family": "Disclosure",
+      "maturity": "beta",
+      "summary": "Whole-line truncation with a toggle only when needed.",
+      "tested": [],
+      "docs": "components/read-more/"
+    },
+    {
+      "name": "Splitter",
+      "slug": "splitter",
+      "family": "Layout",
+      "maturity": "beta",
+      "summary": "Resizable panes with a keyboard-operable separator.",
+      "tested": [],
+      "docs": "components/splitter/"
+    },
+    {
+      "name": "ScrollArea",
+      "slug": "scroll-area",
+      "family": "Layout",
+      "maturity": "beta",
+      "summary": "Scroll region with edge shadows and keyboard focus.",
+      "tested": [],
+      "docs": "components/scroll-area/"
+    },
+    {
+      "name": "Chip",
+      "slug": "chip",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Filter, assist and removable input chips.",
+      "tested": [],
+      "docs": "components/chip/"
+    },
+    {
+      "name": "DataList",
+      "slug": "data-list",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Key–value pairs as a description list that adapts to its container.",
+      "tested": [],
+      "docs": "components/data-list/"
+    },
+    {
+      "name": "Timeline",
+      "slug": "timeline",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Chronological events with machine-readable times.",
+      "tested": [],
+      "docs": "components/timeline/"
+    },
+    {
+      "name": "Sparkline",
+      "slug": "sparkline",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Inline trend that breaks at gaps and carries a data table.",
+      "tested": [],
+      "docs": "components/sparkline/"
+    },
+    {
+      "name": "Meter",
+      "slug": "meter",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Value in a range with semantic zones, as bar or gauge.",
+      "tested": [],
+      "docs": "components/meter/"
+    },
+    {
+      "name": "Highlight",
+      "slug": "highlight",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Accent-insensitive match highlighting.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/highlight/"
+    },
+    {
+      "name": "RelativeTime",
+      "slug": "relative-time",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "“3 minutes ago” that stays current, with the exact time on hand.",
+      "tested": [],
+      "docs": "components/relative-time/"
+    },
+    {
+      "name": "Banner",
+      "slug": "banner",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Page-level message that pushes content instead of covering it.",
+      "tested": [],
+      "docs": "components/banner/"
+    },
+    {
+      "name": "OfflineIndicator",
+      "slug": "offline-indicator",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Calm offline banner and a brief back-online confirmation.",
+      "tested": [],
+      "docs": "components/offline-indicator/"
+    },
+    {
+      "name": "ProgressRing",
+      "slug": "progress-ring",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Compact circular progress, determinate or indeterminate.",
+      "tested": [],
+      "docs": "components/progress-ring/"
+    },
+    {
+      "name": "Carousel",
+      "slug": "carousel",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Native scroll-snap slides; autoplay off by default and pausable.",
+      "tested": [],
+      "docs": "components/carousel/"
+    },
+    {
+      "name": "BeforeAfter",
+      "slug": "before-after",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Drag or arrow-key comparison of two images.",
+      "tested": [],
+      "docs": "components/before-after/"
+    },
+    {
+      "name": "Lightbox",
+      "slug": "lightbox",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Gallery that opens full-screen with swipe and keyboard.",
+      "tested": [],
+      "docs": "components/lightbox/"
+    },
+    {
+      "name": "Knob",
+      "slug": "knob",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Rotary slider for studio-style tools; drag, arrows, double-click reset.",
+      "tested": [],
+      "docs": "components/knob/"
+    },
+    {
+      "name": "HoldToConfirm",
+      "slug": "hold-to-confirm",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Press and hold to confirm irreversible actions; release cancels.",
+      "tested": [],
+      "docs": "components/hold-to-confirm/"
+    },
+    {
+      "name": "SignaturePad",
+      "slug": "signature-pad",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Pressure-aware drawing with undo and a typed alternative.",
+      "tested": [],
+      "docs": "components/signature-pad/"
+    },
+    {
+      "name": "ShortcutRecorder",
+      "slug": "shortcut-recorder",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Records key combos and warns about browser-reserved ones.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/shortcut-recorder/"
+    },
+    {
+      "name": "ReorderableList",
+      "slug": "reorderable-list",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Drag or keyboard reordering with spoken positions.",
+      "tested": [],
+      "docs": "components/reorderable-list/"
+    },
+    {
+      "name": "Heatmap",
+      "slug": "heatmap",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Calendar activity grid with keyboard exploration.",
+      "tested": [],
+      "docs": "components/heatmap/"
+    },
+    {
+      "name": "JsonTree",
+      "slug": "json-tree",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Collapsible JSON explorer with labelled types.",
+      "tested": [],
+      "docs": "components/json-tree/"
+    },
+    {
+      "name": "DiffViewer",
+      "slug": "diff-viewer",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Line diff with +/− gutters and a spoken summary.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/diff-viewer/"
+    },
+    {
+      "name": "CodeBlock",
+      "slug": "code-block",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Code with copy, line numbers, highlights and wrap.",
+      "tested": [],
+      "docs": "components/code-block/"
+    },
+    {
+      "name": "Countdown",
+      "slug": "countdown",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Live timer that announces only meaningful moments.",
+      "tested": [],
+      "docs": "components/countdown/"
+    },
+    {
+      "name": "Marquee",
+      "slug": "marquee",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Ambient scroller that pauses on hover, focus and reduced motion.",
+      "tested": [],
+      "docs": "components/marquee/"
+    }
+  ]
+}
