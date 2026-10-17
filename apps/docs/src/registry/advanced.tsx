@@ -32,7 +32,12 @@ const makeRows = (n: number): Row[] => Array.from({ length: n }, (_, i) => ({ id
 function GridDemo() {
   const rows = useMemo(() => makeRows(10000), []);
   const [sel, setSel] = useState<string[]>([]);
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   const cols: GridColumn<Row>[] = [{ key: "name", header: "Name", width: 190, sortable: true, pin: true }, { key: "team", header: "Team", width: 130, sortable: true, render: (r) => <Badge tone="neutral">{r.team}</Badge> }, { key: "city", header: "City", width: 120, sortable: true }, { key: "score", header: "Score", width: 110, sortable: true, align: "end" }, { key: "joined", header: "Joined", width: 130, sortable: true }];
+  // Virtual row windows depend on browser layout. Keep the SSR and initial
+  // client trees identical, then mount the interactive example after hydrate.
+  if (!ready) return <Skeleton width="100%" height={380} />;
   return <div style={{ inlineSize: "100%" }}><DataGrid label="People" columns={cols} rows={rows} rowKey={(r) => r.id} selectable selection={sel} onSelectionChange={setSel} height={380} /></div>;
 }
 
