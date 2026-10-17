@@ -18,6 +18,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Layering](foundations/layering/): Who owns the space when surfaces overlap.
 - [Async states](foundations/async-states/): Loading, failure, empty, offline and retry.
 - [Edge cases](foundations/edge-cases/): The details lab: flawed beside fixed.
+- [Failure gallery](foundations/failures/): Every error state, side by side.
 - [Writing](foundations/writing/): Words for errors, empty states and actions.
 - [Design tokens](foundations/tokens/): Primitive, semantic and component layers.
 - [Overview](styles/): 
@@ -25,6 +26,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Typography](styles/typography/): Type scale, rhythm and numerals.
 - [Shape](styles/shape/): Radii, strokes and corners.
 - [Elevation](styles/elevation/): Surfaces, shadows and scrims.
+- [Materials](styles/materials/): Solid, glass and tinted glass with a readability guard.
 - [Motion](styles/motion/): Springs, presets and the MotionLab.
 - [Icons](styles/icons/): Orlo's own 24px icon set.
 - [Density](styles/density/): Comfortable, compact and touch.
@@ -38,7 +40,9 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Testing](develop/testing/): How Orlo is verified, and how to test with it.
 - [Hosting on Read the Docs](develop/read-the-docs/): How this site is built and served.
 - [For AI agents](develop/agents/): Rules for coding agents using Orlo.
+- [Device lab](develop/devices/): Real pages in phone, tablet and laptop frames.
 - [Logo & usage](brand/): Wordmark, mark, favicons and rules.
+- [Licensing & credits](brand/licensing/): Designer, copyright, licence and attribution.
 
 ## Components
 - [Button](components/button/): Solid, subtle, ghost and danger buttons with a geometry-preserving loading state.

@@ -3,7 +3,7 @@ import { OrloProvider, ProgressiveBlur, Wordmark, Button, IconButton, SegmentedC
 import type { MotionMode } from "@orlo/motion";
 import { pages, sections, sectionOf, TABS, tabTitle, type Tab } from "./site.ts";
 import { PageToc } from "./kit.tsx";
-import { renderPage } from "./pages/index.tsx";
+import type { PageRender } from "./pages/index.tsx";
 import "@orlo/tokens/css";
 import "@orlo/react/styles.css";
 import "./docs.css";
@@ -15,12 +15,15 @@ const DEFAULTS: Prefs = { theme: "system", motion: "system", scheme: "standard",
 const read = (): Partial<Prefs> => { try { return JSON.parse(localStorage.getItem("orlo-prefs") ?? "{}"); } catch { return {}; } };
 const write = (p: Prefs) => { try { localStorage.setItem("orlo-prefs", JSON.stringify(p)); localStorage.setItem("orlo-theme", p.theme); } catch { /* storage blocked */ } };
 
-export function App({ route }: { route: string }) {
+export function App({ route, page }: { route: string; page: PageRender }) {
   const depth = route ? route.split("/").length : 0;
   const root = "../".repeat(depth) || "./";
   const href = (p: string) => `${root}${p}${p ? "/" : ""}`;
   const [prefs, setPrefs] = useState<Prefs>(DEFAULTS);
   const [searchOpen, setSearchOpen] = useState(false);
+  // Render in a fixed locale first (matches the prerendered HTML), then switch to the visitor's locale.
+  const [locale, setLocale] = useState("en-US");
+  useEffect(() => setLocale(navigator.language || "en-US"), []);
   useEffect(() => setPrefs({ ...DEFAULTS, ...read() }), []);
   const set = <K extends keyof Prefs>(k: K) => (v: Prefs[K]) => setPrefs((p) => {
     const next = { ...p, [k]: v }; write(next);
@@ -67,7 +70,7 @@ export function App({ route }: { route: string }) {
   );
 
   return (
-    <OrloProvider theme={prefs.theme} motion={prefs.motion} motionScheme={prefs.scheme} images={prefs.images} density={prefs.density === "auto" ? undefined : prefs.density} dir={prefs.dir} material={prefs.material} tint={prefs.tint} reduceTransparency={prefs.transparency === "reduced"}>
+    <OrloProvider theme={prefs.theme} motion={prefs.motion} motionScheme={prefs.scheme} images={prefs.images} density={prefs.density === "auto" ? undefined : prefs.density} dir={prefs.dir} material={prefs.material} tint={prefs.tint} reduceTransparency={prefs.transparency === "reduced"} locale={locale}>
       <a className="skip" href="#main">Skip to content</a>
       <header className="topbar orlo-material">
         <Sheet side="start" title="Orlo" trigger={<IconButton label="Open navigation" className="only-narrow"><Icons.Menu /></IconButton>}>
@@ -108,7 +111,7 @@ export function App({ route }: { route: string }) {
         {section !== "home" && <aside className="shell__drawer">{drawer}</aside>}
         <main id="main" tabIndex={-1} className="content" data-section={section}>
           <div className="content__inner">
-            {renderPage(route, root, tab)}
+            {page({ root, tab })}
             {section !== "home" && idx >= 0 && (
               <nav className="pager" aria-label="Previous and next">
                 {prev ? <a href={href(prev.path)}><span className="orlo-hint">Previous</span>{prev.title === "Overview" ? `${sections.find((s) => s.id === prev.section)?.title}` : prev.title}</a> : <span />}

@@ -8,7 +8,8 @@ const root = dirname(fileURLToPath(import.meta.url));
 await build({ root, logLevel: "warn" });
 await build({ root, logLevel: "warn", build: { ssr: "src/entry-server.tsx", outDir: "dist-ssr", emptyOutDir: true, rollupOptions: { output: { entryFileNames: "entry-server.mjs" } } }, ssr: { noExternal: [/^@orlo\//] } });
 
-const { render, routes, missingDocs, manifest, pages } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.mjs")).href);
+const { render, routes, findMissingDocs, manifest, pages } = await import(pathToFileURL(join(root, "dist-ssr/entry-server.mjs")).href);
+const missingDocs = await findMissingDocs();
 if (missingDocs.length) throw new Error(`Components without docs: ${missingDocs.join(", ")}`);
 const template = readFileSync(join(root, "dist/index.html"), "utf8");
 
@@ -21,7 +22,7 @@ for (const { path, title } of routes) {
     .replace("<!--canonical-->", "")
     // The template's asset URLs are relative to the site root; rebase them for nested pages.
     .replace(/(href|src)="\.\/(?!\/)/g, `$1="${up}`)
-    .replace("<!--app-->", render(path));
+    .replace("<!--app-->", await render(path));
   const out = join(root, "dist", path, "index.html");
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, html);

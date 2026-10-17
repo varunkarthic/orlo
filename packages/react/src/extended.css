@@ -97,6 +97,7 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 
 /* ---------- Calendar ---------- */
 .orlo-calendar { display: grid; gap: 8px; inline-size: max-content; }
+.orlo-calendar--pending { inline-size: 17.5rem; }
 .orlo-calendar__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .orlo-calendar__title { margin: 0; font-size: var(--orlo-text-md); font-weight: 600; }
 .orlo-calendar__grid { border-collapse: collapse; }

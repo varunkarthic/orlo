@@ -30,7 +30,9 @@ export function ColorPicker({ label, value: v, defaultValue = "#A8370A", onValue
   useEffect(() => { if (value.toUpperCase() !== hsvToHex(...hsv).toUpperCase()) setHsv(hexToHsv(value)); setText(value); }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
   const apply = (h: number, s: number, b: number) => { const n: [number, number, number] = [h, Math.min(1, Math.max(0, s)), Math.min(1, Math.max(0, b))]; setHsv(n); setValue(hsvToHex(...n)); };
   const fromPointer = (e: { clientX: number; clientY: number }) => { const r = area.current!.getBoundingClientRect(); apply(hsv[0], (e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height); };
-  const eyedrop = typeof window !== "undefined" && "EyeDropper" in window;
+  // Feature detection after mount, so server and client render the same markup.
+  const [eyedrop, setEyedrop] = useState(false);
+  useEffect(() => setEyedrop("EyeDropper" in window), []);
   const cw = contrast(value, "#FFFFFF"), cb = contrast(value, "#000000");
   return (
     <div className="orlo-color" role="group" aria-labelledby={id}>

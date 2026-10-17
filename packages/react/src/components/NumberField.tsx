@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { useControllable } from "../internal/hooks.ts";
 import { Icons } from "../internal/icons.tsx";
@@ -28,8 +29,9 @@ export type NumberFieldProps = {
 };
 
 /** Spinbutton with locale-aware parsing and formatting, clamping on commit, PageUp/PageDown ×10, and hold-to-repeat steppers. */
-export function NumberField({ label, value: v, defaultValue = null, onValueChange, min = -Infinity, max = Infinity, step = 1, format, locale, help, disabled, name }: NumberFieldProps) {
+export function NumberField({ label, value: v, defaultValue = null, onValueChange, min = -Infinity, max = Infinity, step = 1, format, locale: localeProp, help, disabled, name }: NumberFieldProps) {
   const [value, setValue] = useControllable<number | null>(v, defaultValue, onValueChange);
+  const locale = useLocale(localeProp);
   const fmt = useMemo(() => new Intl.NumberFormat(locale, { maximumFractionDigits: 20, ...format }), [locale, format]);
   const [text, setText] = useState(value === null ? "" : fmt.format(value));
   const [editing, setEditing] = useState(false);

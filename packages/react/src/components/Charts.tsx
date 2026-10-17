@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { useOrloMotion } from "@orlo/motion";
@@ -66,7 +67,9 @@ export type LineChartProps = { title: string; description?: string; labels: stri
  * Line and area charts. Nulls break the line (never drawn as zero), each series has a distinct colour, dash and marker,
  * the crosshair works by pointer and by keyboard (← →), values are announced, and a data table is one click away.
  */
-export function LineChart({ title, description, labels, series, area, height = 260, format = (n) => n.toLocaleString(), loading, curve = true }: LineChartProps) {
+export function LineChart({ title, description, labels, series, area, height = 260, format: fmtProp, loading, curve = true }: LineChartProps) {
+  const locale = useLocale();
+  const format = fmtProp ?? ((n: number) => n.toLocaleString(locale));
   const [hidden, setHidden] = useState<Set<number>>(new Set());
   const [hover, setHover] = useState<number | null>(null);
   const [showTable, setShowTable] = useState(false);
@@ -117,8 +120,8 @@ export function LineChart({ title, description, labels, series, area, height = 2
           {labels.map((l, i) => (labels.length <= 12 || i % Math.ceil(labels.length / 8) === 0) && <text key={l + i} x={x(i)} y={H - 8} className="orlo-chart__xtick">{l}</text>)}
           {series.map((s, i) => hidden.has(i) ? null : (
             <g key={s.name}>
-              {area && <motion.path d={areaPath(s.data)} fill={color(i)} opacity={0.12} initial={false} animate={{ d: areaPath(s.data) }} transition={transition("shift")} />}
-              <motion.path d={path(s.data)} fill="none" stroke={color(i)} strokeWidth={2.4} strokeDasharray={DASHES[i]} strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1, d: path(s.data) }} transition={{ pathLength: transition("page"), d: transition("shift") }} />
+              {area && <path d={areaPath(s.data)} fill={color(i)} opacity={0.12} className="orlo-chart__morph" style={{ d: `path("${areaPath(s.data)}")` } as React.CSSProperties} />}
+              <motion.path d={path(s.data)} fill="none" stroke={color(i)} strokeWidth={2.4} strokeDasharray={DASHES[i]} strokeLinecap="round" className="orlo-chart__morph" style={{ d: `path("${path(s.data)}")` } as React.CSSProperties} initial={DASHES[i] ? false : { pathLength: 0 }} animate={DASHES[i] ? undefined : { pathLength: 1 }} transition={transition("page")} />
               {s.data.map((v, j) => v === null || !Number.isFinite(v) ? null : (labels.length <= 16 || j === hover) && <Marker key={j} kind={MARKERS[i]} x={x(j)} y={y(v)} i={i} r={j === hover ? 5 : 3.2} />)}
             </g>
           ))}
@@ -139,7 +142,9 @@ export function LineChart({ title, description, labels, series, area, height = 2
 export type BarChartProps = { title: string; description?: string; labels: string[]; series: Series[]; stacked?: boolean; height?: number; format?: (n: number) => string; loading?: boolean };
 
 /** Grouped or stacked bars with a true zero baseline (negative values hang below it), value focus by keyboard, and a data table. */
-export function BarChart({ title, description, labels, series, stacked, height = 260, format = (n) => n.toLocaleString(), loading }: BarChartProps) {
+export function BarChart({ title, description, labels, series, stacked, height = 260, format: fmtProp, loading }: BarChartProps) {
+  const locale = useLocale();
+  const format = fmtProp ?? ((n: number) => n.toLocaleString(locale));
   const [hidden, setHidden] = useState<Set<number>>(new Set());
   const [showTable, setShowTable] = useState(false);
   const [focus, setFocus] = useState<[number, number] | null>(null);
@@ -195,7 +200,9 @@ export function BarChart({ title, description, labels, series, stacked, height =
 export type DonutChartProps = { title: string; description?: string; data: { label: string; value: number }[]; format?: (n: number) => string; centerLabel?: string };
 
 /** Part-to-whole for a handful of categories. Segments are focusable (Tab, then ← →), percentages are spelled out, and a table is one click away. */
-export function DonutChart({ title, description, data, format = (n) => n.toLocaleString(), centerLabel = "Total" }: DonutChartProps) {
+export function DonutChart({ title, description, data, format: fmtProp, centerLabel = "Total" }: DonutChartProps) {
+  const locale = useLocale();
+  const format = fmtProp ?? ((n: number) => n.toLocaleString(locale));
   const [active, setActive] = useState<number | null>(null);
   const [showTable, setShowTable] = useState(false);
   const { transition } = useOrloMotion();

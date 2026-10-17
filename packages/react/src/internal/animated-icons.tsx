@@ -32,14 +32,14 @@ export function AnimatedIcon({ name, size = 20, active = false, label, className
       return <svg {...common}><circle cx="12" cy="12" r="8.5" opacity="0.25" /><motion.path d="M20.5 12A8.5 8.5 0 0 0 12 3.5" animate={{ rotate: 360 }} transition={{ duration: still ? 2.4 : 0.8, ease: "linear", repeat: Infinity }} style={{ originX: "12px", originY: "12px" }} /></svg>;
     case "menu":
       return <svg {...common}>
-        <motion.path animate={{ d: active ? "M6 6L18 18" : "M4 7H20" }} transition={t} />
+        <motion.path d={active ? "M6 6L18 18" : "M4 7H20"} initial={false} animate={{ d: active ? "M6 6L18 18" : "M4 7H20" }} transition={t} />
         <motion.path d="M4 12H20" animate={{ opacity: active ? 0 : 1, scaleX: active ? 0.2 : 1 }} transition={t} style={{ originX: "12px" }} />
-        <motion.path animate={{ d: active ? "M6 18L18 6" : "M4 17H20" }} transition={t} />
+        <motion.path d={active ? "M6 18L18 6" : "M4 17H20"} initial={false} animate={{ d: active ? "M6 18L18 6" : "M4 17H20" }} transition={t} />
       </svg>;
     case "play":
       return <svg {...common}>
-        <motion.path animate={{ d: active ? "M7 5.5L10 5.5L10 18.5L7 18.5Z" : "M8 5.5L13 8.75L13 15.25L8 18.5Z" }} transition={t} fill="currentColor" />
-        <motion.path animate={{ d: active ? "M14 5.5L17 5.5L17 18.5L14 18.5Z" : "M13 8.75L18 12L18 12L13 15.25Z" }} transition={t} fill="currentColor" />
+        <motion.path d={active ? "M7 5.5L10 5.5L10 18.5L7 18.5Z" : "M8 5.5L13 8.75L13 15.25L8 18.5Z"} initial={false} animate={{ d: active ? "M7 5.5L10 5.5L10 18.5L7 18.5Z" : "M8 5.5L13 8.75L13 15.25L8 18.5Z" }} transition={t} fill="currentColor" />
+        <motion.path d={active ? "M14 5.5L17 5.5L17 18.5L14 18.5Z" : "M13 8.75L18 12L18 12L13 15.25Z"} initial={false} animate={{ d: active ? "M14 5.5L17 5.5L17 18.5L14 18.5Z" : "M13 8.75L18 12L18 12L13 15.25Z" }} transition={t} fill="currentColor" />
       </svg>;
     case "heart":
       return <svg {...common}>

@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useOrloMotion } from "@orlo/motion";
@@ -166,6 +167,7 @@ export type StatCardProps = { label: string; value: ReactNode; delta?: number; d
 export function StatCard({ label, value, delta, deltaLabel = "vs previous period", trend, positive = "up", footnote }: StatCardProps) {
   const dir = delta === undefined ? null : delta > 0 ? "up" : delta < 0 ? "down" : "flat";
   const good = dir === "flat" || dir === null ? null : dir === positive;
+  const locale = useLocale();
   return (
     <div className="orlo-stat orlo-card">
       <span className="orlo-stat__label">{label}</span>
@@ -173,7 +175,7 @@ export function StatCard({ label, value, delta, deltaLabel = "vs previous period
       {dir && (
         <span className="orlo-stat__delta" data-good={good === null ? undefined : String(good)}>
           {dir === "up" ? <Icons.TrendingUp size={16} /> : dir === "down" ? <Icons.TrendingDown size={16} /> : <Icons.Minus size={16} />}
-          <span>{dir === "flat" ? "No change" : `${dir === "up" ? "Up" : "Down"} ${Math.abs(delta!).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`}</span>
+          <span>{dir === "flat" ? "No change" : `${dir === "up" ? "Up" : "Down"} ${Math.abs(delta!).toLocaleString(locale, { maximumFractionDigits: 1 })}%`}</span>
           <span className="orlo-hint" style={{ display: "inline" }}>{deltaLabel}</span>
         </span>
       )}

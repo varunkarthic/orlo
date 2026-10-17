@@ -33,6 +33,7 @@ export const pages: Page[] = [
   { path: "foundations/layering", title: "Layering", section: "foundations", summary: "Who owns the space when surfaces overlap." },
   { path: "foundations/async-states", title: "Async states", section: "foundations", summary: "Loading, failure, empty, offline and retry." },
   { path: "foundations/edge-cases", title: "Edge cases", section: "foundations", summary: "The details lab: flawed beside fixed." },
+  { path: "foundations/failures", title: "Failure gallery", section: "foundations", summary: "Every error state, side by side." },
   { path: "foundations/writing", title: "Writing", section: "foundations", summary: "Words for errors, empty states and actions." },
   { path: "foundations/tokens", title: "Design tokens", section: "foundations", summary: "Primitive, semantic and component layers." },
   { path: "styles", title: "Overview", section: "styles" },
@@ -40,6 +41,7 @@ export const pages: Page[] = [
   { path: "styles/typography", title: "Typography", section: "styles", summary: "Type scale, rhythm and numerals." },
   { path: "styles/shape", title: "Shape", section: "styles", summary: "Radii, strokes and corners." },
   { path: "styles/elevation", title: "Elevation", section: "styles", summary: "Surfaces, shadows and scrims." },
+  { path: "styles/materials", title: "Materials", section: "styles", summary: "Solid, glass and tinted glass with a readability guard." },
   { path: "styles/motion", title: "Motion", section: "styles", summary: "Springs, presets and the MotionLab." },
   { path: "styles/icons", title: "Icons", section: "styles", summary: "Orlo's own 24px icon set." },
   { path: "styles/density", title: "Density", section: "styles", summary: "Comfortable, compact and touch." },
@@ -54,7 +56,9 @@ export const pages: Page[] = [
   { path: "develop/testing", title: "Testing", section: "develop", summary: "How Orlo is verified, and how to test with it." },
   { path: "develop/read-the-docs", title: "Hosting on Read the Docs", section: "develop", summary: "How this site is built and served." },
   { path: "develop/agents", title: "For AI agents", section: "develop", summary: "Rules for coding agents using Orlo." },
+  { path: "develop/devices", title: "Device lab", section: "develop", summary: "Real pages in phone, tablet and laptop frames." },
   { path: "brand", title: "Logo & usage", section: "brand", summary: "Wordmark, mark, favicons and rules." },
+  { path: "brand/licensing", title: "Licensing & credits", section: "brand", summary: "Designer, copyright, licence and attribution." },
 ];
 
 /** Every prerendered route: pages plus the four extra tabs of each component. */

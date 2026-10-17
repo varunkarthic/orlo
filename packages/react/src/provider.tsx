@@ -11,6 +11,10 @@ const ImagesCtx = createContext<ImagePolicy>("on");
 export const useImagePolicy = () => useContext(ImagesCtx);
 
 type PortalInfo = { theme: Theme; density?: Density; dir?: "ltr" | "rtl"; material: Material; materialStyle?: CSSProperties; reduceTransparency?: boolean };
+const LocaleCtx = createContext<string | undefined>(undefined);
+/** Locale for dates, numbers and week starts. Pass it explicitly when server rendering so server and client agree. */
+export const useLocale = (override?: string) => override ?? useContext(LocaleCtx);
+
 const PortalCtx = createContext<PortalInfo>({ theme: "system", material: "solid" });
 export const usePortalContext = () => useContext(PortalCtx);
 
@@ -31,6 +35,8 @@ export type OrloProviderProps = {
   /** Force solid surfaces regardless of OS preference. */
   reduceTransparency?: boolean;
   dir?: "ltr" | "rtl";
+  /** BCP 47 locale for dates and numbers (e.g. "en-GB"). Defaults to the runtime locale. */
+  locale?: string;
   className?: string;
   children: ReactNode;
 };
@@ -49,21 +55,23 @@ export function useMaterialStyle(material: Material, tint?: string, glass?: Glas
   }, [material, tint, glass]);
 }
 
-export function OrloProvider({ theme = "system", density, motion = "system", motionScheme = "standard", images = "on", material = "solid", tint, glass, reduceTransparency, dir, className, children }: OrloProviderProps) {
+export function OrloProvider({ theme = "system", density, motion = "system", motionScheme = "standard", images = "on", material = "solid", tint, glass, reduceTransparency, dir, locale, className, children }: OrloProviderProps) {
   const materialStyle = useMaterialStyle(material, tint, glass);
   const portal = useMemo(() => ({ theme, density, dir, material, materialStyle, reduceTransparency }), [theme, density, dir, material, materialStyle, reduceTransparency]);
   return (
     <OrloMotionProvider mode={motion} scheme={motionScheme}>
+      <LocaleCtx.Provider value={locale}>
       <ImagesCtx.Provider value={images}>
         <PortalCtx.Provider value={portal}>
           <ToastRegion>
             <div className={["orlo-root", className].filter(Boolean).join(" ")} data-orlo-theme={theme === "system" ? undefined : theme} data-orlo-density={density}
-              data-orlo-material={material} data-orlo-transparency={reduceTransparency ? "reduced" : undefined} dir={dir} style={materialStyle}>
+              lang={locale} data-orlo-material={material} data-orlo-transparency={reduceTransparency ? "reduced" : undefined} dir={dir} style={materialStyle}>
               {children}
             </div>
           </ToastRegion>
         </PortalCtx.Provider>
       </ImagesCtx.Provider>
+      </LocaleCtx.Provider>
     </OrloMotionProvider>
   );
 }

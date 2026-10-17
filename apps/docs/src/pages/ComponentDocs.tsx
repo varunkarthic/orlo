@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { manifest, families, Badge, Chip, SearchField, Stack, EmptyState, Button, ProgressiveBlur } from "@orlo/react";
-import { docs } from "../registry/index.ts";
+import type { Doc } from "../registry/types.ts";
 import { TABS, tabTitle, type Tab } from "../site.ts";
 import { Anatomy, Bullets, Code, DoDont, H2, H3, KeyTable, PageHeader, SpecTable, Stage } from "../kit.tsx";
 import { controlSpecs } from "../registry/types.ts";
 
 /** Renders a component's demo only once its card scrolls near the viewport, so the index stays light. */
-function LazyPreview({ slug }: { slug: string }) {
+function LazyPreview({ doc }: { doc?: Doc }) {
   const ref = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -14,10 +14,10 @@ function LazyPreview({ slug }: { slug: string }) {
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setShow(true); io.disconnect(); } }, { rootMargin: "200px" });
     io.observe(el); return () => io.disconnect();
   }, []);
-  return <div ref={ref} className="cindex__preview" inert aria-hidden="true">{show && <div className="cindex__scale">{docs[slug]?.demo()}</div>}</div>;
+  return <div ref={ref} className="cindex__preview" inert aria-hidden="true">{show && <div className="cindex__scale">{doc?.demo()}</div>}</div>;
 }
 
-export function ComponentsIndex({ root }: { root: string }) {
+export function ComponentsIndex({ root, docs }: { root: string; docs: Record<string, Doc> }) {
   const [q, setQ] = useState("");
   const [fam, setFam] = useState<string | null>(null);
   const list = manifest.filter((c) => (!fam || c.family === fam) && (!q || `${c.name} ${c.summary} ${c.family}`.toLowerCase().includes(q.toLowerCase())));
@@ -42,7 +42,7 @@ export function ComponentsIndex({ root }: { root: string }) {
               <div className="cindex">
                 {items.map((c) => (
                   <a key={c.slug} href={`${root}components/${c.slug}/`} className="cindex__card">
-                    <LazyPreview slug={c.slug} />
+                    <LazyPreview doc={docs[c.slug]} />
                     <span className="cindex__body"><strong>{c.name}</strong><span className="orlo-hint">{c.summary}</span></span>
                   </a>
                 ))}
@@ -54,9 +54,8 @@ export function ComponentsIndex({ root }: { root: string }) {
   );
 }
 
-export function ComponentPage({ slug, root, tab }: { slug: string; root: string; tab: Tab }) {
+export function ComponentPage({ slug, doc: d, root, tab }: { slug: string; doc?: Doc; root: string; tab: Tab }) {
   const entry = manifest.find((c) => c.slug === slug);
-  const d = docs[slug];
   if (!entry || !d) return <h1>Not found</h1>;
   const importName = entry.name === "Toast" ? "useToast" : entry.name;
   return (

@@ -239,3 +239,21 @@ table.keys td:first-child { white-space: nowrap; }
 .chart { inline-size: 100%; max-inline-size: 30rem; block-size: auto; color: var(--orlo-color-accent); }
 .lab-fig { margin: 0; display: grid; gap: 6px; }
 .lab-fig figcaption { font-size: var(--orlo-text-sm); color: var(--orlo-color-fg-muted); }
+
+/* Materials page */
+.mat-pair { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+.mat-stage { position: relative; min-block-size: 18rem; border-radius: 18px; overflow: hidden; display: grid; place-items: center; padding: 24px; border: 1px solid var(--orlo-color-border); }
+.mat-backdrop { position: absolute; inset: 0; }
+.mat-backdrop span { position: absolute; border-radius: 50%; inline-size: 9rem; block-size: 9rem; filter: blur(2px); }
+.mat-backdrop span:nth-child(1) { inset-block-start: 8%; inset-inline-start: 6%; } .mat-backdrop span:nth-child(2) { inset-block-end: 6%; inset-inline-end: 10%; inline-size: 11rem; block-size: 11rem; }
+.mat-backdrop span:nth-child(3) { inset-block-start: 40%; inset-inline-start: 40%; inline-size: 6rem; block-size: 6rem; } .mat-backdrop span:nth-child(4) { inset-block-start: 4%; inset-inline-end: 4%; inline-size: 5rem; block-size: 5rem; }
+.mat-backdrop p { position: absolute; inset-inline: 0; inset-block-end: 30%; margin: 0; font-size: 1.6rem; font-weight: 800; opacity: 0.55; white-space: nowrap; }
+.mat-card { position: relative; display: grid; gap: 10px; padding: 18px 20px; border-radius: var(--orlo-radius-xl); border: 1px solid var(--orlo-color-border); max-inline-size: 20rem; box-shadow: var(--orlo-material-depth-shadow, var(--orlo-shadow-3)); }
+/* Device lab */
+.devicelab { display: grid; justify-items: center; gap: 10px; margin-block-start: 20px; }
+.devicelab__frame { position: relative; padding: 12px; border-radius: 34px; background: #1C1B18; box-shadow: var(--orlo-shadow-4); overflow: hidden; transition: inline-size var(--orlo-duration-spatial-default) var(--orlo-ease-spatial-default), block-size var(--orlo-duration-spatial-default) var(--orlo-ease-spatial-default); }
+.devicelab__frame[data-kind="laptop"] { border-radius: 14px; }
+.devicelab__frame iframe { border: 0; transform-origin: top left; border-radius: 22px; background: var(--orlo-color-canvas); display: block; }
+.devicelab__frame[data-kind="laptop"] iframe { border-radius: 4px; }
+.devicelab__safe { position: absolute; inset-inline: 12px; display: grid; place-items: center; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; background: repeating-linear-gradient(45deg, rgb(255 0 80 / 0.22) 0 6px, rgb(255 0 80 / 0.1) 6px 12px); pointer-events: none; border-radius: 22px 22px 0 0; }
+.devicelab__safe[style*="inset-block-end"] { border-radius: 0 0 22px 22px; }

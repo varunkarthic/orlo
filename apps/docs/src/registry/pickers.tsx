@@ -4,7 +4,7 @@ import type { Doc } from "./types.ts";
 
 function RangeCal() {
   const [r, setR] = useState<DateRange>({ start: null, end: null });
-  const f = new Intl.DateTimeFormat(undefined, { dateStyle: "medium" });
+  const f = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
   return <Stack gap={2}><Calendar mode="range" value={r} onValueChange={setR} /><span className="orlo-hint">{r.start ? `${f.format(r.start)} → ${r.end ? f.format(r.end) : "pick an end date"}` : "Pick a start date"}</span></Stack>;
 }
 const in2w = () => { const d = new Date(); d.setDate(d.getDate() + 14); return d; };

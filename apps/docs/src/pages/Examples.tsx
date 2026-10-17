@@ -45,7 +45,7 @@ const orders = [
   { id: "A-1044", customer: "Katherine Johnson", total: 420, status: "Paid" },
   { id: "A-1045", customer: "Barbara Liskov", total: 39.9, status: "Overdue" },
 ];
-const eur = new Intl.NumberFormat(undefined, { style: "currency", currency: "EUR" });
+const eur = new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" });
 
 function Dashboard() {
   const [range, setRange] = useState("30");

@@ -5,6 +5,7 @@ import { Icons } from "../internal/icons.tsx";
 import { AnimatedIcon } from "../internal/animated-icons.tsx";
 import { Markdown } from "./Editor.tsx";
 import { Avatar } from "./Avatar.tsx";
+import { useLocale } from "../provider.tsx";
 
 export type ChatMessage = { id: string; role: "user" | "assistant" | "system"; content: string; author?: string; time?: Date; citations?: { id: string; title: string; href: string; source?: string }[]; status?: "streaming" | "done" | "error" | "stopped" };
 
@@ -17,6 +18,7 @@ export function ChatThread({ messages, label = "Conversation", assistantName = "
   const box = useRef<HTMLDivElement>(null);
   const [pinned, setPinned] = useState(true);
   const { transition, distance } = useOrloMotion();
+  const locale = useLocale();
   const last = messages[messages.length - 1];
   useEffect(() => { const el = box.current; if (el && pinned) el.scrollTop = el.scrollHeight; }, [messages, last?.content, pinned]);
   return (
@@ -24,7 +26,7 @@ export function ChatThread({ messages, label = "Conversation", assistantName = "
       <div ref={box} className="orlo-chat__log" role="log" aria-label={label} aria-live="off" tabIndex={0} onScroll={(e) => { const el = e.currentTarget; setPinned(el.scrollHeight - el.scrollTop - el.clientHeight < 40); }}>
         <AnimatePresence initial={false}>
           {messages.map((m) => (
-            <motion.article key={m.id} className="orlo-msg" data-role={m.role} initial={{ opacity: 0, y: distance(8) }} animate={{ opacity: 1, y: 0, transition: transition("reveal") }} aria-label={`${m.role === "user" ? m.author ?? "You" : assistantName}${m.time ? `, ${m.time.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` : ""}`}>
+            <motion.article key={m.id} className="orlo-msg" data-role={m.role} initial={{ opacity: 0, y: distance(8) }} animate={{ opacity: 1, y: 0, transition: transition("reveal") }} aria-label={`${m.role === "user" ? m.author ?? "You" : assistantName}${m.time ? `, ${m.time.toLocaleTimeString(locale, { hour: "numeric", minute: "2-digit" })}` : ""}`}>
               {m.role !== "system" && <span className="orlo-msg__avatar" aria-hidden="true">{m.role === "user" ? <Avatar name={m.author ?? "You"} size="sm" /> : <span className="orlo-msg__bot"><Icons.Sparkle size={16} /></span>}</span>}
               <div className="orlo-msg__bubble">
                 {m.role === "system" ? <p className="orlo-hint" style={{ margin: 0 }}>{m.content}</p> : <Markdown source={m.content || " "} />}

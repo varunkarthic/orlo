@@ -1,4 +1,4 @@
-export { OrloProvider, useImagePolicy, useMaterialStyle, type OrloProviderProps, type ImagePolicy } from "./provider.tsx";
+export { OrloProvider, useImagePolicy, useMaterialStyle, useLocale, type OrloProviderProps, type ImagePolicy } from "./provider.tsx";
 // Actions
 export { Button, ButtonGroup, type ButtonProps } from "./components/Button.tsx";
 export { AsyncButton, type AsyncButtonProps, type AsyncState } from "./components/AsyncButton.tsx";

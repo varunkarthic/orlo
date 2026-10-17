@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Icons } from "../internal/icons.tsx";
 import { useControllable } from "../internal/hooks.ts";
@@ -50,6 +51,7 @@ export function windowRange(scrollTop: number, viewport: number, rowHeight: numb
  */
 export function DataGrid<T>({ label, columns, rows, rowKey, selectable, selection, defaultSelection = [], onSelectionChange, onRowActivate, rowHeight = 44, height = 440, loading, empty = "No rows" }: DataGridProps<T>) {
   const [selected, setSelected] = useControllable(selection, defaultSelection, onSelectionChange);
+  const locale = useLocale();
   const [sort, setSort] = useState<Sort>(null);
   const [widths, setWidths] = useState<number[]>(() => columns.map((c) => c.width ?? 160));
   const [scroll, setScroll] = useState({ top: 0, left: 0 });
@@ -189,7 +191,7 @@ export function DataGrid<T>({ label, columns, rows, rowKey, selectable, selectio
         </div>
       </div>
       <div className="orlo-grid__foot">
-        <span className="orlo-hint" aria-live="polite">{loading ? "Loading rows…" : `${sorted.length.toLocaleString()} rows${selectable ? ` · ${selected.length.toLocaleString()} selected` : ""}`}</span>
+        <span className="orlo-hint" aria-live="polite">{loading ? "Loading rows…" : `${sorted.length.toLocaleString(locale)} rows${selectable ? ` · ${selected.length.toLocaleString(locale)} selected` : ""}`}</span>
         <span className="orlo-hint orlo-grid__keys">Arrows move · Space selects · Enter opens · Alt+←/→ resizes</span>
       </div>
     </div>

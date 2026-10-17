@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
 import { animate } from "motion/react";
 import { useOrloMotion } from "@orlo/motion";
@@ -61,7 +62,8 @@ export function CopyButton({ text, label = "Copy" }: { text: string; label?: str
  * Animates between numeric values with locale formatting. Screen readers get only the settled value;
  * reduced motion shows it instantly. Negative numbers and decimals never pass through misleading states.
  */
-export function AnimatedNumber({ value, format = {}, locale }: { value: number; format?: Intl.NumberFormatOptions; locale?: string }) {
+export function AnimatedNumber({ value, format = {}, locale: localeProp }: { value: number; format?: Intl.NumberFormatOptions; locale?: string }) {
+  const locale = useLocale(localeProp);
   const fmt = new Intl.NumberFormat(locale, format);
   const ref = useRef<HTMLSpanElement>(null);
   const from = useRef(value);

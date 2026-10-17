@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { useId, useMemo, useRef, type KeyboardEvent, type ReactNode } from "react";
 import { useControllable } from "../internal/hooks.ts";
 
@@ -7,8 +8,9 @@ export type TimeFieldProps = { label: ReactNode; value?: string | null; defaultV
  * Segmented time entry ("HH:MM", 24-hour value) that displays the locale's 12- or 24-hour convention.
  * Each segment is a spinbutton: type digits (auto-advance), arrows step and wrap, Backspace clears.
  */
-export function TimeField({ label, value: v, defaultValue = null, onValueChange, locale, minuteStep = 1, help }: TimeFieldProps) {
+export function TimeField({ label, value: v, defaultValue = null, onValueChange, locale: localeProp, minuteStep = 1, help }: TimeFieldProps) {
   const [value, setValue] = useControllable<string | null>(v, defaultValue, onValueChange);
+  const locale = useLocale(localeProp);
   const hour12 = useMemo(() => new Intl.DateTimeFormat(locale, { hour: "numeric" }).resolvedOptions().hour12 ?? false, [locale]);
   const id = useId();
   const refs = useRef<(HTMLSpanElement | null)[]>([]);

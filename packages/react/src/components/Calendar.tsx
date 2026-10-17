@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Icons } from "../internal/icons.tsx";
 import { useControllable } from "../internal/hooks.ts";
@@ -41,13 +42,17 @@ export type CalendarProps = (Single | Range) & {
  * PageUp/PageDown by month, Shift+PageUp/PageDown by year. Locale decides week start, names and digits.
  */
 export function Calendar(props: CalendarProps) {
-  const { locale, min, max, isDateDisabled, autoFocus, label = "Choose date" } = props;
+  const { locale: localeProp, min, max, isDateDisabled, autoFocus, label = "Choose date" } = props;
+  const locale = useLocale(localeProp);
   const range = props.mode === "range";
   const [single, setSingle] = useControllable<Date | null>(range ? undefined : props.value, range ? null : props.defaultValue ?? null, range ? undefined : props.onValueChange);
   const [rng, setRng] = useControllable<DateRange>(range ? props.value : undefined, range ? props.defaultValue ?? { start: null, end: null } : { start: null, end: null }, range ? props.onValueChange : undefined);
-  const today = useMemo(() => { const n = new Date(); return day(n.getFullYear(), n.getMonth(), n.getDate()); }, []);
+  // "Today" is only known in the browser; resolving it after mount keeps server and client markup identical.
+  const [today, setToday] = useState<Date | null>(null);
   const anchor = range ? rng.start : single;
-  const [focus, setFocus] = useState<Date>(anchor ?? today);
+  const [focusState, setFocus] = useState<Date | null>(anchor ?? null);
+  useEffect(() => { const n = new Date(); const t = day(n.getFullYear(), n.getMonth(), n.getDate()); setToday(t); setFocus((f) => f ?? t); }, []);
+  const focus = focusState ?? anchor ?? day(2000, 0, 1);
   const [hover, setHover] = useState<Date | null>(null);
   const grid = useRef<HTMLTableElement>(null);
   const wantFocus = useRef(!!autoFocus);
@@ -90,6 +95,7 @@ export function Calendar(props: CalendarProps) {
     else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(focus); }
   };
 
+  if (!focusState && !anchor) return <div className="orlo-calendar orlo-calendar--pending" aria-busy="true"><div className="orlo-calendar__head"><span className="orlo-skeleton" style={{ inlineSize: "100%", blockSize: 32 }} /></div><span className="orlo-skeleton" style={{ inlineSize: "100%", blockSize: 280, borderRadius: 12 }} /></div>;
   return (
     <div className="orlo-calendar" role="group" aria-labelledby={`${id}-m`}>
       <div className="orlo-calendar__head">
@@ -128,10 +134,11 @@ export function Calendar(props: CalendarProps) {
 export type DatePickerProps = { label: ReactNode; value?: Date | null; defaultValue?: Date | null; onValueChange?: (d: Date | null) => void; locale?: string; min?: Date; max?: Date; placeholder?: string; help?: ReactNode };
 
 /** Button-shaped field that opens a Calendar in a popover (a docked sheet on phones). Selecting closes it and returns focus. */
-export function DatePicker({ label, value: v, defaultValue = null, onValueChange, locale, min, max, placeholder = "Select a date", help }: DatePickerProps) {
+export function DatePicker({ label, value: v, defaultValue = null, onValueChange, locale: localeProp, min, max, placeholder = "Select a date", help }: DatePickerProps) {
   const [value, setValue] = useControllable<Date | null>(v, defaultValue, onValueChange);
   const [open, setOpen] = useState(false);
   const id = useId();
+  const locale = useLocale(localeProp);
   const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
   return (
     <div className="orlo-field">

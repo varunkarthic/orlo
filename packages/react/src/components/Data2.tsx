@@ -1,3 +1,4 @@
+import { useLocale } from "../provider.tsx";
 import { Fragment, useEffect, useId, useMemo, useState, type ReactNode } from "react";
 import { Icons } from "../internal/icons.tsx";
 import { useControllable } from "../internal/hooks.ts";
@@ -29,7 +30,8 @@ export function Chip({ children, icon, selected: s, defaultSelected = false, onS
 export type TimelineItem = { title: ReactNode; time?: Date | string; body?: ReactNode; tone?: "neutral" | "accent" | "success" | "warning" | "error"; icon?: ReactNode };
 
 /** Chronological events as an ordered list with machine-readable times. */
-export function Timeline({ items, locale }: { items: TimelineItem[]; locale?: string }) {
+export function Timeline({ items, locale: localeProp }: { items: TimelineItem[]; locale?: string }) {
+  const locale = useLocale(localeProp);
   const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
   return (
     <ol className="orlo-timeline">
@@ -122,7 +124,7 @@ export type HeatmapProps = { data: Record<string, number>; end?: Date; weeks?: n
  * Calendar heatmap (activity over time). Five intensity steps that also differ in pattern density for low-vision users,
  * roving keyboard focus across days, and a readable label for every cell.
  */
-export function Heatmap({ data, end = new Date(), weeks = 20, label, locale, unit = "contributions" }: HeatmapProps) {
+export function Heatmap({ data, end = new Date(), weeks = 20, label, locale: localeProp, unit = "contributions" }: HeatmapProps) {
   const days = useMemo(() => {
     const e = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 12);
     const startOffset = e.getDay() + (weeks - 1) * 7;
@@ -130,6 +132,7 @@ export function Heatmap({ data, end = new Date(), weeks = 20, label, locale, uni
   }, [end, weeks]);
   const max = Math.max(1, ...Object.values(data));
   const [focus, setFocus] = useState(days.length - 1);
+  const locale = useLocale(localeProp);
   const fmt = new Intl.DateTimeFormat(locale, { weekday: "short", month: "short", day: "numeric" });
   const key = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const level = (n: number) => (n <= 0 ? 0 : Math.min(4, Math.ceil((n / max) * 4)));
@@ -172,24 +175,30 @@ export function Highlight({ text, query }: { text: string; query: string }) {
 }
 
 /** "3 minutes ago" that stays current (updating less often as it ages) with the exact time in a tooltip and datetime attribute. */
-export function RelativeTime({ date, locale }: { date: Date; locale?: string }) {
-  const [now, setNow] = useState(() => Date.now());
+export function RelativeTime({ date, locale: localeProp }: { date: Date; locale?: string }) {
+  const locale = useLocale(localeProp);
+  const [now, setNow] = useState(() => date.getTime());
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setNow(Date.now()); setMounted(true); }, []);
   const diff = (date.getTime() - now) / 1000;
   const abs = Math.abs(diff);
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), abs < 60 ? 1000 : abs < 3600 ? 30000 : 600000); return () => clearInterval(t); }, [abs]);
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const [n, u]: [number, Intl.RelativeTimeFormatUnit] = abs < 45 ? [Math.round(diff), "second"] : abs < 2700 ? [Math.round(diff / 60), "minute"] : abs < 79200 ? [Math.round(diff / 3600), "hour"] : abs < 2592000 ? [Math.round(diff / 86400), "day"] : abs < 31536000 ? [Math.round(diff / 2592000), "month"] : [Math.round(diff / 31536000), "year"];
   const exact = new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "short" }).format(date);
-  return <time dateTime={date.toISOString()} title={exact} className="orlo-reltime">{rtf.format(n, u)}</time>;
+  // Before mount, show the absolute date: the server can't know "now", so relative text would mismatch on hydration.
+  return <time dateTime={date.toISOString()} title={exact} className="orlo-reltime">{mounted ? rtf.format(n, u) : new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(date)}</time>;
 }
 
 /** Live countdown. Ticks visually every second but announces only at meaningful moments, and never goes negative. */
 export function Countdown({ to, label, onDone }: { to: Date; label: string; onDone?: () => void }) {
-  const [left, setLeft] = useState(() => Math.max(0, to.getTime() - Date.now()));
+  const [left, setLeft] = useState<number | null>(null);
   useEffect(() => {
+    setLeft(Math.max(0, to.getTime() - Date.now()));
     const t = setInterval(() => { const l = Math.max(0, to.getTime() - Date.now()); setLeft(l); if (l === 0) { clearInterval(t); onDone?.(); } }, 1000);
     return () => clearInterval(t);
   }, [to, onDone]);
+  if (left === null) return <div className="orlo-countdown" role="timer" aria-label={label}>{["days", "hours", "minutes", "seconds"].slice(1).map((n) => <span key={n} className="orlo-countdown__unit"><span className="orlo-countdown__num">––</span><span className="orlo-hint">{n}</span></span>)}</div>;
   const s = Math.floor(left / 1000), parts = [Math.floor(s / 86400), Math.floor((s % 86400) / 3600), Math.floor((s % 3600) / 60), s % 60];
   const names = ["days", "hours", "minutes", "seconds"];
   const announce = s === 0 ? `${label}: time is up` : s % 60 === 0 && s <= 600 ? `${label}: ${Math.floor(s / 60)} minutes left` : "";

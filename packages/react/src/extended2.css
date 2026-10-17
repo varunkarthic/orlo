@@ -135,6 +135,8 @@
 .orlo-chart__zero { stroke: var(--orlo-color-border-control); }
 .orlo-chart__ytick, .orlo-chart__xtick { fill: var(--orlo-color-fg-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
 .orlo-chart__ytick { text-anchor: end; } .orlo-chart__xtick { text-anchor: middle; }
+.orlo-chart__morph { transition: d var(--orlo-duration-spatial-default) var(--orlo-ease-spatial-default); }
+@media (prefers-reduced-motion: reduce) { .orlo-chart__morph { transition: none; } }
 .orlo-chart__crosshair { stroke: var(--orlo-color-fg-muted); stroke-dasharray: 3 3; }
 .orlo-chart__bar[data-focus] { stroke: var(--orlo-color-fg); stroke-width: 2; }
 .orlo-chart__tip { position: absolute; inset-block-start: 8px; display: grid; gap: 3px; min-inline-size: 9rem; padding: 8px 10px; border-radius: var(--orlo-radius-md); background: var(--orlo-material-bg); -webkit-backdrop-filter: blur(var(--orlo-material-blur)); backdrop-filter: blur(var(--orlo-material-blur)); border: 1px solid var(--orlo-color-border); box-shadow: var(--orlo-shadow-3); font-size: var(--orlo-text-xs); pointer-events: none; }
