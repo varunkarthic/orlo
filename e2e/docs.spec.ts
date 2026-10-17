@@ -138,3 +138,22 @@ test("theme studio generates an accessible theme", async ({ page, isMobile }) =>
   await expect(page.locator(".code pre").first()).toContainText("--orlo-color-accent:");
   await expect(page.getByText(/Adjusted to #/)).toBeVisible();
 });
+
+test("sign-up flow: validation focus, back keeps input, failure then retry", async ({ page }) => {
+  await page.goto("start/examples/");
+  const wiz = page.locator("#wizard");
+  await wiz.getByRole("button", { name: "Continue" }).click();
+  await expect(wiz.getByLabel("Full name")).toBeFocused();
+  await wiz.getByLabel("Full name").fill("Grace Hopper");
+  await wiz.getByLabel("Email").fill("grace@example.com");
+  await wiz.getByRole("button", { name: "Continue" }).click();
+  await wiz.getByRole("button", { name: "Back" }).click();
+  await expect(wiz.getByLabel("Full name")).toHaveValue("Grace Hopper");
+  await wiz.getByRole("button", { name: "Continue" }).click();
+  await wiz.getByRole("button", { name: "Continue" }).click();
+  await wiz.getByLabel("I accept the terms").check();
+  await wiz.getByRole("button", { name: "Create workspace" }).click();
+  await expect(wiz.getByRole("alert").filter({ hasText: "Couldn’t create" })).toBeVisible({ timeout: 5000 });
+  await wiz.getByRole("button", { name: "Try again" }).click();
+  await expect(page.getByText("Welcome, Grace")).toBeVisible({ timeout: 5000 });
+});
