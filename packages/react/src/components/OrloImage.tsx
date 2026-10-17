@@ -39,19 +39,19 @@ export function OrloImage({ src, alt, decorative, ratio = "4 / 3", caption, maxR
           draggable={false}
         />
       ) : (
-        <div className="orlo-image__placeholder" role={decorative ? "presentation" : "img"} aria-label={decorative ? undefined : alt} aria-busy={state === "loading" || undefined}>
-          {state === "loading" ? <span className="orlo-skeleton" aria-hidden="true" style={{ position: "absolute", inset: 0, borderRadius: 0 }} /> : null}
-          {state !== "loading" && (
-            <>
-              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
-                <path d="M4 18l5-6 4 4 3-3 4 5M4 5h16v14H4z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-              </svg>
-              {!decorative && label ? <span className="orlo-image__caption">{label}</span> : null}
-              {state === "failed" && (
-                <button type="button" className="orlo-image__retry" onClick={retry}>Try again</button>
-              )}
-            </>
-          )}
+        <div className="orlo-image__placeholder" aria-busy={state === "loading" || undefined}>
+          {state === "loading" && <span className="orlo-skeleton" aria-hidden="true" style={{ position: "absolute", inset: 0, borderRadius: 0 }} />}
+          <span className="orlo-image__label" role={decorative ? undefined : "img"} aria-label={decorative ? undefined : alt} aria-hidden={decorative || undefined}>
+            {state !== "loading" && (
+              <>
+                <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                  <path d="M4 18l5-6 4 4 3-3 4 5M4 5h16v14H4z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+                </svg>
+                {!decorative && label ? <span className="orlo-image__caption" aria-hidden="true">{label}</span> : null}
+              </>
+            )}
+          </span>
+          {state === "failed" && <button type="button" className="orlo-image__retry" onClick={retry}>Try again</button>}
         </div>
       )}
     </figure>

@@ -88,7 +88,10 @@ export function useFocusScope(ref: RefObject<HTMLElement | null>, active: boolea
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", onKey);
-      if (previous && previous.isConnected && !(previous as HTMLButtonElement).disabled) previous.focus({ preventScroll: true });
+      // Deferred: sibling cleanups (inert removal) run in the same commit, and inert elements refuse focus.
+      queueMicrotask(() => {
+        if (previous && previous.isConnected && !(previous as HTMLButtonElement).disabled && !previous.closest("[inert]")) previous.focus({ preventScroll: true });
+      });
     };
   }, [active, trap, ref, initial]);
 }

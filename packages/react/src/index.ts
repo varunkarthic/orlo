@@ -41,4 +41,4 @@ export { useImageState, type ImageState } from "./components/useImageState.ts";
 export { Wordmark, Mark } from "./components/Brand.tsx";
 export { Icons, type IconName } from "./internal/icons.tsx";
 export { computePosition, type Placement } from "./internal/position.ts";
-export { manifest, type ManifestEntry, type Maturity } from "./manifest.ts";
+export { manifest, families, type ManifestEntry, type Maturity } from "./manifest.ts";

@@ -73,7 +73,7 @@
   .orlo-badge {
     display: inline-flex; align-items: center; gap: 0.3em; padding: 0.1rem 0.45rem;
     border-radius: var(--orlo-radius-sm); border: 1px solid color-mix(in oklab, currentColor 40%, transparent);
-    background: color-mix(in oklab, currentColor 8%, transparent);
+    background: color-mix(in oklab, var(--orlo-color-surface-raised), currentColor 7%);
     font-size: var(--orlo-text-xs); font-weight: 600; line-height: 1.45; white-space: nowrap; vertical-align: middle;
   }
   .orlo-badge[data-tone="neutral"] { color: var(--orlo-color-fg-muted); }
@@ -177,7 +177,7 @@
   .orlo-slider input:focus-visible::-moz-range-thumb { outline: 2px solid var(--orlo-color-focus); outline-offset: 2px; }
 
   /* ---------- Segmented control ---------- */
-  .orlo-segmented { display: inline-flex; padding: 3px; gap: 2px; border-radius: calc(var(--orlo-radius-md) + 3px); background: color-mix(in oklab, var(--orlo-color-border) 70%, transparent); }
+  .orlo-segmented { max-inline-size: 100%; overflow-x: auto; scrollbar-width: none; display: inline-flex; padding: 3px; gap: 2px; border-radius: calc(var(--orlo-radius-md) + 3px); background: color-mix(in oklab, var(--orlo-color-border) 70%, transparent); }
   .orlo-segmented__item {
     position: relative; min-block-size: calc(var(--orlo-control-h) - 6px); padding-inline: var(--orlo-space-3);
     border: 0; background: transparent; color: var(--orlo-color-fg-muted); font: inherit; font-weight: 500; cursor: pointer; border-radius: var(--orlo-radius-md);
@@ -260,7 +260,7 @@
   .orlo-avatar__status[data-status="offline"] { background: var(--orlo-color-canvas); box-shadow: inset 0 0 0 2px var(--orlo-color-fg-muted); }
   .orlo-avatar-group { display: inline-flex; }
   .orlo-avatar-group .orlo-avatar { box-shadow: 0 0 0 2px var(--orlo-color-canvas); }
-  .orlo-avatar-group .orlo-avatar + .orlo-avatar { margin-inline-start: calc(var(--s) * -0.28); }
+  .orlo-avatar-group .orlo-avatar + .orlo-avatar { margin-inline-start: calc(var(--s) * -0.16); }
 
   /* ---------- Table ---------- */
   .orlo-table-wrap { overflow: auto; border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-lg); max-inline-size: 100%; background: var(--orlo-color-surface); }
@@ -304,6 +304,7 @@
     position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--orlo-space-2);
     padding: var(--orlo-space-3); text-align: center; color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm);
   }
+  .orlo-image__label { display: grid; justify-items: center; gap: var(--orlo-space-2); }
   .orlo-image__caption { overflow-wrap: anywhere; max-inline-size: 28ch; }
   .orlo-image__retry {
     min-block-size: 2rem; padding-inline: var(--orlo-space-3); font: inherit; font-size: var(--orlo-text-sm); font-weight: 600;

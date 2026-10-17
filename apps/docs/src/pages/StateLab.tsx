@@ -20,15 +20,16 @@ export function StateLab() {
   const track = (k: string) => (s: ImageState) => setStates((p) => (p[k] === s ? p : { ...p, [k]: s }));
   return (
     <>
+      <p className="eyebrow">Labs</p>
       <h1>State Lab</h1>
       <p className="lead">Forced failures and delays, all simulated locally. Nothing here touches the network.</p>
       <p><Button variant="subtle" onClick={() => setRun((n) => n + 1)}>Replay image loads</Button></p>
       <h2>Images</h2>
       <div className="grid">
-        <figure style={{ margin: 0 }}><OrloImage key={`a${run}`} src={photo} alt="Immediate" onStateChange={track("fast")} /><figcaption>Immediate · {states.fast}</figcaption></figure>
-        <figure style={{ margin: 0 }}><OrloImage key={`b${run}`} src={slow} alt="Slow image (simulated 2.5s)" onStateChange={track("slow")} /><figcaption>Slow, 2.5 s simulated · {states.slow}</figcaption></figure>
-        <figure style={{ margin: 0 }}><OrloImage key={`c${run}`} src="./__missing__.png" alt="Missing file (404)" maxRetries={2} onStateChange={track("404")} /><figcaption>404, two bounded retries · {states["404"]}</figcaption></figure>
-        <figure style={{ margin: 0 }}>
+        <figure className="lab-fig"><OrloImage key={`a${run}`} src={photo} alt="Immediate" onStateChange={track("fast")} /><figcaption>Immediate · {states.fast}</figcaption></figure>
+        <figure className="lab-fig"><OrloImage key={`b${run}`} src={slow} alt="Slow image (simulated 2.5s)" onStateChange={track("slow")} /><figcaption>Slow, 2.5 s simulated · {states.slow}</figcaption></figure>
+        <figure className="lab-fig"><OrloImage key={`c${run}`} src="./__missing__.png" alt="Missing file (404)" maxRetries={2} onStateChange={track("404")} /><figcaption>404, two bounded retries · {states["404"]}</figcaption></figure>
+        <figure className="lab-fig">
           <OrloProvider images="off"><OrloImage key={`d${run}`} src={photo} alt="Images switched off" onStateChange={track("off")} /></OrloProvider>
           <figcaption>Images off for this subtree · {states.off}</figcaption>
         </figure>

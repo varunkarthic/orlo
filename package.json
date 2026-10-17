@@ -12,9 +12,13 @@
     "build:rtd": "npm run build:tokens && npm run build -w @orlo/docs",
     "dev": "npm run build:tokens && npm run dev -w @orlo/docs",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "serve:rtd": "node scripts/serve-rtd.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",

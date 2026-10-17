@@ -4,5 +4,5 @@
     "jsx": "react-jsx", "strict": true, "noEmit": true, "skipLibCheck": true, "isolatedModules": true,
     "allowImportingTsExtensions": true, "verbatimModuleSyntax": true, "types": ["vite/client"]
   },
-  "include": ["packages/*/src", "apps/docs/src"]
+  "include": ["packages/*/src", "apps/docs/src", "vitest.setup.ts"]
 }
