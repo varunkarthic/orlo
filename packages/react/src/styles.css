@@ -1,5 +1,6 @@
-/* Orlo component styles. Everything reads tokens; nothing here hardcodes a colour. */
+/* Orlo component styles. Colour comes from tokens, except the always-dark media viewer chrome. */
 @layer orlo.base, orlo.components;
+@import "./extended.css" layer(orlo.components);
 
 @layer orlo.base {
   .orlo-root, .orlo-portal {

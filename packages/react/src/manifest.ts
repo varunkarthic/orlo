@@ -3,7 +3,7 @@ export type Maturity = "planned" | "prototype" | "beta" | "stable";
 export type ManifestEntry = {
   name: string;
   slug: string;
-  family: "Actions" | "Forms" | "Navigation" | "Overlays" | "Disclosure" | "Data display" | "Feedback" | "Media" | "Layout";
+  family: "Actions" | "Forms" | "Pickers" | "Navigation" | "Overlays" | "Disclosure" | "Data display" | "Feedback" | "Media" | "Layout" | "Specialty";
   maturity: Maturity;
   summary: string;
   /** What has actually been verified; empty means nothing yet. */
@@ -52,6 +52,60 @@ export const manifest: ManifestEntry[] = [
   { name: "Skeleton", slug: "skeleton", family: "Feedback", maturity: "beta", summary: "Geometry-reserving placeholder; static under reduced motion.", tested: [] },
   { name: "EmptyState", slug: "empty-state", family: "Feedback", maturity: "beta", summary: "Designed nothing-here-yet state with a next step.", tested: [] },
   { name: "OrloImage", slug: "image", family: "Media", maturity: "beta", summary: "Image lifecycle with bounded retry, designed failure and a no-image mode.", tested: ["unit"] },
+  { name: "ToggleButton", slug: "toggle-button", family: "Actions", maturity: "beta", summary: "A button that stays on, for formatting and view options.", tested: [] },
+  { name: "ToggleGroup", slug: "toggle-group", family: "Actions", maturity: "beta", summary: "Toolbar of toggles with one tab stop and arrow-key movement.", tested: [] },
+  { name: "SplitButton", slug: "split-button", family: "Actions", maturity: "beta", summary: "Primary action with a menu of related alternatives.", tested: [] },
+  { name: "Fab", slug: "fab", family: "Actions", maturity: "beta", summary: "Floating action; extended label collapses while scrolling down.", tested: [] },
+  { name: "SpeedDial", slug: "speed-dial", family: "Actions", maturity: "beta", summary: "A floating action that fans out a few labelled actions.", tested: [] },
+  { name: "PasswordField", slug: "password-field", family: "Forms", maturity: "beta", summary: "Reveal that keeps the caret, Caps Lock warning and strength feedback.", tested: ["unit"] },
+  { name: "NumberField", slug: "number-field", family: "Forms", maturity: "beta", summary: "Locale-aware spinbutton with clamping and hold-to-repeat steppers.", tested: ["unit"] },
+  { name: "SearchField", slug: "search-field", family: "Forms", maturity: "beta", summary: "Debounced, IME-safe search with clear and busy states.", tested: [] },
+  { name: "Combobox", slug: "combobox", family: "Forms", maturity: "beta", summary: "Editable autocomplete with local or remote filtering.", tested: ["unit"] },
+  { name: "TagInput", slug: "tag-input", family: "Forms", maturity: "beta", summary: "Tokens from text; paste splits, duplicates explain themselves.", tested: ["unit"] },
+  { name: "PinInput", slug: "pin-input", family: "Forms", maturity: "beta", summary: "One-time code boxes with paste-to-fill and autofill.", tested: ["unit"] },
+  { name: "RadioCards", slug: "radio-cards", family: "Forms", maturity: "beta", summary: "Large, explanatory choices backed by native radios.", tested: [] },
+  { name: "RangeSlider", slug: "range-slider", family: "Forms", maturity: "beta", summary: "Two thumbs that cannot cross; track press moves the nearest.", tested: [] },
+  { name: "Rating", slug: "rating", family: "Forms", maturity: "beta", summary: "Star rating radiogroup with exact fractional read-only display.", tested: [] },
+  { name: "Calendar", slug: "calendar", family: "Pickers", maturity: "beta", summary: "Locale-aware month grid with full keyboard and range mode.", tested: ["unit", "keyboard"] },
+  { name: "DatePicker", slug: "date-picker", family: "Pickers", maturity: "beta", summary: "Field that opens a calendar popover and returns focus.", tested: [] },
+  { name: "TimeField", slug: "time-field", family: "Pickers", maturity: "beta", summary: "Segmented time entry in the locale’s 12- or 24-hour form.", tested: [] },
+  { name: "ColorPicker", slug: "color-picker", family: "Pickers", maturity: "beta", summary: "Area, hue, hex, swatches, eyedropper and a live contrast readout.", tested: [] },
+  { name: "FileDropzone", slug: "file-dropzone", family: "Pickers", maturity: "beta", summary: "Shows accept/reject before release and explains every rejection.", tested: ["unit"] },
+  { name: "NavigationRail", slug: "navigation-rail", family: "Navigation", maturity: "beta", summary: "Vertical rail of top-level destinations with a travelling pill.", tested: [] },
+  { name: "BottomNavigation", slug: "bottom-navigation", family: "Navigation", maturity: "beta", summary: "Phone navigation bar that respects the safe area.", tested: [] },
+  { name: "Steps", slug: "steps", family: "Navigation", maturity: "beta", summary: "Progress through a known sequence, never colour alone.", tested: [] },
+  { name: "TableOfContents", slug: "table-of-contents", family: "Navigation", maturity: "beta", summary: "On-this-page links with scrollspy; works without JavaScript.", tested: [] },
+  { name: "ContextMenu", slug: "context-menu", family: "Overlays", maturity: "beta", summary: "Right-click, Shift+F10 or long-press; kept on screen.", tested: [] },
+  { name: "HoverCard", slug: "hover-card", family: "Overlays", maturity: "beta", summary: "Rich preview after hover intent or keyboard focus.", tested: [] },
+  { name: "Tour", slug: "tour", family: "Overlays", maturity: "beta", summary: "Skippable spotlight walkthrough that skips missing targets.", tested: [] },
+  { name: "TreeView", slug: "tree-view", family: "Disclosure", maturity: "beta", summary: "Hierarchy with the full WAI-ARIA tree keyboard model.", tested: ["unit", "keyboard"] },
+  { name: "ReadMore", slug: "read-more", family: "Disclosure", maturity: "beta", summary: "Whole-line truncation with a toggle only when needed.", tested: [] },
+  { name: "Splitter", slug: "splitter", family: "Layout", maturity: "beta", summary: "Resizable panes with a keyboard-operable separator.", tested: [] },
+  { name: "ScrollArea", slug: "scroll-area", family: "Layout", maturity: "beta", summary: "Scroll region with edge shadows and keyboard focus.", tested: [] },
+  { name: "Chip", slug: "chip", family: "Data display", maturity: "beta", summary: "Filter, assist and removable input chips.", tested: [] },
+  { name: "DataList", slug: "data-list", family: "Data display", maturity: "beta", summary: "Key–value pairs as a description list that adapts to its container.", tested: [] },
+  { name: "Timeline", slug: "timeline", family: "Data display", maturity: "beta", summary: "Chronological events with machine-readable times.", tested: [] },
+  { name: "Sparkline", slug: "sparkline", family: "Data display", maturity: "beta", summary: "Inline trend that breaks at gaps and carries a data table.", tested: [] },
+  { name: "Meter", slug: "meter", family: "Data display", maturity: "beta", summary: "Value in a range with semantic zones, as bar or gauge.", tested: [] },
+  { name: "Highlight", slug: "highlight", family: "Data display", maturity: "beta", summary: "Accent-insensitive match highlighting.", tested: ["unit"] },
+  { name: "RelativeTime", slug: "relative-time", family: "Data display", maturity: "beta", summary: "“3 minutes ago” that stays current, with the exact time on hand.", tested: [] },
+  { name: "Banner", slug: "banner", family: "Feedback", maturity: "beta", summary: "Page-level message that pushes content instead of covering it.", tested: [] },
+  { name: "OfflineIndicator", slug: "offline-indicator", family: "Feedback", maturity: "beta", summary: "Calm offline banner and a brief back-online confirmation.", tested: [] },
+  { name: "ProgressRing", slug: "progress-ring", family: "Feedback", maturity: "beta", summary: "Compact circular progress, determinate or indeterminate.", tested: [] },
+  { name: "Carousel", slug: "carousel", family: "Media", maturity: "beta", summary: "Native scroll-snap slides; autoplay off by default and pausable.", tested: [] },
+  { name: "BeforeAfter", slug: "before-after", family: "Media", maturity: "beta", summary: "Drag or arrow-key comparison of two images.", tested: [] },
+  { name: "Lightbox", slug: "lightbox", family: "Media", maturity: "beta", summary: "Gallery that opens full-screen with swipe and keyboard.", tested: [] },
+  { name: "Knob", slug: "knob", family: "Specialty", maturity: "beta", summary: "Rotary slider for studio-style tools; drag, arrows, double-click reset.", tested: [] },
+  { name: "HoldToConfirm", slug: "hold-to-confirm", family: "Specialty", maturity: "beta", summary: "Press and hold to confirm irreversible actions; release cancels.", tested: [] },
+  { name: "SignaturePad", slug: "signature-pad", family: "Specialty", maturity: "beta", summary: "Pressure-aware drawing with undo and a typed alternative.", tested: [] },
+  { name: "ShortcutRecorder", slug: "shortcut-recorder", family: "Specialty", maturity: "beta", summary: "Records key combos and warns about browser-reserved ones.", tested: ["unit"] },
+  { name: "ReorderableList", slug: "reorderable-list", family: "Specialty", maturity: "beta", summary: "Drag or keyboard reordering with spoken positions.", tested: [] },
+  { name: "Heatmap", slug: "heatmap", family: "Specialty", maturity: "beta", summary: "Calendar activity grid with keyboard exploration.", tested: [] },
+  { name: "JsonTree", slug: "json-tree", family: "Specialty", maturity: "beta", summary: "Collapsible JSON explorer with labelled types.", tested: [] },
+  { name: "DiffViewer", slug: "diff-viewer", family: "Specialty", maturity: "beta", summary: "Line diff with +/− gutters and a spoken summary.", tested: ["unit"] },
+  { name: "CodeBlock", slug: "code-block", family: "Specialty", maturity: "beta", summary: "Code with copy, line numbers, highlights and wrap.", tested: [] },
+  { name: "Countdown", slug: "countdown", family: "Specialty", maturity: "beta", summary: "Live timer that announces only meaningful moments.", tested: [] },
+  { name: "Marquee", slug: "marquee", family: "Specialty", maturity: "beta", summary: "Ambient scroller that pauses on hover, focus and reduced motion.", tested: [] },
 ];
 
-export const families = [...new Set(manifest.map((m) => m.family))];
+export const families: ManifestEntry["family"][] = ["Actions", "Forms", "Pickers", "Navigation", "Overlays", "Disclosure", "Layout", "Data display", "Feedback", "Media", "Specialty"];
