@@ -11,6 +11,7 @@ export function FoundationsOverview({ root }: { root: string }) {
         <LinkCard href={`${root}foundations/accessibility/`} title="Accessibility" body="WCAG 2.2 AA as the target, and how it's tested." />
         <LinkCard href={`${root}foundations/adaptive/`} title="Adaptive design" body="Space, input, zoom, direction and preferences." />
         <LinkCard href={`${root}foundations/interaction-states/`} title="Interaction states" body="One consistent language for hover, focus, press and more." />
+        <LinkCard href={`${root}foundations/lifecycle/`} title="Lifecycle & composition" body="How a component starts, responds, interrupts, resolves and hands off." />
         <LinkCard href={`${root}foundations/layering/`} title="Layering" body="Stacking, portals, focus ownership and dismissal order." />
         <LinkCard href={`${root}foundations/async-states/`} title="Async states" body="Loading, failure, empty, offline, retry." />
         <LinkCard href={`${root}foundations/edge-cases/`} title="Edge cases" body="The Details Lab: flawed beside fixed." />
@@ -135,6 +136,38 @@ export function InteractionStates() {
       </tbody></table>
       <H2>Disabled is not one thing</H2>
       <p>Intentionally unavailable, permission-gated, busy and invalid look and read differently. Prefer explaining why something is unavailable (in nearby text or a description) over silently greying it out.</p>
+    </>
+  );
+}
+
+const lifecycle = [
+  ["1. Stable", "The first frame is complete: labels are present, geometry is reserved and the control has its real semantics. Nothing needs motion to become usable."],
+  ["2. Acknowledge", "Pointer, keyboard and assistive technology input receive an immediate, equivalent response. Hover is an enhancement, never the only path."],
+  ["3. Change", "A component moves only to explain hierarchy, cause, destination or continuity. It uses a named Orlo motion purpose and preserves content, focus and hit targets."],
+  ["4. Resolve", "Success, selection and completion make the next state unmistakable. The resulting state remains available long enough to be understood and acted on."],
+  ["5. Interrupt", "A new input redirects the current animation from its current velocity; it does not restart, jump or leave an invisible interaction layer behind."],
+  ["6. Recover", "Cancellation, error, offline and unmount paths restore a safe, intelligible state. Focus returns only to a live, enabled element."],
+] as const;
+
+export function Lifecycle() {
+  return (
+    <>
+      <PageHeader eyebrow="Foundations" title="Lifecycle & composition" lead="Orlo defines components by their whole journey, not their resting frame. This contract is shown on every component page and is the bar for new work." />
+      <section className="lifecycle" aria-label="Component lifecycle contract">
+        {lifecycle.map(([step, detail], i) => <article className="lifecycle__step" key={step}><span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span><div><h2>{step}</h2><p>{detail}</p></div></article>)}
+      </section>
+      <H2>When components work together</H2>
+      <table className="doc" tabIndex={0}><thead><tr><th>Relationship</th><th>Contract</th></tr></thead><tbody>
+        <tr><td>Trigger → overlay</td><td>The trigger keeps its identity. The overlay owns focus, Escape and outside dismissal while open; on close, focus returns only when the trigger remains valid.</td></tr>
+        <tr><td>Field → validation</td><td>Validation appears near its cause, preserves layout where practical and gives words, an icon or shape in addition to colour.</td></tr>
+        <tr><td>Action → async result</td><td>Busy work keeps its geometry and focus. A result explains what happened, what is safe, and the next action.</td></tr>
+        <tr><td>Collection → detail</td><td>Selection is represented in the collection before a detail view opens. Closing a detail restores the reader to the same logical item.</td></tr>
+        <tr><td>Nested surfaces</td><td>The topmost surface owns the space. Layer, inertness, scroll lock and dismissal are coordinated rather than independently guessed.</td></tr>
+      </tbody></table>
+      <H2>Implementation checklist</H2>
+      <Bullets items={["Design the initial, loading, empty, success, error, cancelled and unavailable states before polishing the happy path.", "Route movement through useOrloMotion(): choose a purpose, carry gesture velocity into a settle, and test full, reduced and off modes.", "Exercise pointer, touch, keyboard, screen reader, narrow layout, RTL and interruption paths in the same composed flow.", "Document component-specific exceptions in Highlights and Edge cases; do not hide an unsupported lifecycle behind a visual variant."]} />
+      <H2>What this does not mean</H2>
+      <p>A lifecycle is not an excuse to animate every state. Static information, instant local toggles and low-confidence changes can remain quiet. The contract requires clarity and recovery; motion is only one possible tool.</p>
     </>
   );
 }

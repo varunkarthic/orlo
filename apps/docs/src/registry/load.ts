@@ -25,5 +25,9 @@ export function chunkFor(slug: string): Chunk {
   const fam = manifest.find((m) => m.slug === slug)?.family ?? "Specialty";
   return byFamily[fam] ?? "advanced";
 }
-export async function loadDoc(slug: string): Promise<Doc | undefined> { return (await loaders[chunkFor(slug)]())[slug]; }
+const PLAYGROUNDS = new Set(["button", "async-button", "slider", "switch", "badge", "alert", "tooltip", "progress", "avatar", "chip", "rating", "text-field", "checkbox", "segmented-control", "spinner"]);
+export async function loadDoc(slug: string): Promise<Doc | undefined> {
+  const [doc, pg] = await Promise.all([loaders[chunkFor(slug)]().then((m) => m[slug]), PLAYGROUNDS.has(slug) ? import("./playgrounds.tsx").then((m) => m.playgrounds[slug]) : undefined]);
+  return doc && pg ? { ...doc, playground: pg } : doc;
+}
 export async function loadAllDocs(): Promise<Record<string, Doc>> { return Object.assign({}, ...(await Promise.all(Object.values(loaders).map((l) => l())))); }

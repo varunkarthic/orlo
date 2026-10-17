@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { PlaygroundDef } from "../playground.tsx";
 
 export type Doc = {
   /** Hero demo on the Overview tab. */
@@ -21,6 +22,8 @@ export type Doc = {
   semantics?: string[];
   /** Edge cases this component handles deliberately. */
   edge?: string[];
+  /** Live prop playground. */
+  playground?: PlaygroundDef;
 };
 
 export const controlSpecs: [string, string][] = [["Height", "--orlo-control-h"], ["Horizontal padding", "--orlo-control-pad"], ["Corner radius", "--orlo-radius-md"], ["Focus ring", "--orlo-color-focus"]];

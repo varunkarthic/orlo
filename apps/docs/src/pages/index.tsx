@@ -23,7 +23,7 @@ export async function loadPage(route: string): Promise<PageRender> {
     if (route === "foundations/edge-cases") { const { DetailsLab } = await import("./DetailsLab.tsx"); return () => <DetailsLab />; }
     if (route === "foundations/failures") { const { Failures } = await import("./Failures.tsx"); return () => <Failures />; }
     const f = await import("./FoundationsPages.tsx");
-    return ({ root }) => ({ foundations: <f.FoundationsOverview root={root} />, "foundations/principles": <f.Principles />, "foundations/accessibility": <f.Accessibility root={root} />, "foundations/adaptive": <f.Adaptive />, "foundations/interaction-states": <f.InteractionStates />, "foundations/layering": <f.Layering />, "foundations/writing": <f.Writing />, "foundations/tokens": <f.TokensPage /> } as Record<string, ReactNode>)[route] ?? <h1>Not found</h1>;
+    return ({ root }) => ({ foundations: <f.FoundationsOverview root={root} />, "foundations/principles": <f.Principles />, "foundations/accessibility": <f.Accessibility root={root} />, "foundations/adaptive": <f.Adaptive />, "foundations/interaction-states": <f.InteractionStates />, "foundations/lifecycle": <f.Lifecycle />, "foundations/layering": <f.Layering />, "foundations/writing": <f.Writing />, "foundations/tokens": <f.TokensPage /> } as Record<string, ReactNode>)[route] ?? <h1>Not found</h1>;
   }
   if (route.startsWith("styles")) {
     if (route === "styles/motion") { const { MotionLab } = await import("./MotionLab.tsx"); return () => <MotionLab />; }

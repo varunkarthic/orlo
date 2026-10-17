@@ -11,7 +11,7 @@ Orlo is built on the idea that an interface is shaped as much by what happens *b
 
 The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is the finish that holds the whole together, even when nobody notices it.
 
-> **Status: beta, pre-release.** 91 components exist and are tested in code. None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
+> **Status: beta, pre-release.** 121 components are documented in source; automated coverage is recorded per component in [`components.json`](components.json). None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
 
 ## What makes it different
 
@@ -22,6 +22,8 @@ The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is th
 <img src="docs/media/details-lab.png" alt="Details Lab: a flawed card slicing through text beside Orlo's version with a scrim" width="800">
 
 **One motion grammar.** Components ask for a purpose (`press`, `reveal`, `overlay`, `shared`) and Orlo supplies a spring. A test enforces that every preset stays under 5% overshoot and settles within 700 ms. Interrupt an animation and it redirects from its current velocity. Reduced motion turns movement into a fade, and `off` makes changes instant.
+
+**A lifecycle, not a resting frame.** Every component page now carries the same behavioural contract: stable entry, equivalent input acknowledgement, meaningful change, clear resolution, interruption and safe recovery. The [Lifecycle & composition guide](apps/docs/src/pages/FoundationsPages.tsx) defines how overlays, fields, asynchronous actions and nested surfaces hand off focus, layers, state and failure.
 
 **Failure is designed.** Images reserve their space before loading, decode before they appear, retry a limited number of times and fall back to a designed placeholder. `images="off"` makes every managed image a placeholder and stops all image requests.
 
@@ -49,7 +51,7 @@ The machine-readable list is [`components.json`](components.json).
 ## Documentation
 
 The docs are an Orlo application in their own right:
-- **Five tabs per component.** Overview, Specs, Guidelines, Accessibility and Code, with live anatomy callouts and spec values read from the stylesheet.
+- **Five tabs per component.** Overview, Specs, Guidelines, Accessibility and Code, with live anatomy callouts, a lifecycle contract and spec values read from the stylesheet.
 - **Sections.** Foundations, Styles and Develop.
 - **Tools.** A MotionLab, a Theme Studio and ⌘K search.
 - **Static hosting.** Every route is prerendered as a separate HTML file, so the site runs on Read the Docs without a server ([`.readthedocs.yaml`](.readthedocs.yaml)).

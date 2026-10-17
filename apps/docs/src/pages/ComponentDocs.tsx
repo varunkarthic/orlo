@@ -4,6 +4,8 @@ import type { Doc } from "../registry/types.ts";
 import { TABS, tabTitle, type Tab } from "../site.ts";
 import { Anatomy, Bullets, Code, DoDont, H2, H3, KeyTable, PageHeader, SpecTable, Stage } from "../kit.tsx";
 import { controlSpecs } from "../registry/types.ts";
+import { Playground } from "../playground.tsx";
+import { LifecycleContract } from "./LifecycleContract.tsx";
 
 /** Renders a component's demo only once its card scrolls near the viewport, so the index stays light. */
 function LazyPreview({ doc }: { doc?: Doc }) {
@@ -70,6 +72,8 @@ export function ComponentPage({ slug, doc: d, root, tab }: { slug: string; doc?:
       {tab === "overview" && (
         <>
           <Stage label="Live example">{d.demo()}</Stage>
+          {d.playground && <><H2>Playground</H2><Playground def={d.playground} /></>}
+          <LifecycleContract entry={entry} doc={d} root={root} />
           <H2>Highlights</H2>
           <Bullets items={d.notes} />
           {d.variants?.length ? <><H2>Variants</H2>{d.variants.map((v) => <section key={v.title}><H3>{v.title}</H3>{v.body && <p>{v.body}</p>}<Stage label={v.title}>{v.demo()}</Stage></section>)}</> : null}

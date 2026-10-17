@@ -15,6 +15,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Accessibility](foundations/accessibility/): Targets, testing and known limits.
 - [Adaptive design](foundations/adaptive/): Space, input, zoom, direction and preference.
 - [Interaction states](foundations/interaction-states/): Hover, focus, press, disabled and more.
+- [Lifecycle & composition](foundations/lifecycle/): How components enter, respond, interrupt, recover and work together.
 - [Layering](foundations/layering/): Who owns the space when surfaces overlap.
 - [Async states](foundations/async-states/): Loading, failure, empty, offline and retry.
 - [Edge cases](foundations/edge-cases/): The details lab: flawed beside fixed.

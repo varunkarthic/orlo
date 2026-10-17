@@ -30,6 +30,7 @@ export const pages: Page[] = [
   { path: "foundations/accessibility", title: "Accessibility", section: "foundations", summary: "Targets, testing and known limits." },
   { path: "foundations/adaptive", title: "Adaptive design", section: "foundations", summary: "Space, input, zoom, direction and preference." },
   { path: "foundations/interaction-states", title: "Interaction states", section: "foundations", summary: "Hover, focus, press, disabled and more." },
+  { path: "foundations/lifecycle", title: "Lifecycle & composition", section: "foundations", summary: "How components enter, respond, interrupt, recover and work together." },
   { path: "foundations/layering", title: "Layering", section: "foundations", summary: "Who owns the space when surfaces overlap." },
   { path: "foundations/async-states", title: "Async states", section: "foundations", summary: "Loading, failure, empty, offline and retry." },
   { path: "foundations/edge-cases", title: "Edge cases", section: "foundations", summary: "The details lab: flawed beside fixed." },
