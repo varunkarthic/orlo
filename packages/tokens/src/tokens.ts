@@ -40,6 +40,15 @@ export const tints = {
   dark: [["#4A2614", "#F6C9A9"], ["#26381F", "#C3DDB5"], ["#1E3049", "#BDD2EE"], ["#3C2440", "#E5C6EA"], ["#40330D", "#EBD796"], ["#183632", "#B3DDD6"]],
 } as const;
 
+/**
+ * Chart palette: ordered so neighbours stay distinguishable under the common colour-vision deficiencies;
+ * charts also vary dash and marker shape, so colour is never the only cue. Each ≥ 3:1 against the surface.
+ */
+export const chart = {
+  light: ["#1F5FA8", "#C2410C", "#1F7A4D", "#7C3AED", "#A16207", "#0E7490", "#BE185D", "#4B5563"],
+  dark: ["#8DB8EB", "#F59E6B", "#6CCB9A", "#B794F6", "#E8B44A", "#67C8DC", "#F38BB6", "#A3A9B5"],
+} as const;
+
 /** 4px base scale. */
 export const space = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40, 12: 48, 16: 64 } as const;
 export const radius = { xs: 4, sm: 6, md: 10, lg: 14, xl: 20, "2xl": 28, full: 9999 } as const;

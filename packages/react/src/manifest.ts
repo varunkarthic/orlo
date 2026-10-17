@@ -3,7 +3,7 @@ export type Maturity = "planned" | "prototype" | "beta" | "stable";
 export type ManifestEntry = {
   name: string;
   slug: string;
-  family: "Actions" | "Forms" | "Pickers" | "Navigation" | "Overlays" | "Disclosure" | "Data display" | "Feedback" | "Media" | "Layout" | "Specialty";
+  family: "Actions" | "Forms" | "Pickers" | "Navigation" | "Overlays" | "Disclosure" | "Data display" | "Feedback" | "Media" | "Layout" | "Typography" | "Charts" | "Editors" | "AI" | "Workspace" | "Specialty";
   maturity: Maturity;
   summary: string;
   /** What has actually been verified; empty means nothing yet. */
@@ -110,6 +110,31 @@ export const manifest: ManifestEntry[] = [
   { name: "CodeBlock", slug: "code-block", family: "Specialty", maturity: "beta", summary: "Code with copy, line numbers, highlights and wrap.", tested: [] },
   { name: "Countdown", slug: "countdown", family: "Specialty", maturity: "beta", summary: "Live timer that announces only meaningful moments.", tested: [] },
   { name: "Marquee", slug: "marquee", family: "Specialty", maturity: "beta", summary: "Ambient scroller that pauses on hover, focus and reduced motion.", tested: [] },
+  { name: "Text", slug: "text", family: "Typography", maturity: "beta", summary: "Type scale, tones, whole-line truncation and tabular numbers.", tested: [] },
+  { name: "Heading", slug: "heading", family: "Typography", maturity: "beta", summary: "Semantic level and visual size chosen independently.", tested: [] },
+  { name: "Prose", slug: "prose", family: "Typography", maturity: "beta", summary: "Long-form content with measure, rhythm and multilingual line breaking.", tested: [] },
+  { name: "Truncate", slug: "truncate", family: "Typography", maturity: "beta", summary: "Middle truncation that keeps the start and end of names.", tested: [] },
+  { name: "AsyncContent", slug: "async-content", family: "Feedback", maturity: "beta", summary: "Loading, empty, error, offline and stale states for remote data.", tested: ["unit"] },
+  { name: "VideoPlayer", slug: "video-player", family: "Media", maturity: "beta", summary: "Orlo controls, shortcuts, buffering and error states; never autoplays sound.", tested: [] },
+  { name: "AudioPlayer", slug: "audio-player", family: "Media", maturity: "beta", summary: "Compact audio with seek, rate and failure handling.", tested: [] },
+  { name: "Embed", slug: "embed", family: "Media", maturity: "beta", summary: "Consent-gated, sandboxed third-party content with slow-load fallback.", tested: [] },
+  { name: "MapView", slug: "map-view", family: "Media", maturity: "beta", summary: "Location without surprise requests; interactive map after consent.", tested: [] },
+  { name: "DocumentViewer", slug: "document-viewer", family: "Media", maturity: "beta", summary: "Inline document preview with toolbar and download fallback.", tested: [] },
+  { name: "DataGrid", slug: "data-grid", family: "Data display", maturity: "beta", summary: "Virtualised grid with sorting, selection, resizing and grid keyboard.", tested: ["unit", "keyboard"] },
+  { name: "LineChart", slug: "line-chart", family: "Charts", maturity: "beta", summary: "Lines and areas with gaps, markers, keyboard crosshair and data table.", tested: ["unit"] },
+  { name: "BarChart", slug: "bar-chart", family: "Charts", maturity: "beta", summary: "Grouped or stacked bars with a true zero baseline.", tested: [] },
+  { name: "DonutChart", slug: "donut-chart", family: "Charts", maturity: "beta", summary: "Part-to-whole with focusable segments and spelled-out percentages.", tested: [] },
+  { name: "Markdown", slug: "markdown", family: "Editors", maturity: "beta", summary: "Safe Markdown rendering to React elements, never raw HTML.", tested: ["unit"] },
+  { name: "MarkdownEditor", slug: "markdown-editor", family: "Editors", maturity: "beta", summary: "Toolbar, shortcuts, preview and word count over native text.", tested: [] },
+  { name: "ChatThread", slug: "chat-thread", family: "AI", maturity: "beta", summary: "Conversation log that respects the reader's scroll position.", tested: [] },
+  { name: "Composer", slug: "composer", family: "AI", maturity: "beta", summary: "Message input: Enter sends, IME-safe, becomes Stop while generating.", tested: ["unit"] },
+  { name: "ToolRun", slug: "tool-run", family: "AI", maturity: "beta", summary: "Honest step-by-step status for tools, agents and pipelines.", tested: [] },
+  { name: "ResponseFeedback", slug: "response-feedback", family: "AI", maturity: "beta", summary: "Reversible helpful / not helpful signal.", tested: [] },
+  { name: "AppShell", slug: "app-shell", family: "Workspace", maturity: "beta", summary: "Header, resizable sidebar, main, inspector and status bar.", tested: [] },
+  { name: "TabStrip", slug: "tab-strip", family: "Workspace", maturity: "beta", summary: "Editor tabs with close, unsaved marks and keyboard reorder.", tested: [] },
+  { name: "StatusBar", slug: "status-bar", family: "Workspace", maturity: "beta", summary: "App footer for counts, modes and transient messages.", tested: [] },
+  { name: "Kanban", slug: "kanban", family: "Workspace", maturity: "beta", summary: "Board with pointer drag and a complete keyboard path.", tested: ["unit"] },
+  { name: "ProgressiveBlur", slug: "progressive-blur", family: "Layout", maturity: "beta", summary: "Layered blur band so content softens under sticky chrome instead of being sliced.", tested: [] },
+  { name: "StatCard", slug: "stat-card", family: "Data display", maturity: "beta", summary: "KPI with direction in icon, sign and words.", tested: [] },
 ];
-
-export const families: ManifestEntry["family"][] = ["Actions", "Forms", "Pickers", "Navigation", "Overlays", "Disclosure", "Layout", "Data display", "Feedback", "Media", "Specialty"];
+export const families: ManifestEntry["family"][] = ["Actions", "Forms", "Pickers", "Navigation", "Overlays", "Disclosure", "Layout", "Typography", "Data display", "Charts", "Feedback", "Media", "Editors", "AI", "Workspace", "Specialty"];

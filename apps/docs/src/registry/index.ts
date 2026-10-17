@@ -9,6 +9,7 @@ import { data } from "./data.tsx";
 import { feedback } from "./feedback.tsx";
 import { media } from "./media.tsx";
 import { specialty } from "./specialty.tsx";
+import { advanced } from "./advanced.tsx";
 
-export const docs: Record<string, Doc> = { ...actions, ...forms, ...pickers, ...navigation, ...overlays, ...structure, ...data, ...feedback, ...media, ...specialty };
+export const docs: Record<string, Doc> = { ...actions, ...forms, ...pickers, ...navigation, ...overlays, ...structure, ...data, ...feedback, ...media, ...specialty, ...advanced };
 export type { Doc };

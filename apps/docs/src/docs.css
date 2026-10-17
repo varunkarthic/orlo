@@ -89,7 +89,8 @@ code { font-size: 0.85em; background: var(--orlo-color-surface); border: 1px sol
 .code .orlo-copy { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; }
 
 /* Component tabs */
-.ctabs { display: flex; gap: 4px; border-block-end: 1px solid var(--orlo-color-border); margin-block-end: 28px; overflow-x: auto; scrollbar-width: none; position: sticky; inset-block-start: var(--topbar); background: var(--orlo-color-canvas); z-index: 2; }
+.ctabs-wrap { position: sticky; inset-block-start: var(--topbar); z-index: 2; margin-block-end: 28px; background: var(--orlo-color-canvas); }
+.ctabs { display: flex; gap: 4px; border-block-end: 1px solid var(--orlo-color-border); overflow-x: auto; scrollbar-width: none; }
 .ctabs a { flex: none; position: relative; display: inline-flex; align-items: center; min-block-size: 46px; padding-inline: 14px; color: var(--orlo-color-fg-muted); text-decoration: none; font-weight: 500; }
 .ctabs a:hover { color: var(--orlo-color-fg); }
 .ctabs a[aria-current="page"] { color: var(--orlo-color-fg); font-weight: 650; }

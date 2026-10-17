@@ -922,6 +922,253 @@
       "summary": "Ambient scroller that pauses on hover, focus and reduced motion.",
       "tested": [],
       "docs": "components/marquee/"
+    },
+    {
+      "name": "Text",
+      "slug": "text",
+      "family": "Typography",
+      "maturity": "beta",
+      "summary": "Type scale, tones, whole-line truncation and tabular numbers.",
+      "tested": [],
+      "docs": "components/text/"
+    },
+    {
+      "name": "Heading",
+      "slug": "heading",
+      "family": "Typography",
+      "maturity": "beta",
+      "summary": "Semantic level and visual size chosen independently.",
+      "tested": [],
+      "docs": "components/heading/"
+    },
+    {
+      "name": "Prose",
+      "slug": "prose",
+      "family": "Typography",
+      "maturity": "beta",
+      "summary": "Long-form content with measure, rhythm and multilingual line breaking.",
+      "tested": [],
+      "docs": "components/prose/"
+    },
+    {
+      "name": "Truncate",
+      "slug": "truncate",
+      "family": "Typography",
+      "maturity": "beta",
+      "summary": "Middle truncation that keeps the start and end of names.",
+      "tested": [],
+      "docs": "components/truncate/"
+    },
+    {
+      "name": "AsyncContent",
+      "slug": "async-content",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Loading, empty, error, offline and stale states for remote data.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/async-content/"
+    },
+    {
+      "name": "VideoPlayer",
+      "slug": "video-player",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Orlo controls, shortcuts, buffering and error states; never autoplays sound.",
+      "tested": [],
+      "docs": "components/video-player/"
+    },
+    {
+      "name": "AudioPlayer",
+      "slug": "audio-player",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Compact audio with seek, rate and failure handling.",
+      "tested": [],
+      "docs": "components/audio-player/"
+    },
+    {
+      "name": "Embed",
+      "slug": "embed",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Consent-gated, sandboxed third-party content with slow-load fallback.",
+      "tested": [],
+      "docs": "components/embed/"
+    },
+    {
+      "name": "MapView",
+      "slug": "map-view",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Location without surprise requests; interactive map after consent.",
+      "tested": [],
+      "docs": "components/map-view/"
+    },
+    {
+      "name": "DocumentViewer",
+      "slug": "document-viewer",
+      "family": "Media",
+      "maturity": "beta",
+      "summary": "Inline document preview with toolbar and download fallback.",
+      "tested": [],
+      "docs": "components/document-viewer/"
+    },
+    {
+      "name": "DataGrid",
+      "slug": "data-grid",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Virtualised grid with sorting, selection, resizing and grid keyboard.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/data-grid/"
+    },
+    {
+      "name": "LineChart",
+      "slug": "line-chart",
+      "family": "Charts",
+      "maturity": "beta",
+      "summary": "Lines and areas with gaps, markers, keyboard crosshair and data table.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/line-chart/"
+    },
+    {
+      "name": "BarChart",
+      "slug": "bar-chart",
+      "family": "Charts",
+      "maturity": "beta",
+      "summary": "Grouped or stacked bars with a true zero baseline.",
+      "tested": [],
+      "docs": "components/bar-chart/"
+    },
+    {
+      "name": "DonutChart",
+      "slug": "donut-chart",
+      "family": "Charts",
+      "maturity": "beta",
+      "summary": "Part-to-whole with focusable segments and spelled-out percentages.",
+      "tested": [],
+      "docs": "components/donut-chart/"
+    },
+    {
+      "name": "Markdown",
+      "slug": "markdown",
+      "family": "Editors",
+      "maturity": "beta",
+      "summary": "Safe Markdown rendering to React elements, never raw HTML.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/markdown/"
+    },
+    {
+      "name": "MarkdownEditor",
+      "slug": "markdown-editor",
+      "family": "Editors",
+      "maturity": "beta",
+      "summary": "Toolbar, shortcuts, preview and word count over native text.",
+      "tested": [],
+      "docs": "components/markdown-editor/"
+    },
+    {
+      "name": "ChatThread",
+      "slug": "chat-thread",
+      "family": "AI",
+      "maturity": "beta",
+      "summary": "Conversation log that respects the reader's scroll position.",
+      "tested": [],
+      "docs": "components/chat-thread/"
+    },
+    {
+      "name": "Composer",
+      "slug": "composer",
+      "family": "AI",
+      "maturity": "beta",
+      "summary": "Message input: Enter sends, IME-safe, becomes Stop while generating.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/composer/"
+    },
+    {
+      "name": "ToolRun",
+      "slug": "tool-run",
+      "family": "AI",
+      "maturity": "beta",
+      "summary": "Honest step-by-step status for tools, agents and pipelines.",
+      "tested": [],
+      "docs": "components/tool-run/"
+    },
+    {
+      "name": "ResponseFeedback",
+      "slug": "response-feedback",
+      "family": "AI",
+      "maturity": "beta",
+      "summary": "Reversible helpful / not helpful signal.",
+      "tested": [],
+      "docs": "components/response-feedback/"
+    },
+    {
+      "name": "AppShell",
+      "slug": "app-shell",
+      "family": "Workspace",
+      "maturity": "beta",
+      "summary": "Header, resizable sidebar, main, inspector and status bar.",
+      "tested": [],
+      "docs": "components/app-shell/"
+    },
+    {
+      "name": "TabStrip",
+      "slug": "tab-strip",
+      "family": "Workspace",
+      "maturity": "beta",
+      "summary": "Editor tabs with close, unsaved marks and keyboard reorder.",
+      "tested": [],
+      "docs": "components/tab-strip/"
+    },
+    {
+      "name": "StatusBar",
+      "slug": "status-bar",
+      "family": "Workspace",
+      "maturity": "beta",
+      "summary": "App footer for counts, modes and transient messages.",
+      "tested": [],
+      "docs": "components/status-bar/"
+    },
+    {
+      "name": "Kanban",
+      "slug": "kanban",
+      "family": "Workspace",
+      "maturity": "beta",
+      "summary": "Board with pointer drag and a complete keyboard path.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/kanban/"
+    },
+    {
+      "name": "ProgressiveBlur",
+      "slug": "progressive-blur",
+      "family": "Layout",
+      "maturity": "beta",
+      "summary": "Layered blur band so content softens under sticky chrome instead of being sliced.",
+      "tested": [],
+      "docs": "components/progressive-blur/"
+    },
+    {
+      "name": "StatCard",
+      "slug": "stat-card",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "KPI with direction in icon, sign and words.",
+      "tested": [],
+      "docs": "components/stat-card/"
     }
   ]
 }

@@ -136,3 +136,29 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [CodeBlock](components/code-block/): Code with copy, line numbers, highlights and wrap.
 - [Countdown](components/countdown/): Live timer that announces only meaningful moments.
 - [Marquee](components/marquee/): Ambient scroller that pauses on hover, focus and reduced motion.
+- [Text](components/text/): Type scale, tones, whole-line truncation and tabular numbers.
+- [Heading](components/heading/): Semantic level and visual size chosen independently.
+- [Prose](components/prose/): Long-form content with measure, rhythm and multilingual line breaking.
+- [Truncate](components/truncate/): Middle truncation that keeps the start and end of names.
+- [AsyncContent](components/async-content/): Loading, empty, error, offline and stale states for remote data.
+- [VideoPlayer](components/video-player/): Orlo controls, shortcuts, buffering and error states; never autoplays sound.
+- [AudioPlayer](components/audio-player/): Compact audio with seek, rate and failure handling.
+- [Embed](components/embed/): Consent-gated, sandboxed third-party content with slow-load fallback.
+- [MapView](components/map-view/): Location without surprise requests; interactive map after consent.
+- [DocumentViewer](components/document-viewer/): Inline document preview with toolbar and download fallback.
+- [DataGrid](components/data-grid/): Virtualised grid with sorting, selection, resizing and grid keyboard.
+- [LineChart](components/line-chart/): Lines and areas with gaps, markers, keyboard crosshair and data table.
+- [BarChart](components/bar-chart/): Grouped or stacked bars with a true zero baseline.
+- [DonutChart](components/donut-chart/): Part-to-whole with focusable segments and spelled-out percentages.
+- [Markdown](components/markdown/): Safe Markdown rendering to React elements, never raw HTML.
+- [MarkdownEditor](components/markdown-editor/): Toolbar, shortcuts, preview and word count over native text.
+- [ChatThread](components/chat-thread/): Conversation log that respects the reader's scroll position.
+- [Composer](components/composer/): Message input: Enter sends, IME-safe, becomes Stop while generating.
+- [ToolRun](components/tool-run/): Honest step-by-step status for tools, agents and pipelines.
+- [ResponseFeedback](components/response-feedback/): Reversible helpful / not helpful signal.
+- [AppShell](components/app-shell/): Header, resizable sidebar, main, inspector and status bar.
+- [TabStrip](components/tab-strip/): Editor tabs with close, unsaved marks and keyboard reorder.
+- [StatusBar](components/status-bar/): App footer for counts, modes and transient messages.
+- [Kanban](components/kanban/): Board with pointer drag and a complete keyboard path.
+- [ProgressiveBlur](components/progressive-blur/): Layered blur band so content softens under sticky chrome instead of being sliced.
+- [StatCard](components/stat-card/): KPI with direction in icon, sign and words.

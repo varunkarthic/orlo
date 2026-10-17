@@ -1,6 +1,7 @@
 /* Orlo component styles. Colour comes from tokens, except the always-dark media viewer chrome. */
 @layer orlo.base, orlo.components, orlo.extended;
 @import "./extended.css" layer(orlo.extended);
+@import "./extended2.css" layer(orlo.extended);
 
 @layer orlo.base {
   .orlo-root, .orlo-portal {

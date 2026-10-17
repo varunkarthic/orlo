@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { manifest, families, Badge, Chip, SearchField, Stack, EmptyState, Button } from "@orlo/react";
+import { manifest, families, Badge, Chip, SearchField, Stack, EmptyState, Button, ProgressiveBlur } from "@orlo/react";
 import { docs } from "../registry/index.ts";
 import { TABS, tabTitle, type Tab } from "../site.ts";
 import { Anatomy, Bullets, Code, DoDont, H2, H3, KeyTable, PageHeader, SpecTable, Stage } from "../kit.tsx";
@@ -62,9 +62,12 @@ export function ComponentPage({ slug, root, tab }: { slug: string; root: string;
   return (
     <>
       <PageHeader eyebrow={entry.family} title={entry.name} badge={entry.maturity} lead={entry.summary} />
-      <nav className="ctabs" aria-label={`${entry.name} documentation`}>
-        {TABS.map((t) => <a key={t} href={`${root}components/${slug}/${t === "overview" ? "" : t + "/"}`} aria-current={t === tab ? "page" : undefined}>{tabTitle[t]}</a>)}
-      </nav>
+      <div className="ctabs-wrap">
+        <nav className="ctabs" aria-label={`${entry.name} documentation`}>
+          {TABS.map((t) => <a key={t} href={`${root}components/${slug}/${t === "overview" ? "" : t + "/"}`} aria-current={t === tab ? "page" : undefined}>{tabTitle[t]}</a>)}
+        </nav>
+        <ProgressiveBlur side="top" size="32px" />
+      </div>
       {tab === "overview" && (
         <>
           <Stage label="Live example">{d.demo()}</Stage>
