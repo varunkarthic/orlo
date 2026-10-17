@@ -34,7 +34,6 @@ export type DataGridProps<T> = {
 };
 
 type Sort = { key: string; dir: "ascending" | "descending" } | null;
-const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
 
 /** Rows to render for a scroll position: visible window plus overscan. Exported for tests. */
 export function windowRange(scrollTop: number, viewport: number, rowHeight: number, count: number, overscan = 6) {
@@ -52,6 +51,7 @@ export function windowRange(scrollTop: number, viewport: number, rowHeight: numb
 export function DataGrid<T>({ label, columns, rows, rowKey, selectable, selection, defaultSelection = [], onSelectionChange, onRowActivate, rowHeight = 44, height = 440, loading, empty = "No rows" }: DataGridProps<T>) {
   const [selected, setSelected] = useControllable(selection, defaultSelection, onSelectionChange);
   const locale = useLocale();
+  const collator = useMemo(() => new Intl.Collator(locale ?? "en-US", { numeric: true, sensitivity: "base" }), [locale]);
   const [sort, setSort] = useState<Sort>(null);
   const [widths, setWidths] = useState<number[]>(() => columns.map((c) => c.width ?? 160));
   const [scroll, setScroll] = useState({ top: 0, left: 0 });
@@ -67,7 +67,7 @@ export function DataGrid<T>({ label, columns, rows, rowKey, selectable, selectio
     const v = (r: T) => (col.sortValue ? col.sortValue(r) : (r[col.key] as unknown as string | number));
     const m = sort.dir === "ascending" ? 1 : -1;
     return [...rows].sort((a, b) => { const x = v(a), y = v(b); return m * (typeof x === "number" && typeof y === "number" ? x - y : collator.compare(String(x ?? ""), String(y ?? ""))); });
-  }, [rows, sort, columns]);
+  }, [rows, sort, columns, collator]);
 
   const cols = selectable ? [{ key: "__select", header: "Select", width: 48 } as unknown as GridColumn<T>, ...columns] : columns;
   const colWidths = selectable ? [48, ...widths] : widths;

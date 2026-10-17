@@ -176,7 +176,7 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
   border: 1px solid transparent; border-radius: var(--orlo-radius-md); background: none; color: var(--orlo-color-fg-muted); font: inherit; font-weight: 500; cursor: pointer;
 }
 .orlo-toggle[aria-pressed="true"] { background: var(--orlo-color-surface-selected); color: var(--orlo-color-fg); border-color: color-mix(in oklab, var(--orlo-color-accent) 40%, transparent); }
-.orlo-toggle:disabled { opacity: 0.45; cursor: not-allowed; }
+.orlo-toggle:disabled { opacity: 1; cursor: not-allowed; color: var(--orlo-color-fg-muted); background: var(--orlo-color-surface); border-color: var(--orlo-color-border); }
 @media (hover: hover) and (pointer: fine) { .orlo-toggle:hover:not([aria-pressed="true"]):not(:disabled) { background: color-mix(in oklab, transparent, var(--orlo-color-fg) 6%); color: var(--orlo-color-fg); } }
 .orlo-toggle-group { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--orlo-color-border); border-radius: calc(var(--orlo-radius-md) + 3px); background: var(--orlo-color-surface); }
 .orlo-toggle-group .orlo-toggle { min-block-size: calc(var(--orlo-control-h) - 8px); }
@@ -408,7 +408,8 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 
 /* ---------- Carousel / compare / gallery / lightbox ---------- */
 .orlo-carousel { display: grid; gap: 10px; }
-.orlo-carousel__track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; border-radius: var(--orlo-radius-lg); }
+.orlo-carousel__track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; border-radius: var(--orlo-radius-lg); user-select: none; }
+.orlo-carousel__track[data-selectable] { user-select: text; }
 .orlo-carousel__track::-webkit-scrollbar { display: none; }
 .orlo-carousel__slide { flex: 0 0 auto; scroll-snap-align: start; min-inline-size: 0; }
 .orlo-carousel__controls { display: flex; align-items: center; justify-content: center; gap: 6px; }

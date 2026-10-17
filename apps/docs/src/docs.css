@@ -69,7 +69,8 @@ html { scroll-padding-top: 5rem; }
 .content__inner { min-inline-size: 0; max-inline-size: 56rem; }
 .content[data-section="home"] .content__inner, .content__inner:has(> .wide) { max-inline-size: 78rem; }
 .content__toc { position: sticky; inset-block-start: calc(var(--topbar) + 32px); align-self: start; max-block-size: calc(100dvh - var(--topbar) - 64px); overflow-y: auto; }
-.content :where(a:not([class])) { color: var(--orlo-color-accent-text); text-underline-offset: 0.18em; }
+.content :where(a:not([class])) { color: var(--orlo-color-accent-text); text-underline-offset: 0.18em; overflow-wrap: anywhere; }
+.content :where(pre, code) { max-inline-size: 100%; }
 .page-header { margin-block-end: 24px; }
 .eyebrow { margin: 0 0 8px; font-size: var(--orlo-text-sm); font-weight: 600; color: var(--orlo-color-accent-text); }
 h1:not([class^="orlo-"]) { font-size: var(--orlo-text-2xl); line-height: var(--orlo-leading-tight); letter-spacing: -0.03em; margin: 0 0 12px; text-wrap: balance; font-weight: 700; }

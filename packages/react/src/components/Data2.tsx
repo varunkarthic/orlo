@@ -32,7 +32,9 @@ export type TimelineItem = { title: ReactNode; time?: Date | string; body?: Reac
 /** Chronological events as an ordered list with machine-readable times. */
 export function Timeline({ items, locale: localeProp }: { items: TimelineItem[]; locale?: string }) {
   const locale = useLocale(localeProp);
-  const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" });
+  // UTC makes the server-rendered fallback deterministic. Consumers that want
+  // visitor-local time can opt in after hydration with their own formatted text.
+  const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" });
   return (
     <ol className="orlo-timeline">
       {items.map((it, i) => (
@@ -185,9 +187,9 @@ export function RelativeTime({ date, locale: localeProp }: { date: Date; locale?
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), abs < 60 ? 1000 : abs < 3600 ? 30000 : 600000); return () => clearInterval(t); }, [abs]);
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const [n, u]: [number, Intl.RelativeTimeFormatUnit] = abs < 45 ? [Math.round(diff), "second"] : abs < 2700 ? [Math.round(diff / 60), "minute"] : abs < 79200 ? [Math.round(diff / 3600), "hour"] : abs < 2592000 ? [Math.round(diff / 86400), "day"] : abs < 31536000 ? [Math.round(diff / 2592000), "month"] : [Math.round(diff / 31536000), "year"];
-  const exact = new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "short" }).format(date);
+  const exact = new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "short", timeZone: "UTC" }).format(date);
   // Before mount, show the absolute date: the server can't know "now", so relative text would mismatch on hydration.
-  return <time dateTime={date.toISOString()} title={exact} className="orlo-reltime">{mounted ? rtf.format(n, u) : new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(date)}</time>;
+  return <time dateTime={date.toISOString()} title={exact} className="orlo-reltime">{mounted ? rtf.format(n, u) : new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(date)}</time>;
 }
 
 /** Live countdown. Ticks visually every second but announces only at meaningful moments, and never goes negative. */

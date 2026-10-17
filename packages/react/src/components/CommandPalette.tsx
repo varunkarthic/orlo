@@ -37,7 +37,14 @@ export function CommandPalette({ commands, open: o, onOpenChange, placeholder = 
   const [open, setOpen] = useControllable(o, false, onOpenChange);
   useEffect(() => {
     if (!hotkey) return;
-    const on = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen(!open); } };
+    const on = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        // Opening is deliberately idempotent. Repeated key events must not close the
+        // palette before its focus scope can move focus to the search field.
+        if (!open) setOpen(true);
+      }
+    };
     document.addEventListener("keydown", on);
     return () => document.removeEventListener("keydown", on);
   }, [hotkey, open, setOpen]);

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type ImageState = "disabled" | "empty" | "loading" | "loaded" | "failed";
+export type ImageState = "disabled" | "empty" | "loading" | "retrying" | "loaded" | "failed";
 
 export type UseImageOptions = { enabled?: boolean; maxRetries?: number; retryDelayMs?: number; srcSet?: string; sizes?: string };
 
@@ -15,7 +15,7 @@ export function useImageState(src: string | undefined, { enabled = true, maxRetr
   useEffect(() => {
     if (!enabled) return setState("disabled");
     if (!src) return setState("empty");
-    setState("loading");
+    setState(attempt > 0 ? "retrying" : "loading");
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const img = new Image();
@@ -38,6 +38,8 @@ export function useImageState(src: string | undefined, { enabled = true, maxRetr
     return () => { cancelled = true; clearTimeout(timer); img.onload = img.onerror = null; img.src = ""; };
   }, [src, srcSet, sizes, enabled, maxRetries, retryDelayMs, attempt]);
 
-  const retry = useCallback(() => setAttempt((a) => a + 1), []);
+  const retry = useCallback(() => {
+    if (state === "failed") setAttempt((a) => a + 1);
+  }, [state]);
   return { state, retry };
 }

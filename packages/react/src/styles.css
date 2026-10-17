@@ -90,8 +90,8 @@
   [data-variant="danger"].orlo-button { color: var(--orlo-color-error); border-color: color-mix(in oklab, var(--orlo-color-error) 70%, transparent); background: var(--orlo-color-surface-raised); }
   [data-variant="solid"]:is(.orlo-button, .orlo-icon-button):focus-visible { box-shadow: var(--orlo-ring), inset 0 1px 0 color-mix(in oklab, white 22%, transparent); }
 
-  /* Press: compress and tighten the corners (shape follows force), springing back on release. */
-  :is(.orlo-button, .orlo-icon-button):active:not(:disabled):not([aria-disabled="true"]) { transform: scale(0.965); border-radius: var(--orlo-radius-sm); transition-duration: 60ms; }
+  /* Press is tactile without changing the component's established geometry. */
+  :is(.orlo-button, .orlo-icon-button):active:not(:disabled):not([aria-disabled="true"]) { transform: scale(0.98); }
   @media (hover: hover) and (pointer: fine) {
     [data-variant="solid"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: linear-gradient(to bottom, color-mix(in oklab, var(--orlo-color-accent), white 2%), color-mix(in oklab, var(--orlo-color-accent), var(--orlo-color-fg) 12%)); box-shadow: inset 0 1px 0 color-mix(in oklab, white 22%, transparent), var(--orlo-shadow-2); }
     [data-variant="tonal"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-surface-selected), var(--orlo-color-accent) 10%); }
@@ -103,12 +103,6 @@
   .orlo-button[aria-disabled="true"] { cursor: progress; }
   .orlo-button[data-loading] .orlo-button__label { opacity: 0; }
   .orlo-button__busy { position: absolute; inset: 0; display: grid; place-items: center; }
-  @supports (corner-shape: squircle) {
-    :is(.orlo-button, .orlo-icon-button, .orlo-card, .orlo-menu, .orlo-popover, .orlo-modal__panel, .orlo-toast, .orlo-field__input) { corner-shape: squircle; }
-    .orlo-button { border-radius: calc(var(--orlo-radius-md) * 1.7); }
-    .orlo-card { border-radius: calc(var(--orlo-radius-lg) * 1.6); }
-    .orlo-modal__panel { border-radius: calc(var(--orlo-radius-2xl) * 1.5); }
-  }
 
   /* Button group: attached buttons share borders and outer corners only. */
   .orlo-button-group { display: inline-flex; }
@@ -402,6 +396,7 @@
     min-block-size: 2rem; padding-inline: var(--orlo-space-3); font: inherit; font-size: var(--orlo-text-sm); font-weight: 600;
     color: var(--orlo-color-accent-text); background: var(--orlo-color-surface-raised); border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-sm); cursor: pointer;
   }
+  .orlo-image__retry-state { color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); font-weight: var(--orlo-weight-medium); }
 
   /* ---------- Overlays ---------- */
   .orlo-modal { position: fixed; inset: 0; z-index: var(--orlo-layer-modal); display: grid; place-items: center; padding: var(--orlo-space-4); }

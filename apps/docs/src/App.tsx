@@ -78,9 +78,8 @@ export function App({ route, page }: { route: string; page: PageRender }) {
           {section !== "home" && drawer}
         </Sheet>
         <a href={root} className="topbar__logo" aria-label="Orlo home"><Wordmark height={24} /></a>
-        <span className="topbar__tag">beta</span>
         <button type="button" className="search-trigger" onClick={() => setSearchOpen(true)} aria-label="Search documentation">
-          <Icons.Search size={16} /><span>Search {manifest.length} components and guides</span><span className="search-trigger__keys" aria-hidden="true"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
+          <Icons.Search size={16} /><span>Search the Orlo library</span><span className="search-trigger__keys" aria-hidden="true"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
         </button>
         <div className="topbar__end">
           <SegmentedControl label="Colour theme" size="sm" value={prefs.theme} onValueChange={(v) => set("theme")(v as Theme)}

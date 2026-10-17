@@ -2,7 +2,7 @@ import { describe, expect, it, vi, afterEach } from "vitest";
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { OrloProvider, Button, Dialog, Tabs, Select, Switch, Menu, Accordion, Tooltip, SegmentedControl, useToast, Checkbox, Table, OrloImage } from "./index.ts";
+import { OrloProvider, Button, Dialog, Tabs, Select, Switch, Menu, Accordion, Tooltip, SegmentedControl, useToast, Checkbox, Table, OrloImage, CommandPalette } from "./index.ts";
 
 afterEach(cleanup);
 const wrap = (ui: React.ReactNode, props: Partial<React.ComponentProps<typeof OrloProvider>> = {}) => render(<OrloProvider {...props}>{ui}</OrloProvider>);
@@ -168,6 +168,29 @@ describe("OrloImage", () => {
     expect(await screen.findByRole("button", { name: "Try again" })).toBeInTheDocument();
     window.Image = Real;
     vi.useRealTimers();
+  });
+  it("announces a manual retry while its next request is in flight", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const made: HTMLImageElement[] = [];
+    const Real = window.Image;
+    window.Image = class extends Real { constructor() { super(); made.push(this); } } as typeof Image;
+    wrap(<OrloImage src="/dead.png" alt="Dead" maxRetries={0} />);
+    await act(async () => { made[0].onerror?.(new Event("error")); });
+    await userEvent.click(await screen.findByRole("button", { name: "Try again" }));
+    expect(await screen.findByRole("status")).toHaveTextContent("Retrying image");
+    window.Image = Real;
+    vi.useRealTimers();
+  });
+});
+
+describe("CommandPalette", () => {
+  it("opens once and hands focus to search for Ctrl+K", async () => {
+    wrap(<CommandPalette commands={[{ id: "new", label: "New item", onSelect: vi.fn() }]} />);
+    await userEvent.keyboard("{Control>}k{/Control}");
+    const search = await screen.findByRole("combobox", { name: "Search" });
+    await waitFor(() => expect(search).toHaveFocus());
+    await userEvent.keyboard("{Control>}k{/Control}");
+    expect(screen.getByRole("combobox", { name: "Search" })).toBeInTheDocument();
   });
 });
 

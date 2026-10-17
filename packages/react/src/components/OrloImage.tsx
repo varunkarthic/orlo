@@ -39,6 +39,7 @@ export function OrloImage({ src, srcSet, sizes, alt, decorative, ratio = "4 / 3"
   useEffect(() => onStateChange?.(state), [state, onStateChange]);
   const label = caption ?? alt;
   const showImage = state === "loaded" && src;
+  const pending = state === "loading" || state === "retrying";
   return (
     <figure className={["orlo-image", className].filter(Boolean).join(" ")} data-state={state} style={{ aspectRatio: ratio === "auto" ? undefined : ratio, background: placeholder?.color }}>
       {placeholder?.preview && state !== "failed" && state !== "disabled" && <img className="orlo-image__preview" src={placeholder.preview} alt="" aria-hidden="true" />}
@@ -51,10 +52,10 @@ export function OrloImage({ src, srcSet, sizes, alt, decorative, ratio = "4 / 3"
           animate={{ opacity: 1, filter: "blur(0px)", scale: 1, transition: { opacity: transition("fade"), filter: transition("blur"), scale: transition("reveal") } }}
         />
       ) : (
-        <div className="orlo-image__placeholder" aria-busy={state === "loading" || undefined}>
-          {state === "loading" && !placeholder && <span className="orlo-skeleton" aria-hidden="true" style={{ position: "absolute", inset: 0, borderRadius: 0 }} />}
+        <div className="orlo-image__placeholder" aria-busy={pending || undefined}>
+          {pending && !placeholder && <span className="orlo-skeleton" aria-hidden="true" style={{ position: "absolute", inset: 0, borderRadius: 0 }} />}
           <span className="orlo-image__label" role={decorative ? undefined : "img"} aria-label={decorative ? undefined : alt} aria-hidden={decorative || undefined}>
-            {state !== "loading" && (
+            {!pending && (
               <>
                 {state === "failed" ? <Icons.Image size={24} /> : state === "disabled" ? <Icons.EyeOff size={22} /> : <Icons.Image size={24} />}
                 {!decorative && label ? <span className="orlo-image__caption" aria-hidden="true">{label}</span> : null}
@@ -63,6 +64,7 @@ export function OrloImage({ src, srcSet, sizes, alt, decorative, ratio = "4 / 3"
             )}
           </span>
           {state === "failed" && <button type="button" className="orlo-image__retry" onClick={retry}>Try again</button>}
+          {state === "retrying" && <span className="orlo-image__retry-state" role="status">Retrying image</span>}
         </div>
       )}
     </figure>

@@ -6,13 +6,13 @@ import { Portal } from "../internal/Portal.tsx";
 import { useDismiss, useFocusScope, useInertOutside, useScrollLock } from "../internal/hooks.ts";
 import { OrloImage } from "./OrloImage.tsx";
 
-export type CarouselProps = { label: string; slides: ReactNode[]; slideWidth?: string; autoplay?: number };
+export type CarouselProps = { label: string; slides: ReactNode[]; slideWidth?: string; autoplay?: number; /** Keep text selection available for editorial or code slides. */ allowTextSelection?: boolean };
 
 /**
  * Native scroll-snap carousel: touch, trackpad and keyboard scrolling work as the platform intends. Buttons and dots
  * reflect the visible slide. Autoplay is off by default and, when on, has a pause control and stops on hover, focus and reduced motion.
  */
-export function Carousel({ label, slides, slideWidth = "85%", autoplay }: CarouselProps) {
+export function Carousel({ label, slides, slideWidth = "85%", autoplay, allowTextSelection = false }: CarouselProps) {
   const track = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(!!autoplay);
@@ -36,7 +36,7 @@ export function Carousel({ label, slides, slideWidth = "85%", autoplay }: Carous
   }, [autoplay, playing, hold, index, slides.length, go, effective]);
   return (
     <section className="orlo-carousel" aria-roledescription="carousel" aria-label={label} onPointerEnter={() => setHold(true)} onPointerLeave={() => setHold(false)} onFocus={() => setHold(true)} onBlur={() => setHold(false)}>
-      <div ref={track} className="orlo-carousel__track" id={id} tabIndex={0} aria-live={playing ? "off" : "polite"}>
+      <div ref={track} className="orlo-carousel__track" data-selectable={allowTextSelection || undefined} id={id} tabIndex={0} aria-live={playing ? "off" : "polite"}>
         {slides.map((s, i) => <div key={i} className="orlo-carousel__slide" role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`} style={{ flexBasis: slideWidth }}>{s}</div>)}
       </div>
       <div className="orlo-carousel__controls">
