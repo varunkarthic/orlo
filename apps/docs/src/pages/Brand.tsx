@@ -1,34 +1,35 @@
-import { Wordmark, Mark } from "@orlo/react";
+import { Wordmark, Mark, Stack } from "@orlo/react";
+import { Bullets, H2, PageHeader, DoDont } from "../kit.tsx";
 
-const tile = (bg: string, fg: string) => ({ background: bg, color: fg, padding: 24, borderRadius: 12, border: "1px solid var(--orlo-color-border)" });
+const tile = (bg: string, fg: string) => ({ background: bg, color: fg, padding: 28, borderRadius: 14, border: "1px solid var(--orlo-color-border)", display: "grid", placeItems: "center", minBlockSize: 140 });
 
-export function BrandPage() {
+export function BrandPage({ root }: { root: string }) {
+  const dl = (f: string) => `https://github.com/varunkarthic/orlo/raw/main/assets/brand/${f}`;
   return (
-    <>
-      <p className="eyebrow">System</p>
-      <h1>Brand</h1>
-      <p className="lead">The wordmark and mark are original, hand-built vector artwork (SVG, stroke-based, editable). Source files are in <code>assets/brand/</code>.</p>
-      <h2>Wordmark</h2>
+    <div className="wide">
+      <PageHeader eyebrow="Brand" title="Logo & usage" lead="A lowercase wordmark with leaf-shaped terminals on the r and l: soft where it meets the reader, precise everywhere else." />
+      <H2>Wordmark</H2>
       <div className="grid">
-        <div style={tile("#F7F5F0", "#1C1B18")}><Wordmark height={56} /></div>
-        <div style={tile("#1C1B18", "#F7F5F0")}><Wordmark height={56} /></div>
-        <div style={tile("#C2410C", "#FFFFFF")}><Wordmark height={56} /></div>
+        <div style={tile("#F7F5F0", "#1C1B18")}><Wordmark height={64} /></div>
+        <div style={tile("#1C1B18", "#F7F5F0")}><Wordmark height={64} /></div>
+        <div style={tile("#A8370A", "#FFFFFF")}><Wordmark height={64} /></div>
       </div>
-      <h2>Mark</h2>
-      <div className="grid">
-        <div style={tile("#F7F5F0", "#1C1B18")}><Mark height={48} /></div>
-        <div style={tile("#1C1B18", "#F7F5F0")}><Mark height={48} /></div>
-        <div style={{ ...tile("var(--orlo-color-surface)", "inherit"), display: "flex", gap: 16, alignItems: "end" }}>{[16, 24, 32, 48].map((s) => <Mark key={s} height={s} width={s} />)}</div>
-      </div>
-      <h2>Rationale</h2>
-      <p>The direction is a <em>precise finishing edge</em>: geometric letterforms with butt terminals, and an O whose rim stops short of closing at the upper right, like an unstitched hem. The break sits high on purpose: low on the right, it would read as the tail of a Q. It is the only embellishment; the remaining letters stay plain so the mark reads at small sizes and in one colour.</p>
-      <p>Two other directions (typographic continuity, soft organic rhythm) are recorded in the decisions log as explored and not chosen. This is not trademark clearance.</p>
-      <h2>Usage</h2>
-      <ul>
-        <li>Clear space: at least the width of the mark's stroke on every side of the wordmark, and one stroke-width for the mark.</li>
-        <li>Do not recolour outside the neutral and accent tokens, add effects, outline, rotate or close the rim.</li>
-        <li>Minimum wordmark height 20px; below that use the mark.</li>
+      <H2>Mark and favicon</H2>
+      <p>The compact mark is the wordmark's “o”. Below 20 px of wordmark height, use the mark.</p>
+      <Stack direction="row" gap={6} wrap align="end">
+        <div style={tile("#F7F5F0", "#1C1B18")}><Mark height={56} width={56} /></div>
+        <div style={tile("#1C1B18", "#F7F5F0")}><Mark height={56} width={56} /></div>
+        <Stack direction="row" gap={4} align="end">{[16, 24, 32, 48].map((s) => <img key={s} src={`${root}favicon.svg`} width={s} height={s} alt={`Favicon at ${s}px`} />)}</Stack>
+      </Stack>
+      <H2>Downloads</H2>
+      <p>Transparent SVG sources and PNG exports live in <code>assets/brand/</code>.</p>
+      <ul className="downloads">
+        {[["orlo-wordmark.svg", "Wordmark (currentColor)"], ["orlo-wordmark-black.svg", "Wordmark, black"], ["orlo-wordmark-white.svg", "Wordmark, white"], ["orlo-mark.svg", "Mark"], ["favicon.svg", "Favicon (adapts to dark tabs)"], ["exports/wordmark-black@2x.png", "PNG, black, transparent"], ["exports/wordmark-white@2x.png", "PNG, white, transparent"], ["exports/favicon.ico", "favicon.ico (16/32/48)"], ["exports/apple-touch-icon.png", "Apple touch icon"], ["exports/social-card.png", "Social card 1200×630"]].map(([f, l]) => <li key={f}><a href={dl(f)}>{l}</a> <code>{f}</code></li>)}
       </ul>
-    </>
+      <H2>Rules</H2>
+      <Bullets items={["Clear space: at least the width of the “o” counter on every side.", "Minimum wordmark height 20 px on screen; use the mark below that.", "Use graphite, off-white, white, black or the accent. No gradients, outlines, shadows or effects.", "Pronounced OR-loh. Written lowercase in the logo, “Orlo” in running text."]} />
+      <DoDont items={[["Place the wordmark on a calm, solid background with strong contrast.", "Place it on a busy photo or a low-contrast tint."], ["Scale it proportionally.", "Stretch, rotate, re-letter or recolour individual letters."]]} />
+      <p className="orlo-hint">The name is used in good faith; this page is not trademark clearance.</p>
+    </div>
   );
 }

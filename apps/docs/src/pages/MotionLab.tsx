@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { Button, Slider, SegmentedControl, Stack, Badge } from "@orlo/react";
 import { presets, springMetrics, useOrloMotion, OVERSHOOT_CEILING, type PresetName } from "@orlo/motion";
-import { Code } from "./Installation.tsx";
+import { Code } from "../kit.tsx";
 
 /** Numerically integrates the spring (semi-implicit Euler) for the response chart. */
 function simulate(k: number, c: number, m: number, ms = 900) {

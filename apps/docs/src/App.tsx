@@ -1,16 +1,9 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { OrloProvider, Wordmark, Button, IconButton, SegmentedControl, Popover, Sheet, CommandPalette, Kbd, Stack, Icons, manifest } from "@orlo/react";
+import { useEffect, useMemo, useState } from "react";
+import { OrloProvider, Wordmark, Button, IconButton, SegmentedControl, Popover, Sheet, CommandPalette, Kbd, Stack, Icons, manifest, families } from "@orlo/react";
 import type { MotionMode } from "@orlo/motion";
-import { routes, sections } from "./routes.ts";
-import { Home } from "./pages/Home.tsx";
-import { Installation } from "./pages/Installation.tsx";
-import { Examples } from "./pages/Examples.tsx";
-import { Foundations } from "./pages/Foundations.tsx";
-import { MotionLab } from "./pages/MotionLab.tsx";
-import { ComponentsIndex, ComponentPage } from "./pages/Components.tsx";
-import { StateLab } from "./pages/StateLab.tsx";
-import { DetailsLab } from "./pages/DetailsLab.tsx";
-import { BrandPage } from "./pages/Brand.tsx";
+import { pages, sections, sectionOf, TABS, tabTitle, type Tab } from "./site.ts";
+import { PageToc } from "./kit.tsx";
+import { renderPage } from "./pages/index.tsx";
 import "@orlo/tokens/css";
 import "@orlo/react/styles.css";
 import "./docs.css";
@@ -19,87 +12,80 @@ type Theme = "system" | "light" | "dark";
 type Density = "comfortable" | "compact" | "touch";
 type Prefs = { theme: Theme; motion: MotionMode; images: "on" | "off"; density: Density | "auto"; dir: "ltr" | "rtl" };
 const DEFAULTS: Prefs = { theme: "system", motion: "system", images: "on", density: "auto", dir: "ltr" };
-
 const read = (): Partial<Prefs> => { try { return JSON.parse(localStorage.getItem("orlo-prefs") ?? "{}"); } catch { return {}; } };
-const write = (p: Prefs) => { try { localStorage.setItem("orlo-prefs", JSON.stringify(p)); localStorage.setItem("orlo-theme", p.theme); } catch { /* storage blocked: preferences last for this page only */ } };
-
-function page(route: string, root: string): ReactNode {
-  if (route === "") return <Home root={root} />;
-  if (route === "start/installation") return <Installation />;
-  if (route === "examples") return <Examples />;
-  if (route === "foundations") return <Foundations />;
-  if (route === "motion") return <MotionLab />;
-  if (route === "components") return <ComponentsIndex root={root} />;
-  if (route.startsWith("components/")) return <ComponentPage slug={route.slice(11)} root={root} />;
-  if (route === "labs/states") return <StateLab />;
-  if (route === "labs/details") return <DetailsLab />;
-  if (route === "brand") return <BrandPage />;
-  return null;
-}
-
-function Sidebar({ route, root }: { route: string; root: string }) {
-  return (
-    <nav aria-label="Documentation" className="sidebar__nav">
-      {sections.map((s) => (
-        <div key={s} className="sidebar__group">
-          <p className="sidebar__heading">{s}</p>
-          <ul>
-            {routes.filter((r) => r.section === s).map((r) => (
-              <li key={r.path}><a href={`${root}${r.path}${r.path ? "/" : ""}`} aria-current={r.path === route ? "page" : undefined}>{r.title}</a></li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </nav>
-  );
-}
+const write = (p: Prefs) => { try { localStorage.setItem("orlo-prefs", JSON.stringify(p)); localStorage.setItem("orlo-theme", p.theme); } catch { /* storage blocked */ } };
 
 export function App({ route }: { route: string }) {
   const depth = route ? route.split("/").length : 0;
   const root = "../".repeat(depth) || "./";
+  const href = (p: string) => `${root}${p}${p ? "/" : ""}`;
   const [prefs, setPrefs] = useState<Prefs>(DEFAULTS);
   const [searchOpen, setSearchOpen] = useState(false);
-  // Restore after hydration so the server render and the first client render agree.
   useEffect(() => setPrefs({ ...DEFAULTS, ...read() }), []);
   const set = <K extends keyof Prefs>(k: K) => (v: Prefs[K]) => setPrefs((p) => {
-    const next = { ...p, [k]: v };
-    write(next);
+    const next = { ...p, [k]: v }; write(next);
     if (k === "theme") v === "system" ? delete document.documentElement.dataset.orloTheme : (document.documentElement.dataset.orloTheme = v as string);
     return next;
   });
+  const section = sectionOf(route);
+  const commands = useMemo(() => [
+    ...pages.map((p) => ({ id: p.path || "home", label: p.title === "Overview" ? `${sections.find((s) => s.id === p.section)?.title} overview` : p.title, group: p.group ?? sections.find((s) => s.id === p.section)?.title, keywords: p.summary, onSelect: () => { location.href = href(p.path); } })),
+    ...manifest.flatMap((c) => TABS.slice(1).map((t) => ({ id: `${c.slug}-${t}`, label: `${c.name} ${tabTitle[t].toLowerCase()}`, group: "Component tabs", hint: tabTitle[t], onSelect: () => { location.href = href(`components/${c.slug}/${t}`); } }))),
+  ], [root]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const commands = useMemo(() => routes.map((r) => ({
-    id: r.path || "home", label: r.title, group: r.section,
-    keywords: manifest.find((m) => `components/${m.slug}` === r.path)?.summary,
-    onSelect: () => { location.href = `${root}${r.path}${r.path ? "/" : ""}`; },
-  })), [root]);
+  const base = route.match(/^components\/[^/]+/)?.[0] ?? route;
+  const sidePages = pages.filter((p) => p.section === section && section !== "home");
+  const groups = section === "components" ? ["", ...families] : [""];
+  const flat = pages.filter((p) => p.section !== "home");
+  const idx = flat.findIndex((p) => p.path === base);
+  const prev = idx > 0 ? flat[idx - 1] : undefined, next = idx >= 0 ? flat[idx + 1] : undefined;
+  const tab = (route.split("/")[2] as Tab | undefined) ?? "overview";
 
-  const current = routes.find((r) => r.path === route);
-  const idx = routes.indexOf(current!);
-  const prev = idx > 0 ? routes[idx - 1] : undefined;
-  const next = idx >= 0 && idx < routes.length - 1 ? routes[idx + 1] : undefined;
-  const href = (p: string) => `${root}${p}${p ? "/" : ""}`;
+  const drawer = (
+    <nav aria-label={`${sections.find((s) => s.id === section)?.title ?? ""} pages`} className="drawer__nav">
+      <p className="drawer__title">{sections.find((s) => s.id === section)?.title}</p>
+      {groups.map((g) => {
+        const list = sidePages.filter((p) => (p.group ?? "") === g);
+        if (!list.length) return null;
+        return (
+          <div key={g || "main"} className="drawer__group">
+            {g && <p className="drawer__heading">{g}</p>}
+            <ul>{list.map((p) => <li key={p.path}><a href={href(p.path)} aria-current={p.path === base ? "page" : undefined}>{p.title}</a></li>)}</ul>
+          </div>
+        );
+      })}
+    </nav>
+  );
+  const rail = (
+    <ul className="rail">
+      {sections.map((s) => { const I = Icons[s.icon]; return (
+        <li key={s.id}><a href={href(s.path)} className="rail__item" aria-current={section === s.id ? "page" : undefined}>
+          <span className="rail__icon"><I size={22} /></span><span className="rail__label">{s.title}</span>
+        </a></li>
+      ); })}
+    </ul>
+  );
 
   return (
     <OrloProvider theme={prefs.theme} motion={prefs.motion} images={prefs.images} density={prefs.density === "auto" ? undefined : prefs.density} dir={prefs.dir}>
       <a className="skip" href="#main">Skip to content</a>
       <header className="topbar">
-        <div className="topbar__start">
-          <Sheet side="start" title="Orlo" trigger={<IconButton label="Open navigation" className="only-narrow"><Icons.Menu /></IconButton>}>
-            <Sidebar route={route} root={root} />
-          </Sheet>
-          <a href={root} className="topbar__logo" aria-label="Orlo home"><Wordmark height={26} /></a>
-          <span className="topbar__tag">pre-release</span>
-        </div>
+        <Sheet side="start" title="Orlo" trigger={<IconButton label="Open navigation" className="only-narrow"><Icons.Menu /></IconButton>}>
+          <nav aria-label="Sections" className="mobile-sections">{rail}</nav>
+          {section !== "home" && drawer}
+        </Sheet>
+        <a href={root} className="topbar__logo" aria-label="Orlo home"><Wordmark height={24} /></a>
+        <span className="topbar__tag">beta</span>
         <button type="button" className="search-trigger" onClick={() => setSearchOpen(true)} aria-label="Search documentation">
-          <Icons.Search size={16} /><span>Search</span><span className="search-trigger__keys" aria-hidden="true"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
+          <Icons.Search size={16} /><span>Search {manifest.length} components and guides</span><span className="search-trigger__keys" aria-hidden="true"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
         </button>
         <div className="topbar__end">
           <SegmentedControl label="Colour theme" size="sm" value={prefs.theme} onValueChange={(v) => set("theme")(v as Theme)}
             options={[{ value: "light", label: <Icons.Sun size={16} />, "aria-label": "Light" }, { value: "system", label: "Auto" }, { value: "dark", label: <Icons.Moon size={16} />, "aria-label": "Dark" }]} />
-          <Popover label="Preferences" placement="bottom-end" trigger={<Button variant="ghost" data-size="sm">Preferences</Button>}>
-            <Stack gap={4} style={{ inlineSize: "min(18rem, 100%)" }}>
+          <Popover label="Preferences" placement="bottom-end" trigger={<IconButton label="Preferences"><Icons.Settings size={20} /></IconButton>}>
+            <Stack gap={4} style={{ inlineSize: "min(19rem, 100%)" }}>
               <strong>Preferences</strong>
+              <Pref label="Theme" value={prefs.theme} onChange={(v) => set("theme")(v as Theme)} options={["system", "light", "dark"]} />
               <Pref label="Motion" value={prefs.motion} onChange={(v) => set("motion")(v as MotionMode)} options={["system", "reduced", "off", "full"]} />
               <Pref label="Images" value={prefs.images} onChange={(v) => set("images")(v as "on" | "off")} options={["on", "off"]} />
               <Pref label="Density" value={prefs.density} onChange={(v) => set("density")(v as Prefs["density"])} options={["auto", "compact", "comfortable", "touch"]} />
@@ -112,22 +98,27 @@ export function App({ route }: { route: string }) {
           </a>
         </div>
       </header>
-      <div className="shell">
-        <aside className="sidebar"><Sidebar route={route} root={root} /></aside>
-        <main id="main" tabIndex={-1} className="content">
-          {page(route, root)}
-          {current && (
-            <nav className="pager" aria-label="Previous and next">
-              {prev ? <a href={href(prev.path)}><span className="orlo-hint">Previous</span>{prev.title}</a> : <span />}
-              {next ? <a href={href(next.path)} data-next=""><span className="orlo-hint">Next</span>{next.title}</a> : <span />}
-            </nav>
-          )}
-          <footer className="site-footer">
-            <p>Orlo is an independent, pre-release project. It is not affiliated with Apple, Google, Framer or any other vendor named in its research. Nothing is published to npm yet.</p>
-          </footer>
+      <div className="shell" data-section={section}>
+        <nav aria-label="Sections" className="shell__rail">{rail}</nav>
+        {section !== "home" && <aside className="shell__drawer">{drawer}</aside>}
+        <main id="main" tabIndex={-1} className="content" data-section={section}>
+          <div className="content__inner">
+            {renderPage(route, root, tab)}
+            {section !== "home" && idx >= 0 && (
+              <nav className="pager" aria-label="Previous and next">
+                {prev ? <a href={href(prev.path)}><span className="orlo-hint">Previous</span>{prev.title === "Overview" ? `${sections.find((s) => s.id === prev.section)?.title}` : prev.title}</a> : <span />}
+                {next ? <a href={href(next.path)} data-next=""><span className="orlo-hint">Next</span>{next.title === "Overview" ? `${sections.find((s) => s.id === next.section)?.title}` : next.title}</a> : <span />}
+              </nav>
+            )}
+            <footer className="site-footer">
+              <Wordmark height={18} />
+              <p>An independent, pre-release design framework for React. Not affiliated with Apple, Google, Framer or any other vendor named in its research. Nothing is published to npm yet.</p>
+            </footer>
+          </div>
+          {section !== "home" && <aside className="content__toc"><PageToc dep={route} /></aside>}
         </main>
       </div>
-      <CommandPalette commands={commands} open={searchOpen} onOpenChange={setSearchOpen} placeholder="Search pages and components…" />
+      <CommandPalette commands={commands} open={searchOpen} onOpenChange={setSearchOpen} placeholder="Search components, guides and tabs…" />
     </OrloProvider>
   );
 }
@@ -136,7 +127,7 @@ function Pref({ label, value, options, onChange }: { label: string; value: strin
   return (
     <div className="pref">
       <span className="orlo-field__label">{label}</span>
-      <SegmentedControl label={label} size="sm" value={value} onValueChange={onChange} options={options.map((o) => ({ value: o, label: o.toUpperCase() === o ? o : o[0].toUpperCase() + o.slice(1) }))} />
+      <SegmentedControl label={label} size="sm" value={value} onValueChange={onChange} options={options.map((o) => ({ value: o, label: o === "ltr" || o === "rtl" ? o.toUpperCase() : o[0].toUpperCase() + o.slice(1) }))} />
     </div>
   );
 }

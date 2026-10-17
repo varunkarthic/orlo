@@ -1,4 +1,4 @@
-/* Extended component styles. Imported into the orlo.components layer by styles.css. */
+/* Extended component styles. Imported into the later orlo.extended layer, so they refine base component rules. */
 
 /* ---------- Input groups (adornments, actions) ---------- */
 .orlo-input-group { position: relative; display: flex; align-items: center; }
@@ -114,7 +114,7 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 .orlo-calendar__day {
   inline-size: 2.5rem; block-size: 2.5rem; border: 0; border-radius: 50%; background: none; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; position: relative;
 }
-.orlo-calendar__grid td[data-outside] .orlo-calendar__day { color: var(--orlo-color-fg-muted); opacity: 0.6; }
+.orlo-calendar__grid td[data-outside] .orlo-calendar__day { color: var(--orlo-color-fg-muted); font-weight: 400; }
 .orlo-calendar__day[aria-current="date"]::after { content: ""; position: absolute; inset-block-end: 5px; inset-inline-start: 50%; inline-size: 4px; block-size: 4px; margin-inline-start: -2px; border-radius: 50%; background: var(--orlo-color-accent); }
 .orlo-calendar__day[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
 .orlo-calendar__grid td[data-in-range] { background: var(--orlo-color-surface-selected); }

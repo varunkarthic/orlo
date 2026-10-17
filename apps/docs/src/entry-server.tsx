@@ -1,8 +1,8 @@
 import { renderToString } from "react-dom/server";
 import { manifest } from "@orlo/react";
 import { App } from "./App.tsx";
-import { routes } from "./routes.ts";
-import { docs } from "./registry.tsx";
+import { routes } from "./site.ts";
+import { docs } from "./registry/index.ts";
 
 export { routes };
 export const render = (route: string) => renderToString(<App route={route} />);
