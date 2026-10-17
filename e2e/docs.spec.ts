@@ -96,6 +96,20 @@ test("theme toggle switches to dark without reload", async ({ page, isMobile }) 
   expect(bg).toBe("rgb(18, 17, 16)");
 });
 
+test("off switch keeps a visible thumb and toggles cleanly", async ({ page }) => {
+  await page.goto("components/switch/");
+  const sw = page.locator(".stage").first().getByRole("switch", { name: "Wi-Fi" });
+  await expect(sw).toHaveAttribute("aria-checked", "true");
+  await sw.click();
+  await expect(sw).toHaveAttribute("aria-checked", "false");
+  const thumb = sw.locator(".orlo-switch__thumb");
+  await expect(thumb).toBeVisible();
+  const box = await thumb.boundingBox();
+  expect(box?.width).toBeGreaterThanOrEqual(16);
+  expect(box?.height).toBeGreaterThanOrEqual(16);
+  expect(await thumb.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe("rgba(0, 0, 0, 0)");
+});
+
 test("mobile navigation opens as a sheet", async ({ page, isMobile }) => {
   test.skip(!isMobile, "mobile only");
   await page.goto("components/");

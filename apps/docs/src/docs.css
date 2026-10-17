@@ -252,13 +252,13 @@ table.keys td:first-child { white-space: nowrap; }
 .mat-backdrop p { position: absolute; inset-inline: 0; inset-block-end: 30%; margin: 0; font-size: 1.6rem; font-weight: 800; opacity: 0.55; white-space: nowrap; }
 .mat-card { position: relative; display: grid; gap: 10px; padding: 18px 20px; border-radius: var(--orlo-radius-xl); border: 1px solid var(--orlo-color-border); max-inline-size: 20rem; box-shadow: var(--orlo-material-depth-shadow, var(--orlo-shadow-3)); }
 /* Device lab */
-.devicelab { display: grid; justify-items: center; gap: 10px; margin-block-start: 20px; }
-.devicelab__frame { position: relative; padding: 12px; border-radius: 34px; background: #1C1B18; box-shadow: var(--orlo-shadow-4); overflow: hidden; transition: inline-size var(--orlo-duration-spatial-default) var(--orlo-ease-spatial-default), block-size var(--orlo-duration-spatial-default) var(--orlo-ease-spatial-default); }
-.devicelab__frame[data-kind="laptop"] { border-radius: 14px; }
-.devicelab__frame iframe { border: 0; transform-origin: top left; border-radius: 22px; background: var(--orlo-color-canvas); display: block; }
-.devicelab__frame[data-kind="laptop"] iframe { border-radius: 4px; }
-.devicelab__safe { position: absolute; inset-inline: 12px; display: grid; place-items: center; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; background: repeating-linear-gradient(45deg, rgb(255 0 80 / 0.22) 0 6px, rgb(255 0 80 / 0.1) 6px 12px); pointer-events: none; border-radius: 22px 22px 0 0; }
-.devicelab__safe[style*="inset-block-end"] { border-radius: 0 0 22px 22px; }
+.devicelab { display: grid; justify-items: center; gap: var(--orlo-space-3); margin-block-start: var(--orlo-space-5); }
+.devicelab__frame { position: relative; padding: var(--orlo-space-3); border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-2xl); background: var(--orlo-color-fg); box-shadow: var(--orlo-shadow-4); overflow: hidden; }
+.devicelab__frame[data-kind="laptop"] { border-radius: var(--orlo-radius-lg); }
+.devicelab__frame iframe { border: 0; transform-origin: top left; border-radius: var(--orlo-radius-xl); background: var(--orlo-color-canvas); display: block; }
+.devicelab__frame[data-kind="laptop"] iframe { border-radius: var(--orlo-radius-sm); }
+.devicelab__safe { position: absolute; inset-inline: var(--orlo-space-3); display: grid; place-items: center; font-size: var(--orlo-text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--orlo-color-fg-inverse); background: color-mix(in oklab, var(--orlo-color-error) 28%, transparent); pointer-events: none; border-radius: var(--orlo-radius-xl) var(--orlo-radius-xl) 0 0; }
+.devicelab__safe[style*="inset-block-end"] { border-radius: 0 0 var(--orlo-radius-xl) var(--orlo-radius-xl); }
 /* Motion page */
 .token-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); margin-block-end: 12px; }
 .token { display: grid; gap: 8px; padding: 14px !important; }
@@ -302,3 +302,34 @@ table.keys td:first-child { white-space: nowrap; }
 .component-lifecycle li div { display: grid; gap: var(--orlo-space-1); }
 .component-lifecycle li span:not(:first-child) { color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); }
 @media (max-width: 39rem) { .component-lifecycle__head { align-items: flex-start; flex-direction: column; } }
+
+/* ---------- V3 documentation shell: one quiet visual grammar across every route ---------- */
+.topbar { gap: var(--orlo-space-3); padding-inline: var(--orlo-space-4); background: color-mix(in oklab, var(--orlo-color-canvas) 88%, transparent); box-shadow: 0 1px 0 color-mix(in oklab, var(--orlo-color-fg) 6%, transparent); }
+.topbar__logo, .topbar__gh { border-radius: var(--orlo-radius-md); }
+.topbar__logo { margin-inline-start: 0; }
+.search-trigger { border-radius: var(--orlo-radius-md); background: color-mix(in oklab, var(--orlo-color-surface), var(--orlo-color-canvas) 36%); transition: var(--orlo-t-color), var(--orlo-t-shadow); }
+@media (hover: hover) and (pointer: fine) { .topbar__gh:hover, .search-trigger:hover { background: var(--orlo-color-surface-raised); box-shadow: var(--orlo-shadow-1); } }
+.shell__rail { border-inline-end: 1px solid var(--orlo-color-border); padding-block: var(--orlo-space-4); }
+.shell__drawer { border-inline-end: 1px solid var(--orlo-color-border); padding: var(--orlo-space-5) var(--orlo-space-3) var(--orlo-space-8); }
+.rail { gap: var(--orlo-space-2); }
+.rail__item { border-radius: var(--orlo-radius-md); }
+.rail__icon { border-radius: var(--orlo-radius-md); }
+.drawer__nav a { border-radius: var(--orlo-radius-md); }
+.content { gap: clamp(var(--orlo-space-6), 3vw, var(--orlo-space-9)); padding-block: clamp(var(--orlo-space-6), 5vw, var(--orlo-space-10)); }
+.content__inner { max-inline-size: 60rem; }
+.content[data-section="home"] .content__inner, .content__inner:has(> .wide) { max-inline-size: 82rem; }
+.page-header { padding-block-end: var(--orlo-space-5); border-block-end: 1px solid var(--orlo-color-border); }
+.page-header .lead { margin-block-end: 0; }
+.eyebrow { font-size: var(--orlo-text-xs); letter-spacing: 0.09em; text-transform: uppercase; }
+h1:not([class^="orlo-"]) { font-size: clamp(2.2rem, 1.7rem + 2vw, 3.4rem); }
+h2:not([class^="orlo-"]) { margin-block-start: clamp(var(--orlo-space-8), 7vw, var(--orlo-space-10)); }
+.ctabs-wrap { background: color-mix(in oklab, var(--orlo-color-canvas) 94%, transparent); }
+.ctabs a { border-radius: var(--orlo-radius-md) var(--orlo-radius-md) 0 0; }
+.stage, .anatomy, .playground, .component-lifecycle { border-radius: var(--orlo-radius-lg); box-shadow: var(--orlo-shadow-1); }
+.stage__canvas { background-size: var(--orlo-space-4) var(--orlo-space-4); }
+.link-card, .cindex__card { border-radius: var(--orlo-radius-lg); transition: var(--orlo-t-color), var(--orlo-t-shadow), var(--orlo-t-press); }
+@media (hover: hover) and (pointer: fine) { .link-card:hover, .cindex__card:hover { box-shadow: var(--orlo-shadow-3); transform: translateY(-1px); } }
+.pager a { border-radius: var(--orlo-radius-lg); transition: var(--orlo-t-color), var(--orlo-t-shadow); }
+@media (hover: hover) and (pointer: fine) { .pager a:hover { box-shadow: var(--orlo-shadow-1); } }
+.stats { border-radius: var(--orlo-radius-lg); }
+@media (max-width: 899px) { .shell__rail, .shell__drawer { border-inline-end: 0; } .content { padding-inline: var(--orlo-space-4); } }

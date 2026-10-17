@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { SegmentedControl, Select, Switch, Stack, Badge } from "@orlo/react";
+import { useOrloMotion } from "@orlo/motion";
 import { PageHeader, H2 } from "../kit.tsx";
 
 const devices = {
@@ -18,6 +20,7 @@ export function DeviceLab({ root }: { root: string }) {
   const dev = devices[d];
   const [w, h] = landscape ? [dev.h, dev.w] : [dev.w, dev.h];
   const scale = Math.min(1, 560 / h, 900 / w);
+  const { transition } = useOrloMotion();
   return (
     <div className="wide">
       <PageHeader eyebrow="Develop" title="Device lab" lead="Real Orlo pages in device frames: the pages inside are the actual documentation running at that width, not screenshots." />
@@ -28,11 +31,11 @@ export function DeviceLab({ root }: { root: string }) {
         <Switch label="Show safe areas" checked={safe} onCheckedChange={setSafe} />
       </Stack>
       <div className="devicelab">
-        <div className="devicelab__frame" data-kind={d} style={{ inlineSize: w * scale + 24, blockSize: h * scale + 24 }}>
-          <iframe key={page + w + h} title={`${dev.label} preview of ${page || "home"}`} src={`${root}${page}`} style={{ inlineSize: w, blockSize: h, transform: `scale(${scale})` }} />
+        <motion.div className="devicelab__frame" data-kind={d} layout transition={transition("shared")} style={{ inlineSize: w * scale + 24, blockSize: h * scale + 24 }}>
+          <iframe key={page} title={`${dev.label} preview of ${page || "home"}`} src={`${root}${page}`} style={{ inlineSize: w, blockSize: h, transform: `scale(${scale})` }} />
           {safe && dev.inset.top > 0 && !landscape && <div className="devicelab__safe" style={{ insetBlockStart: 12, blockSize: dev.inset.top * scale }}>safe area</div>}
           {safe && dev.inset.bottom > 0 && !landscape && <div className="devicelab__safe" style={{ insetBlockEnd: 12, blockSize: dev.inset.bottom * scale }}>home indicator</div>}
-        </div>
+        </motion.div>
         <p className="orlo-hint">{w}×{h} CSS px · shown at {Math.round(scale * 100)}% <Badge tone="neutral">{w < 520 ? "Overlays dock as sheets" : w < 900 ? "Navigation in a sheet" : "Rail + drawer"}</Badge></p>
       </div>
       <H2>What changes by width</H2>

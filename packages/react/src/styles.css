@@ -217,14 +217,15 @@
   .orlo-switch {
     flex: none; position: relative; inline-size: 2.75rem; block-size: 1.625rem; padding: 0.1875rem; margin: 0; cursor: pointer;
     display: flex; justify-content: flex-start; align-items: center;
-    border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-full); background: var(--orlo-color-border);
-    transition: background-color var(--orlo-motion-duration-quick), border-color var(--orlo-motion-duration-quick);
+    border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-full); background: var(--orlo-color-surface);
+    transition: background-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), border-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), box-shadow var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
   }
   .orlo-switch::after { content: ""; position: absolute; inset: -0.5rem; } /* larger touch target without visual bulk */
   .orlo-switch[data-checked] { justify-content: flex-end; background: var(--orlo-color-accent); border-color: var(--orlo-color-accent); }
-  .orlo-switch__thumb { inline-size: 1.125rem; block-size: 1.125rem; border-radius: 50%; background: var(--orlo-color-surface-raised); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); }
+  .orlo-switch__thumb { display: block; flex: none; inline-size: 1.125rem; block-size: 1.125rem; border-radius: var(--orlo-radius-full); background: var(--orlo-color-fg-muted); box-shadow: var(--orlo-shadow-1); }
   .orlo-switch[data-checked] .orlo-switch__thumb { background: var(--orlo-color-accent-fg); }
-  .orlo-switch:disabled { opacity: 0.5; cursor: not-allowed; }
+  .orlo-switch:disabled { opacity: 1; cursor: not-allowed; border-color: var(--orlo-color-border); background: var(--orlo-color-surface-raised); }
+  .orlo-switch:disabled .orlo-switch__thumb { background: var(--orlo-color-border-control); box-shadow: none; }
   .orlo-switch__text { display: grid; gap: 0.1rem; padding-block-start: 0.125rem; }
   .orlo-switch__text label { cursor: pointer; }
 
