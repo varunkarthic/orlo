@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useOrloMotion } from "@orlo/motion";
 import type { ReactNode } from "react";
+import { Icons } from "../internal/icons.tsx";
 
 export type AlertProps = {
   tone?: "info" | "success" | "warning" | "error";
@@ -11,7 +12,7 @@ export type AlertProps = {
   action?: ReactNode;
 };
 
-const glyph = { info: "i", success: "✓", warning: "!", error: "!" } as const;
+const glyph = { info: <Icons.Info />, success: <Icons.Check />, warning: <Icons.Alert />, error: <Icons.Alert /> };
 
 export function Alert({ tone = "info", title, open = true, children, action }: AlertProps) {
   const { transition, distance } = useOrloMotion();

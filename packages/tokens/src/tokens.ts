@@ -34,6 +34,12 @@ export const semantic = {
   },
 } as const;
 
+/** Identity tints (avatars, tags): [background, foreground], each pair >= 4.5:1. */
+export const tints = {
+  light: [["#F3DCCB", "#6B2A06"], ["#DDE7D6", "#2B4A22"], ["#D9E3F0", "#1E3D63"], ["#EADCEC", "#522A57"], ["#F1E6C4", "#5A4405"], ["#D8E9E6", "#1D4A44"]],
+  dark: [["#4A2614", "#F6C9A9"], ["#26381F", "#C3DDB5"], ["#1E3049", "#BDD2EE"], ["#3C2440", "#E5C6EA"], ["#40330D", "#EBD796"], ["#183632", "#B3DDD6"]],
+} as const;
+
 /** 4px base scale. */
 export const space = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40, 12: 48, 16: 64 } as const;
 export const radius = { sm: 4, md: 8, lg: 12, xl: 20, full: 9999 } as const;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { contrast, semantic } from "./tokens.ts";
+import { contrast, semantic, tints } from "./tokens.ts";
 
 const pairs: [string, string, number][] = [
   ["fg", "canvas", 4.5], ["fg", "surface", 4.5], ["fg-muted", "canvas", 4.5], ["fg-muted", "surface", 4.5],
@@ -16,5 +16,11 @@ describe("contrast (WCAG 2.2 AA)", () => {
         expect(contrast(t[a], t[b])).toBeGreaterThanOrEqual(min);
       });
     }
+  }
+});
+
+describe("identity tints", () => {
+  for (const scheme of ["light", "dark"] as const) {
+    tints[scheme].forEach(([bg, fg], i) => it(`${scheme} tint ${i} >= 4.5`, () => expect(contrast(bg, fg)).toBeGreaterThanOrEqual(4.5)));
   }
 });
