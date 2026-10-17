@@ -1,0 +1,4 @@
+{ "name": "@orlo/react", "version": "0.0.0", "type": "module", "license": "MIT",
+  "exports": { ".": "./src/index.ts", "./styles.css": "./src/styles.css" },
+  "peerDependencies": { "react": ">=18", "react-dom": ">=18" },
+  "dependencies": { "@orlo/tokens": "*", "@orlo/motion": "*", "@base-ui/react": "^1.0.0" } }

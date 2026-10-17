@@ -1,0 +1,134 @@
+@layer orlo.base, orlo.components;
+
+@layer orlo.base {
+  .orlo-root {
+    background: var(--orlo-color-canvas);
+    color: var(--orlo-color-fg);
+    font-family: var(--orlo-font-sans);
+    font-size: var(--orlo-text-md);
+    line-height: var(--orlo-leading-normal);
+    -webkit-text-size-adjust: 100%;
+  }
+  .orlo-visually-hidden {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .orlo-root :focus-visible {
+    outline: 2px solid var(--orlo-color-focus);
+    outline-offset: 2px;
+  }
+}
+
+@layer orlo.components {
+  /* Button */
+  .orlo-button {
+    position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--orlo-space-2);
+    min-block-size: var(--orlo-control-h); min-inline-size: var(--orlo-control-h);
+    padding-inline: var(--orlo-control-pad);
+    border: 1px solid transparent; border-radius: var(--orlo-radius-md);
+    font: inherit; font-weight: 600; line-height: 1.2; cursor: pointer;
+    transition: background-color var(--orlo-motion-duration-instant) var(--orlo-motion-ease-out),
+                transform var(--orlo-motion-duration-instant) var(--orlo-motion-ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .orlo-button[data-variant="solid"] { background: var(--orlo-color-accent); color: var(--orlo-color-accent-fg); }
+  .orlo-button[data-variant="subtle"] { background: var(--orlo-color-surface-raised); color: var(--orlo-color-fg); border-color: var(--orlo-color-border-control); }
+  .orlo-button[data-variant="ghost"] { background: transparent; color: var(--orlo-color-fg); }
+  .orlo-button[data-variant="danger"] { background: transparent; color: var(--orlo-color-error); border-color: var(--orlo-color-error); }
+  .orlo-button:active:not(:disabled):not([aria-disabled="true"]) { transform: scale(0.98); }
+  @media (hover: hover) and (pointer: fine) {
+    .orlo-button[data-variant="solid"]:hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-accent), var(--orlo-color-fg) 12%); }
+    .orlo-button[data-variant="subtle"]:hover:not(:disabled), .orlo-button[data-variant="ghost"]:hover:not(:disabled) { background: var(--orlo-color-surface-selected); }
+  }
+  .orlo-button:disabled { opacity: 0.55; cursor: not-allowed; }
+  .orlo-button[aria-disabled="true"] { cursor: progress; }
+  .orlo-button__label { transition: opacity var(--orlo-motion-duration-quick); }
+  .orlo-button[data-loading] .orlo-button__label { opacity: 0; }
+  .orlo-button__busy { position: absolute; inset: 0; display: grid; place-items: center; }
+
+  /* Spinner */
+  .orlo-spinner { display: inline-grid; place-items: center; }
+  .orlo-spinner svg { width: 1.25rem; height: 1.25rem; animation: orlo-spin 0.9s linear infinite; }
+  .orlo-spinner[data-size="sm"] svg { width: 1rem; height: 1rem; }
+  @keyframes orlo-spin { to { transform: rotate(360deg); } }
+
+  /* Skeleton: restrained shimmer, static when motion is reduced */
+  .orlo-skeleton {
+    display: inline-block; vertical-align: middle; border-radius: var(--orlo-radius-sm);
+    background: linear-gradient(90deg, var(--orlo-color-border) 0%, var(--orlo-color-surface-raised) 50%, var(--orlo-color-border) 100%) 0 0 / 200% 100%;
+    animation: orlo-shimmer 1.6s ease-in-out infinite;
+  }
+  @keyframes orlo-shimmer { to { background-position: -200% 0; } }
+
+  /* Badge */
+  .orlo-badge {
+    display: inline-flex; align-items: center; padding: 0.125rem var(--orlo-space-2);
+    border-radius: var(--orlo-radius-sm); border: 1px solid currentColor;
+    font-size: var(--orlo-text-xs); font-weight: 600; line-height: 1.4;
+  }
+  .orlo-badge[data-tone="neutral"] { color: var(--orlo-color-fg-muted); }
+  .orlo-badge[data-tone="accent"] { color: var(--orlo-color-accent-text); }
+  .orlo-badge[data-tone="success"] { color: var(--orlo-color-success); }
+  .orlo-badge[data-tone="warning"] { color: var(--orlo-color-warning); }
+  .orlo-badge[data-tone="error"] { color: var(--orlo-color-error); }
+  .orlo-badge[data-tone="info"] { color: var(--orlo-color-info); }
+
+  /* Card */
+  .orlo-card {
+    background: var(--orlo-color-surface); border: 1px solid var(--orlo-color-border);
+    border-radius: var(--orlo-radius-lg); padding: var(--orlo-space-5);
+    container-type: inline-size;
+  }
+
+  /* TextField */
+  .orlo-field { display: grid; gap: var(--orlo-space-1); }
+  .orlo-field__label { font-weight: 600; font-size: var(--orlo-text-sm); }
+  .orlo-field__input {
+    min-block-size: var(--orlo-control-h); padding-inline: var(--orlo-space-3);
+    background: var(--orlo-color-surface-raised); color: inherit; font: inherit;
+    border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-md);
+  }
+  .orlo-field[data-invalid] .orlo-field__input { border-color: var(--orlo-color-error); border-width: 2px; }
+  .orlo-field__msg { margin: 0; min-block-size: 1.4em; font-size: var(--orlo-text-sm); color: var(--orlo-color-fg-muted); }
+  .orlo-field[data-invalid] .orlo-field__msg { color: var(--orlo-color-error); }
+
+  /* Alert */
+  .orlo-alert {
+    display: flex; gap: var(--orlo-space-3); align-items: flex-start; padding: var(--orlo-space-3) var(--orlo-space-4);
+    border: 1px solid var(--orlo-tone); border-inline-start-width: 4px; border-radius: var(--orlo-radius-md);
+    background: var(--orlo-color-surface);
+  }
+  .orlo-alert[data-tone="info"] { --orlo-tone: var(--orlo-color-info); }
+  .orlo-alert[data-tone="success"] { --orlo-tone: var(--orlo-color-success); }
+  .orlo-alert[data-tone="warning"] { --orlo-tone: var(--orlo-color-warning); }
+  .orlo-alert[data-tone="error"] { --orlo-tone: var(--orlo-color-error); }
+  .orlo-alert__glyph {
+    flex: none; inline-size: 1.25rem; block-size: 1.25rem; display: grid; place-items: center;
+    border-radius: 50%; background: var(--orlo-tone); color: var(--orlo-color-canvas); font-size: var(--orlo-text-xs); font-weight: 700;
+  }
+  .orlo-alert__body { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; }
+
+  /* Image */
+  .orlo-image { position: relative; margin: 0; overflow: hidden; border-radius: var(--orlo-radius-md); background: var(--orlo-color-border); inline-size: 100%; }
+  .orlo-image img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .orlo-image__placeholder {
+    position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--orlo-space-2);
+    padding: var(--orlo-space-3); text-align: center; color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm);
+  }
+  .orlo-image__caption { overflow-wrap: anywhere; }
+  .orlo-image__retry {
+    min-block-size: 2rem; padding-inline: var(--orlo-space-3); font: inherit; font-size: var(--orlo-text-sm); font-weight: 600;
+    color: var(--orlo-color-accent-text); background: transparent; border: 1px solid currentColor; border-radius: var(--orlo-radius-sm); cursor: pointer;
+  }
+
+  /* Reduced motion: keep state, drop movement. */
+  @media (prefers-reduced-motion: reduce) {
+    .orlo-spinner svg { animation-duration: 2.4s; }
+    .orlo-skeleton { animation: none; }
+    .orlo-button:active:not(:disabled) { transform: none; }
+  }
+  @media (forced-colors: active) {
+    .orlo-button, .orlo-field__input { border: 1px solid ButtonText; }
+    .orlo-badge, .orlo-alert { border: 1px solid CanvasText; }
+  }
+}

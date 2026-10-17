@@ -1,0 +1,3 @@
+{ "name": "@orlo/docs", "version": "0.0.0", "private": true, "type": "module",
+  "scripts": { "dev": "vite", "build": "node build.mjs" },
+  "dependencies": { "@orlo/react": "*", "@orlo/tokens": "*", "@orlo/motion": "*", "react": "^19.1.0", "react-dom": "^19.1.0" } }

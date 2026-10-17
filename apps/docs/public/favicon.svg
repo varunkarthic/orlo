@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>.bg{fill:#1C1B18}.fg{stroke:#F7F5F0}@media (prefers-color-scheme:dark){.bg{fill:#F7F5F0}.fg{stroke:#1C1B18}}</style>
+  <rect class="bg" width="100" height="100" rx="22"/>
+  <path class="fg" d="M64 76A29 29 0 1 1 74 67" fill="none" stroke-width="13" stroke-linecap="butt"/>
+</svg>

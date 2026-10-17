@@ -1,0 +1,3 @@
+{ "name": "@orlo/tokens", "version": "0.0.0", "type": "module", "license": "MIT",
+  "exports": { ".": "./src/index.ts", "./css": "./dist/orlo.css" },
+  "scripts": { "build": "node build.mjs" } }

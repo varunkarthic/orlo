@@ -1,0 +1,42 @@
+body { margin: 0; background: var(--orlo-color-canvas); color: var(--orlo-color-fg); }
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+*, *::before, *::after { box-sizing: border-box; }
+.skip { position: absolute; inset-inline-start: 8px; inset-block-start: -64px; background: var(--orlo-color-fg); color: var(--orlo-color-fg-inverse); padding: 8px 12px; border-radius: 6px; z-index: var(--orlo-layer-alert); }
+.skip:focus { inset-block-start: 8px; }
+.site-header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; padding: 12px clamp(16px, 4vw, 40px); border-block-end: 1px solid var(--orlo-color-border); position: sticky; inset-block-start: 0; background: var(--orlo-color-canvas); z-index: var(--orlo-layer-sticky); }
+.site-logo { color: var(--orlo-color-fg); display: inline-flex; }
+.site-header ul { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.site-header nav a { display: inline-flex; align-items: center; min-block-size: 44px; padding-inline: 12px; color: var(--orlo-color-fg-muted); text-decoration: none; font-weight: 500; border-radius: 8px; }
+.site-header nav a[aria-current="page"] { color: var(--orlo-color-fg); box-shadow: inset 0 -2px 0 var(--orlo-color-accent); }
+.prefs { display: flex; flex-wrap: wrap; gap: 4px; margin-inline-start: auto; }
+main { max-inline-size: 72rem; margin-inline: auto; padding: clamp(24px, 5vw, 56px) clamp(16px, 4vw, 40px); outline: none; }
+main a { color: var(--orlo-color-accent-text); }
+.crumb { color: var(--orlo-color-fg-muted); margin: 0 0 8px; font-size: var(--orlo-text-sm); }
+h1 { font-size: var(--orlo-text-2xl); line-height: var(--orlo-leading-tight); letter-spacing: -0.02em; margin: 0 0 16px; text-wrap: balance; }
+h2 { font-size: var(--orlo-text-xl); line-height: var(--orlo-leading-tight); margin: 48px 0 12px; letter-spacing: -0.01em; }
+h3 { font-size: var(--orlo-text-lg); margin: 24px 0 8px; }
+p, li { max-inline-size: 68ch; }
+.lead { font-size: var(--orlo-text-lg); color: var(--orlo-color-fg-muted); }
+pre, code { font-family: var(--orlo-font-mono); font-size: 0.875em; }
+pre { background: var(--orlo-color-surface); border: 1px solid var(--orlo-color-border); border-radius: 8px; padding: 16px; overflow-x: auto; max-inline-size: 100%; }
+code { background: var(--orlo-color-surface); padding: 0.1em 0.35em; border-radius: 4px; }
+pre code { background: none; padding: 0; }
+.demo { border: 1px solid var(--orlo-color-border); border-radius: 12px; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; background: var(--orlo-color-surface); }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+.swatches { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+.swatch { border: 1px solid var(--orlo-color-border); border-radius: 8px; overflow: hidden; font-size: var(--orlo-text-sm); }
+.swatch div { block-size: 56px; }
+.swatch p { margin: 0; padding: 6px 8px; }
+table { border-collapse: collapse; inline-size: 100%; display: block; overflow-x: auto; }
+th, td { text-align: start; padding: 8px 12px; border-block-end: 1px solid var(--orlo-color-border); vertical-align: top; }
+.site-footer { border-block-start: 1px solid var(--orlo-color-border); padding: 24px clamp(16px, 4vw, 40px); color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); }
+.pair { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+.pair > section { border: 1px solid var(--orlo-color-border); border-radius: 12px; padding: 16px; }
+.pair h3 { margin-top: 0; }
+.tag { font-size: var(--orlo-text-xs); }
+.lab-box { inline-size: 56px; block-size: 56px; border-radius: 12px; background: var(--orlo-color-accent); }
+.lab-track { inline-size: 100%; max-inline-size: 28rem; padding: 12px; border: 1px dashed var(--orlo-color-border-control); border-radius: 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; }
+label.range { display: grid; gap: 4px; font-size: var(--orlo-text-sm); font-weight: 600; min-inline-size: 12rem; }
+label.range input { inline-size: 100%; min-block-size: 44px; }
