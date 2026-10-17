@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <style>.bg{fill:#1C1B18}.fg{stroke:#F7F5F0}@media (prefers-color-scheme:dark){.bg{fill:#F7F5F0}.fg{stroke:#1C1B18}}</style>
-  <rect class="bg" width="100" height="100" rx="22"/>
-  <path class="fg" d="M73.8 33.4A29 29 0 1 1 63.6 24.4" fill="none" stroke-width="13" stroke-linecap="butt"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>.t{fill:#1C1B18}.m{fill:#F7F5F0}@media (prefers-color-scheme:dark){.t{fill:#F7F5F0}.m{fill:#1C1B18}}</style>
+  <rect class="t" width="64" height="64" rx="14"/>
+  <path class="m" fill-rule="evenodd" d="M32 12C20.4 12 11 21 11 32C11 43 20.4 52 32 52C43.6 52 53 43 53 32C53 21 43.6 12 32 12ZM32 20.5C38.6 20.5 44 25.6 44 32C44 38.4 38.6 43.5 32 43.5C25.4 43.5 20 38.4 20 32C20 25.6 25.4 20.5 32 20.5Z"/>
 </svg>
