@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { SegmentedControl, Select, Switch, Stack, Badge } from "@orlo/react";
+import { SegmentedControl, Select, Switch, Badge } from "@orlo/react";
 import { useOrloMotion } from "@orlo/motion";
 import { PageHeader, H2 } from "../kit.tsx";
 
@@ -17,26 +17,35 @@ export function DeviceLab({ root }: { root: string }) {
   const [landscape, setLandscape] = useState(false);
   const [page, setPage] = useState("components/dialog/");
   const [safe, setSafe] = useState(true);
+  const container = useRef<HTMLDivElement>(null);
+  const [available, setAvailable] = useState(900);
   const dev = devices[d];
   const [w, h] = landscape ? [dev.h, dev.w] : [dev.w, dev.h];
-  const scale = Math.min(1, 560 / h, 900 / w);
+  const scale = Math.min(1, 560 / h, Math.max(200, Math.min(900, available - 24)) / w);
   const { transition } = useOrloMotion();
+  useLayoutEffect(() => {
+    if (!container.current) return;
+    const resize = () => setAvailable(container.current?.clientWidth ?? 900);
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(container.current);
+    return () => observer.disconnect();
+  }, []);
   return (
     <div className="wide">
       <PageHeader eyebrow="Develop" title="Device lab" lead="Real Orlo pages in device frames: the pages inside are the actual documentation running at that width, not screenshots." />
-      <Stack direction="row" gap={4} wrap align="end">
+      <div className="devicelab__controls">
         <SegmentedControl label="Device" value={d} onValueChange={(v) => setD(v as keyof typeof devices)} options={Object.entries(devices).map(([k, v]) => ({ value: k, label: v.label.split(" ")[0] + (k === "small" ? " (small)" : "") }))} />
-        <div style={{ inlineSize: "14rem" }}><Select label="Page" value={page} onValueChange={setPage} options={pagesToTry.map(([v, l]) => ({ value: v, label: l }))} /></div>
-        <Switch label="Landscape" checked={landscape} onCheckedChange={setLandscape} />
-        <Switch label="Show safe areas" checked={safe} onCheckedChange={setSafe} />
-      </Stack>
-      <div className="devicelab">
+        <div className="devicelab__page"><Select label="Page" value={page} onValueChange={setPage} options={pagesToTry.map(([v, l]) => ({ value: v, label: l }))} /></div>
+        <div className="devicelab__options"><Switch label="Landscape" checked={landscape} onCheckedChange={setLandscape} /><Switch label="Show safe areas" checked={safe} onCheckedChange={setSafe} /></div>
+      </div>
+      <div ref={container} className="devicelab">
         <motion.div className="devicelab__frame" data-kind={d} layout transition={transition("shared")} style={{ inlineSize: w * scale + 24, blockSize: h * scale + 24 }}>
           <iframe key={page} title={`${dev.label} preview of ${page || "home"}`} src={`${root}${page}`} style={{ inlineSize: w, blockSize: h, transform: `scale(${scale})` }} />
-          {safe && dev.inset.top > 0 && !landscape && <div className="devicelab__safe" style={{ insetBlockStart: 12, blockSize: dev.inset.top * scale }}>safe area</div>}
-          {safe && dev.inset.bottom > 0 && !landscape && <div className="devicelab__safe" style={{ insetBlockEnd: 12, blockSize: dev.inset.bottom * scale }}>home indicator</div>}
+          {safe && dev.inset.top > 0 && !landscape && <div aria-hidden="true" className="devicelab__safe" style={{ insetBlockStart: 12, blockSize: dev.inset.top * scale }} />}
+          {safe && dev.inset.bottom > 0 && !landscape && <div aria-hidden="true" className="devicelab__safe" style={{ insetBlockEnd: 12, blockSize: dev.inset.bottom * scale }} />}
         </motion.div>
-        <p className="orlo-hint">{w}×{h} CSS px · shown at {Math.round(scale * 100)}% <Badge tone="neutral">{w < 520 ? "Overlays dock as sheets" : w < 900 ? "Navigation in a sheet" : "Rail + drawer"}</Badge></p>
+        <p className="devicelab__caption"><span>{w}×{h} CSS px · shown at {Math.round(scale * 100)}%{safe && !landscape && (dev.inset.top || dev.inset.bottom) ? " · shaded edges show safe areas" : ""}</span><Badge tone="neutral">{w < 520 ? "Overlays dock as sheets" : w < 900 ? "Navigation in a sheet" : "Rail + drawer"}</Badge></p>
       </div>
       <H2>What changes by width</H2>
       <table className="doc" tabIndex={0}><thead><tr><th>Width</th><th>Behaviour</th></tr></thead><tbody>

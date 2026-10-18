@@ -49,7 +49,38 @@ export function Installation() {
 type Scene = "settings" | "dashboard" | "calendar" | "feedback";
 type Density = "compact" | "comfortable" | "touch";
 
+function SettingsScene() {
+  const [name, setName] = useState("Theo");
+  const [sync, setSync] = useState(true);
+  const [remember, setRemember] = useState(true);
+  const [volume, setVolume] = useState(60);
+  const [message, setMessage] = useState("");
+  const reset = () => { setName("Theo"); setSync(true); setRemember(true); setVolume(60); setMessage("Preview changes reset."); };
+  const profile = (
+    <div className="scene__profile">
+      <TextField label="Display name" value={name} onChange={(event) => { setName(event.target.value); setMessage(""); }} />
+      <Stack direction="row" gap={4} wrap align="center"><Switch label="Sync" checked={sync} onCheckedChange={(value) => { setSync(value); setMessage(""); }} /><Checkbox label="Remember me" checked={remember} onChange={(event) => { setRemember(event.target.checked); setMessage(""); }} /></Stack>
+      <Slider label="Volume" value={volume} onValueChange={(value) => { setVolume(value); setMessage(""); }} />
+      <p className="orlo-hint">Accent text stays legible in both appearances.</p>
+      <Stack direction="row" gap={2} justify="end"><Button variant="ghost" onClick={reset}>Reset</Button><Button variant="accent" onClick={() => setMessage(`Preview profile saved for ${name || "Theo"}.`)}>Save</Button></Stack>
+      <span className="scene__status" role="status">{message}</span>
+    </div>
+  );
+  return (
+    <div className="scene scene--settings orlo-material">
+      <div className="scene__head"><Avatar name="Theo Lindqvist" size="lg" /><div><strong>Theo Lindqvist</strong><div className="orlo-hint">theo@example.com</div></div><Badge tone="accent">Pro</Badge></div>
+      <Tabs label="Settings" items={[
+        { value: "profile", label: "Profile", content: profile },
+        { value: "billing", label: "Billing", content: <div className="scene__detail"><strong>Pro plan</strong><p>€12 per month · next invoice on 18 November</p><Badge tone="success" dot>Active</Badge></div> },
+        { value: "team", label: "Team", content: <div className="scene__detail"><strong>Workspace members</strong><p>Theo, Ana and Mira can collaborate in this preview workspace.</p><Badge tone="neutral">3 members</Badge></div> },
+      ]} />
+    </div>
+  );
+}
+
 function SceneView({ scene }: { scene: Scene }) {
+  const [draftEvent, setDraftEvent] = useState(false);
+  const [sampleMessage, setSampleMessage] = useState(false);
   if (scene === "dashboard") return (
     <div className="scene scene--dash">
       {[["Revenue", "€48.2k", [3, 4, 3.6, 5, 4.8, 6, 6.4]], ["Active users", "12,480", [8, 7.5, 9, 9.4, 10, 9.8, 11]], ["Churn", "1.8%", [3, 2.8, 2.9, 2.4, 2.2, 2, 1.8]]].map(([k, v, d]) => (
@@ -63,8 +94,8 @@ function SceneView({ scene }: { scene: Scene }) {
       <div className="orlo-material scene__panel"><Calendar label="Pick a day" /></div>
       <div className="orlo-material scene__panel">
         <strong>Today</strong>
-        <ul className="scene__agenda">{[["09:30", "Design review", "accent"], ["12:00", "Lunch with Ana", "neutral"], ["15:00", "Ship v0.4 notes", "success"]].map(([t, l, tone]) => <li key={t}><span className="orlo-hint">{t}</span><span>{l}</span><Badge tone={tone as "accent"} dot>{tone === "success" ? "Done" : tone === "accent" ? "Next" : "Later"}</Badge></li>)}</ul>
-        <Button variant="accent" start={<Icons.Plus size={16} />}>New event</Button>
+        <ul className="scene__agenda">{[["09:30", "Design review", "accent"], ["12:00", "Lunch with Ana", "neutral"], ["15:00", "Ship v0.4 notes", "success"], ...(draftEvent ? [["16:30", "Draft event", "neutral"]] : [])].map(([t, l, tone]) => <li key={t}><span className="orlo-hint">{t}</span><span>{l}</span><Badge tone={tone as "accent"} dot>{tone === "success" ? "Done" : tone === "accent" ? "Next" : "Later"}</Badge></li>)}</ul>
+        <Button variant="accent" start={<Icons.Plus size={16} />} onClick={() => setDraftEvent((value) => !value)}>{draftEvent ? "Remove draft" : "Add draft event"}</Button>
       </div>
     </div>
   );
@@ -75,20 +106,10 @@ function SceneView({ scene }: { scene: Scene }) {
       <Alert tone="warning" title="Storage almost full">You have used 92% of 10 GB.</Alert>
       <Alert tone="error" title="Payment failed">The card was declined. Try another card.</Alert>
       <Progress label="Uploading report.pdf" value={64} />
-      <div className="orlo-material scene__panel"><EmptyState icon={<Icons.Inbox size={28} />} title="No messages yet" description="When someone writes to you, it shows up here." action={<Button variant="subtle">Invite a teammate</Button>} /></div>
+      <div className="orlo-material scene__panel">{sampleMessage ? <Alert tone="success" title="Sample message shown">This local preview demonstrates how new content replaces an empty state.</Alert> : <EmptyState icon={<Icons.Inbox size={28} />} title="No messages yet" description="When someone writes to you, it shows up here." action={<Button variant="subtle" onClick={() => setSampleMessage(true)}>Show a sample message</Button>} />}</div>
     </div>
   );
-  return (
-    <div className="scene scene--settings orlo-material">
-      <div className="scene__head"><Avatar name="Theo Lindqvist" size="lg" /><div><strong>Theo Lindqvist</strong><div className="orlo-hint">theo@example.com</div></div><Badge tone="accent">Pro</Badge></div>
-      <Tabs label="Settings" items={[{ value: "a", label: "Profile", content: null }, { value: "b", label: "Billing", content: null }, { value: "c", label: "Team", content: null }]} />
-      <TextField label="Display name" defaultValue="Theo" />
-      <Stack direction="row" gap={4} wrap align="center"><Switch label="Sync" defaultChecked /><Checkbox label="Remember me" defaultChecked /></Stack>
-      <Slider label="Volume" defaultValue={60} />
-      <p style={{ margin: 0 }}>Body text with <a href="#x" style={{ color: "var(--orlo-color-accent-text)" }}>an accent link</a>.</p>
-      <Stack direction="row" gap={2} justify="end"><Button variant="ghost">Cancel</Button><Button variant="accent">Save</Button></Stack>
-    </div>
-  );
+  return <SettingsScene />;
 }
 
 export function ThemeStudio() {

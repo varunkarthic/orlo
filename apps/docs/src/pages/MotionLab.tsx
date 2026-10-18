@@ -1,17 +1,18 @@
-import { useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, animate } from "motion/react";
 import { Button, Slider, SegmentedControl, Stack, Badge, Card } from "@orlo/react";
 import { springs, springMetrics, simulate, spring, purposes, useOrloMotion, OVERSHOOT_CEILING, EXPRESSIVE_CEILING, projectSnap, createVelocityTracker, type Scheme } from "@orlo/motion";
 import { Code, H2, PageHeader } from "../kit.tsx";
 
 function Curve({ sp, w = 180, h = 64, velocity = 0, ms = 900 }: { sp: { stiffness: number; damping: number; mass: number }; w?: number; h?: number; velocity?: number; ms?: number }) {
+  const { transition } = useOrloMotion();
   const pts = simulate(sp, { velocity, ms });
   const max = Math.max(1.15, ...pts.map((p) => p[1]));
   const d = pts.filter((_, i) => i % 3 === 0).map(([t, x], i) => `${i ? "L" : "M"}${((t / ms) * w).toFixed(1)},${(h - 4 - (x / max) * (h - 8)).toFixed(1)}`).join("");
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="curve" role="img" aria-label="Spring step response">
       <line x1="0" x2={w} y1={h - 4 - (1 / max) * (h - 8)} y2={h - 4 - (1 / max) * (h - 8)} className="curve__target" />
-      <path d={d} className="curve__line" />
+      <motion.path d={d} animate={{ d }} initial={false} transition={transition("shift")} className="curve__line" />
     </svg>
   );
 }
@@ -28,7 +29,7 @@ function TokenGrid({ scheme }: { scheme: Scheme }) {
             <Card key={fam + speed} className="token">
               <div className="token__head"><code>{fam}.{speed}</code><span className="orlo-hint">k {sp.stiffness} · c {sp.damping}</span></div>
               <Curve sp={sp} />
-              <div className="token__track"><motion.span className="token__dot" initial={false} animate={{ x: atEnd ? 140 : 0 }} transition={sp} /></div>
+              <div className="token__track" data-end={atEnd || undefined}><motion.span className="token__dot" layout="position" initial={false} transition={sp} /></div>
               <div className="token__meta"><span>ζ {m.zeta.toFixed(2)}</span><span>{(m.overshoot * 100).toFixed(1)}% overshoot</span><span>{Math.round(m.settleMs)} ms</span></div>
             </Card>
           );
@@ -42,23 +43,50 @@ function TokenGrid({ scheme }: { scheme: Scheme }) {
 function Fling() {
   const x = useMotionValue(0);
   const tracker = useRef(createVelocityTracker());
+  const track = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(520);
+  const previousTravel = useRef(464);
+  const [snapIndex, setSnapIndex] = useState(0);
   const [info, setInfo] = useState<{ v: number; target: number; from: number } | null>(null);
   const { transition, effective } = useOrloMotion();
-  const W = 520, snaps = [0, 130, 260, 390, 520 - 56];
+  const travel = Math.max(0, width - 56);
+  const snaps = [0, 0.25, 0.5, 0.75, 1].map((n) => n * travel);
+  useLayoutEffect(() => {
+    if (!track.current) return;
+    const resize = () => setWidth(track.current?.clientWidth ?? 520);
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(track.current);
+    return () => observer.disconnect();
+  }, []);
+  useLayoutEffect(() => {
+    if (previousTravel.current !== travel) {
+      x.set(previousTravel.current ? (x.get() / previousTravel.current) * travel : 0);
+      previousTravel.current = travel;
+    }
+  }, [travel, x]);
   return (
     <Stack gap={3}>
-      <div className="fling" style={{ inlineSize: W }}>
+      <div ref={track} className="fling">
         {snaps.map((s) => <span key={s} className="fling__snap" style={{ insetInlineStart: s + 28 }} />)}
-        <motion.div className="fling__puck" style={{ x }} drag="x" dragConstraints={{ left: 0, right: W - 56 }} dragElastic={0.18} dragMomentum={false}
+        <motion.div className="fling__puck" style={{ x }} drag="x" dragConstraints={{ left: 0, right: travel }} dragElastic={0.18} dragMomentum={false}
           onDragStart={() => tracker.current.reset()} onDrag={() => tracker.current.add(x.get())}
           onDragEnd={() => {
             const v = tracker.current.velocity();
             const target = projectSnap(x.get(), v, snaps);
+            setSnapIndex(snaps.indexOf(target));
             setInfo({ v, target, from: x.get() });
             animate(x, target, effective === "full" ? { ...(transition("drag", v) as object) } : (transition("drag") as object));
-          }} aria-label="Fling the puck" role="img" />
+          }} onKeyDown={(event) => {
+            const next = event.key === "ArrowRight" ? Math.min(4, snapIndex + 1) : event.key === "ArrowLeft" ? Math.max(0, snapIndex - 1) : event.key === "Home" ? 0 : event.key === "End" ? 4 : null;
+            if (next === null) return;
+            event.preventDefault();
+            setSnapIndex(next);
+            setInfo({ v: 0, target: snaps[next], from: x.get() });
+            animate(x, snaps[next], transition("snap") as never);
+          }} tabIndex={0} aria-label="Fling snap position" aria-valuemin={1} aria-valuemax={5} aria-valuenow={snapIndex + 1} aria-valuetext={`Snap ${snapIndex + 1} of 5`} role="slider" />
       </div>
-      <p aria-live="polite" style={{ margin: 0 }}>{info ? <>Released at <strong>{Math.round(info.v)} px/s</strong>, projected to snap <strong>{snaps.indexOf(info.target) + 1}</strong>, settled with the <code>drag</code> spring carrying that velocity.</> : "Drag and release the puck quickly or slowly: momentum decides where it lands."}</p>
+      <p aria-live="polite" style={{ margin: 0 }}>{info ? <>Snap <strong>{snapIndex + 1} of 5</strong>{info.v ? <> · release velocity <strong>{Math.round(info.v)} px/s</strong></> : null}. The <code>drag</code> spring settles from the current position.</> : "Drag and release the puck, or use arrow keys to move between snap points."}</p>
       {info && Math.abs(info.target - info.from) > 1 && <Curve sp={spring("drag")} w={360} h={70} velocity={Math.max(-12, Math.min(12, info.v / (info.target - info.from)))} />}
     </Stack>
   );
@@ -71,7 +99,25 @@ export function MotionLab() {
   const [m, setM] = useState(1);
   const [v0, setV0] = useState(0);
   const [end, setEnd] = useState(false);
-  const { effective, distance } = useOrloMotion();
+  const previewTrack = useRef<HTMLDivElement>(null);
+  const previewBox = useRef<HTMLDivElement>(null);
+  const [previewTravel, setPreviewTravel] = useState(260);
+  const { effective, distance, transition } = useOrloMotion();
+  useLayoutEffect(() => {
+    if (!previewTrack.current) return;
+    const resize = () => {
+      const track = previewTrack.current;
+      const box = previewBox.current;
+      if (!track || !box) return;
+      const css = getComputedStyle(track);
+      const pad = parseFloat(css.paddingInlineStart) + parseFloat(css.paddingInlineEnd);
+      setPreviewTravel(Math.max(0, track.clientWidth - pad - box.offsetWidth));
+    };
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(previewTrack.current);
+    return () => observer.disconnect();
+  }, []);
   const metrics = springMetrics({ stiffness: k, damping: c, mass: m });
   const purposeRows = useMemo(() => Object.entries(purposes), []);
   const ceiling = scheme === "expressive" ? EXPRESSIVE_CEILING : OVERSHOOT_CEILING;
@@ -81,23 +127,31 @@ export function MotionLab() {
       <H2>Spring tokens</H2>
       <p><strong>Spatial</strong> springs move position, size and shape and may overshoot a little. <strong>Effects</strong> springs fade opacity, colour, blur and shadow and are critically damped, because opacity can’t overshoot.</p>
       <SegmentedControl label="Scheme" value={scheme} onValueChange={(v) => setScheme(v as Scheme)} options={[{ value: "standard", label: "Standard (≤ 5%)" }, { value: "expressive", label: "Expressive (≤ 12%)" }]} />
-      <div style={{ marginBlockStart: 16 }}><TokenGrid scheme={scheme} /></div>
+      <div className="motion-tokens"><TokenGrid scheme={scheme} /></div>
 
       <H2>Velocity hand-off</H2>
       <p>When a gesture ends, its velocity becomes the spring’s starting velocity, so the object keeps moving the way your hand was moving instead of stopping and restarting.</p>
       <Fling />
 
       <H2>Tune a spring</H2>
-      <div className="lab-controls">
-        <Slider label="Stiffness (k)" value={k} onValueChange={setK} min={50} max={1200} step={10} />
-        <Slider label="Damping (c)" value={c} onValueChange={setC} min={5} max={100} />
-        <Slider label="Mass (m)" value={m} onValueChange={setM} min={0.2} max={3} step={0.1} format={(v) => v.toFixed(1)} />
-        <Slider label="Initial velocity" value={v0} onValueChange={setV0} min={-10} max={10} step={0.5} format={(v) => `${v} travel/s`} />
+      <div className="spring-workbench">
+        <div className="spring-workbench__controls">
+          <p className="spring-workbench__eyebrow">Adjust the physics</p>
+          <div className="lab-controls">
+            <Slider label="Stiffness (k)" value={k} onValueChange={setK} min={50} max={1200} step={10} />
+            <Slider label="Damping (c)" value={c} onValueChange={setC} min={5} max={100} />
+            <Slider label="Mass (m)" value={m} onValueChange={setM} min={0.2} max={3} step={0.1} format={(v) => v.toFixed(1)} />
+            <Slider label="Initial velocity" value={v0} onValueChange={setV0} min={-10} max={10} step={0.5} format={(v) => `${v} travel/s`} />
+          </div>
+        </div>
+        <div className="spring-workbench__preview">
+          <div className="spring-workbench__top"><span>Live response</span><Badge tone={metrics.overshoot > ceiling ? "warning" : "success"}>{metrics.overshoot > ceiling ? "Above limit" : "Within limit"}</Badge></div>
+          <Curve sp={{ stiffness: k, damping: c, mass: m }} w={560} h={130} velocity={v0} ms={1200} />
+          <div ref={previewTrack} className="lab-track"><motion.div ref={previewBox} className="lab-box" initial={false} animate={{ x: end ? distance(previewTravel) : 0, opacity: effective === "full" || end ? 1 : 0.55 }} transition={effective === "full" ? { type: "spring", stiffness: k, damping: c, mass: m, velocity: v0 * previewTravel } : transition("shift")} /></div>
+          <div className="spring-workbench__action"><Button onClick={() => setEnd((e) => !e)}>{end ? "Move back" : "Move forward"}</Button><span className="orlo-hint">Change a value or reverse the block mid-flight.</span></div>
+          <p className="spring-workbench__metrics" aria-live="polite"><span>ζ <strong>{metrics.zeta.toFixed(2)}</strong></span><span>Overshoot <strong>{(metrics.overshoot * 100).toFixed(1)}%</strong></span><span>Settles <strong>{Math.round(metrics.settleMs)} ms</strong></span><span>Policy <strong>{effective}</strong></span></p>
+        </div>
       </div>
-      <p aria-live="polite">ζ = <strong>{metrics.zeta.toFixed(2)}</strong> · overshoot <strong>{(metrics.overshoot * 100).toFixed(1)}%</strong> · settles in <strong>{Math.round(metrics.settleMs)} ms</strong> {metrics.overshoot > ceiling ? <Badge tone="warning">Above the {Math.round(ceiling * 100)}% ceiling</Badge> : <Badge tone="success">Within the {Math.round(ceiling * 100)}% ceiling</Badge>}</p>
-      <Curve sp={{ stiffness: k, damping: c, mass: m }} w={560} h={160} velocity={v0} ms={1200} />
-      <div className="lab-track"><motion.div className="lab-box" animate={{ x: end ? distance(260) : 0, opacity: effective === "full" || end ? 1 : 0.45 }} transition={effective === "off" ? { duration: 0 } : effective === "reduced" ? { duration: 0.15 } : { type: "spring", stiffness: k, damping: c, mass: m, velocity: v0 * 260 }} /></div>
-      <Stack direction="row" gap={3} align="center" wrap><Button onClick={() => setEnd((e) => !e)}>Move</Button><span className="orlo-hint">Click mid-flight: it redirects from its current velocity. Policy: <strong>{effective}</strong>.</span></Stack>
       <Code>{JSON.stringify({ type: "spring", stiffness: k, damping: c, mass: m }, null, 2)}</Code>
 
       <H2>Purposes</H2>

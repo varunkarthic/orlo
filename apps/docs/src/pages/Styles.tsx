@@ -12,9 +12,9 @@ export function StylesOverview({ root }: { root: string }) {
     <>
       <PageHeader eyebrow="Styles" title="Styles" lead="The visual language: editorial precision, tactile naturalness, visual restraint. Recognisable even with motion turned off." />
       <CardGrid>
-        <LinkCard href={`${root}styles/color/`} title="Color" body="Warm graphite neutrals and one persimmon accent, contrast-tested." art={<div className="swatchrow">{["#1C1B18", "#5C574C", "#E2DDD2", "#A8370A"].map((c) => <span key={c} style={{ background: c }} />)}</div>} />
+        <LinkCard href={`${root}styles/color/`} title="Color" body="Warm graphite neutrals and one persimmon accent, contrast-tested." art={<div className="swatchrow">{["fg", "fg-muted", "surface-selected", "accent"].map((c) => <span key={c} style={{ background: `var(--orlo-color-${c})` }} />)}</div>} />
         <LinkCard href={`${root}styles/typography/`} title="Typography" body="Generous hierarchy, clear numerals, fluid display sizes." art={<span style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-0.03em" }}>Aa 123</span>} />
-        <LinkCard href={`${root}styles/shape/`} title="Shape" body="A small, related set of radii that follow hierarchy." art={<Stack direction="row" gap={2}>{[4, 8, 12, 20].map((r) => <span key={r} style={{ inlineSize: 36, blockSize: 36, borderRadius: r, background: "var(--orlo-color-surface-selected)", border: "1px solid var(--orlo-color-border-control)" }} />)}</Stack>} />
+        <LinkCard href={`${root}styles/shape/`} title="Shape" body="A small, related set of radii that follow hierarchy." art={<Stack direction="row" gap={2}>{["xs", "sm", "md", "lg"].map((r) => <span key={r} style={{ inlineSize: 36, blockSize: 36, borderRadius: `var(--orlo-radius-${r})`, background: "var(--orlo-color-surface-selected)", border: "1px solid var(--orlo-color-border-control)" }} />)}</Stack>} />
         <LinkCard href={`${root}styles/elevation/`} title="Elevation" body="Depth from surface tone and occlusion before shadow." />
         <LinkCard href={`${root}styles/motion/`} title="Motion" body="Springs, presets, policies and the MotionLab." />
         <LinkCard href={`${root}styles/icons/`} title="Icons" body={`${Object.keys(Icons).length} original 24 px icons with one stroke and one corner.`} art={<Stack direction="row" gap={2}><Icons.Search /><Icons.Calendar /><Icons.Settings /><Icons.Heart /></Stack>} />
@@ -66,11 +66,11 @@ export function Typography() {
 export function Shape() {
   return (
     <>
-      <PageHeader eyebrow="Styles" title="Shape" lead="Five radii. Shape follows hierarchy and touch affordance, never decoration." />
+      <PageHeader eyebrow="Styles" title="Shape" lead="A small, related radius scale. Shape follows hierarchy and touch affordance, never decoration." />
       <div className="shapes">{Object.entries(radius).map(([k, v]) => <div key={k}><span style={{ borderRadius: v === 9999 ? 999 : v }} /><code>--orlo-radius-{k}</code><span className="orlo-hint">{v === 9999 ? "full" : `${v}px`}</span></div>)}</div>
       <H2>Usage</H2>
       <table className="doc" tabIndex={0}><thead><tr><th>Radius</th><th>Used by</th></tr></thead><tbody>
-        <tr><td>sm · 4</td><td>Badges, chips, keycaps, tooltips</td></tr><tr><td>md · 8</td><td>Buttons, fields, menu items</td></tr><tr><td>lg · 12</td><td>Cards, menus, popovers, tables</td></tr><tr><td>xl · 20</td><td>Dialogs, sheets</td></tr><tr><td>full</td><td>Avatars, switches, progress tracks</td></tr>
+        <tr><td>xs · 4</td><td>Keycaps and small badges</td></tr><tr><td>sm · 8</td><td>Chips and menu items</td></tr><tr><td>md · 10</td><td>Buttons and fields</td></tr><tr><td>lg · 14</td><td>Cards and menus</td></tr><tr><td>xl · 20</td><td>Dialogs and sheets</td></tr><tr><td>2xl · 28</td><td>Large device frames</td></tr><tr><td>full</td><td>Avatars, switches and progress tracks</td></tr>
       </tbody></table>
       <p>Nested corners follow <em>outer = inner + padding</em> (see the segmented control track), so curves stay concentric.</p>
     </>
@@ -84,8 +84,8 @@ export function Elevation() {
       <div className="elev">
         <div style={{ background: "var(--orlo-color-canvas)" }}><strong>Canvas</strong><span>Page background</span></div>
         <div style={{ background: "var(--orlo-color-surface)", border: "1px solid var(--orlo-color-border)" }}><strong>Surface</strong><span>Cards, tables</span></div>
-        <div style={{ background: "var(--orlo-color-surface-raised)", border: "1px solid var(--orlo-color-border)", boxShadow: "0 12px 32px -8px rgb(0 0 0 / 0.25)" }}><strong>Raised</strong><span>Menus, popovers</span></div>
-        <div style={{ background: "var(--orlo-color-surface-raised)", border: "1px solid var(--orlo-color-border)", boxShadow: "0 24px 64px -16px rgb(0 0 0 / 0.35)" }}><strong>Modal</strong><span>Dialogs, sheets</span></div>
+        <div style={{ background: "var(--orlo-color-surface-raised)", border: "1px solid var(--orlo-color-border)", boxShadow: "var(--orlo-shadow-2)" }}><strong>Raised</strong><span>Menus, popovers</span></div>
+        <div style={{ background: "var(--orlo-color-surface-raised)", border: "1px solid var(--orlo-color-border)", boxShadow: "var(--orlo-shadow-4)" }}><strong>Modal</strong><span>Dialogs, sheets</span></div>
       </div>
       <H2>Scrims</H2>
       <p>Modal layers dim the page with <code>--orlo-color-scrim</code>. Under <code>prefers-reduced-transparency</code>, scrims become opaque.</p>
@@ -107,13 +107,16 @@ export function IconsPage() {
 
 export function Density() {
   const [d, setD] = useState("comfortable");
+  const [savedDensity, setSavedDensity] = useState("comfortable");
+  const [message, setMessage] = useState("");
   return (
     <>
       <PageHeader eyebrow="Styles" title="Density" lead="Three densities from one token set. Coarse pointers get touch sizing automatically." />
       <Stage label="Density preview">
         <div data-orlo-density={d} style={{ display: "grid", gap: 16 }}>
-          <SegmentedControl label="Density" value={d} onValueChange={setD} options={Object.keys(density).map((k) => ({ value: k, label: k }))} />
-          <Stack direction="row" gap={2} wrap><Button>Save</Button><Button variant="subtle">Cancel</Button></Stack>
+          <SegmentedControl label="Density" value={d} onValueChange={(value) => { setD(value); setMessage(""); }} options={Object.keys(density).map((k) => ({ value: k, label: k }))} />
+          <Stack direction="row" gap={2} wrap><Button onClick={() => { setSavedDensity(d); setMessage(`${d} density saved for this preview.`); }}>Save</Button><Button variant="subtle" onClick={() => { setD(savedDensity); setMessage("Preview restored to the saved density."); }}>Cancel</Button></Stack>
+          <span role="status" className="orlo-hint">{message}</span>
           <Card style={{ maxInlineSize: 320 }}>Control height {density[d as keyof typeof density].control}px</Card>
         </div>
       </Stage>

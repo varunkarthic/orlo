@@ -104,6 +104,15 @@ function Wizard() {
 }
 const DataListLite = ({ rows }: { rows: [string, string][] }) => <dl className="orlo-datalist">{rows.map(([k, v]) => <div key={k} className="orlo-datalist__row"><dt>{k}</dt><dd>{v || "—"}</dd></div>)}</dl>;
 
+function EmptyInbox() {
+  const [composing, setComposing] = useState(false);
+  const [sent, setSent] = useState(false);
+  return <Card style={{ maxInlineSize: "44rem" }}>
+    {composing ? <Stack gap={3}><TextArea label="Message" help="This is a local preview; no message is sent." /><Stack direction="row" gap={2}><Button onClick={() => { setComposing(false); setSent(true); }}>Finish preview</Button><Button variant="subtle" onClick={() => setComposing(false)}>Cancel</Button></Stack></Stack>
+      : <EmptyState title={sent ? "Draft preview complete" : "You're all caught up"} description={sent ? "Your message was not sent. This example only demonstrates the compose state." : "New messages will appear here. Nothing needs your attention right now."} action={<Button variant="subtle" onClick={() => setComposing(true)}>Compose</Button>} />}
+  </Card>;
+}
+
 export function Examples() {
   return (
     <div className="wide">
@@ -118,7 +127,7 @@ export function Examples() {
       <h2>Store overview</h2>
       <Dashboard />
       <h2>Empty inbox</h2>
-      <Card style={{ maxInlineSize: "44rem" }}><EmptyState title="You're all caught up" description="New messages will appear here. Nothing needs your attention right now." action={<Button variant="subtle">Compose</Button>} /></Card>
+      <EmptyInbox />
     </div>
   );
 }

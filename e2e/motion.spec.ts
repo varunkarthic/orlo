@@ -58,3 +58,25 @@ test("overlays blur and fade in rather than popping", async ({ page }) => {
   expect(settled.o).toBe("1");
   expect(settled.f === "none" || settled.f === "blur(0px)").toBe(true);
 });
+
+test("Motion Lab sliders, responsive travel, and fling keyboard path work", async ({ page }) => {
+  await page.goto("styles/motion/");
+  const workbench = page.locator(".spring-workbench");
+  const stiffness = workbench.getByRole("slider", { name: "Stiffness (k)" });
+  await stiffness.focus();
+  await stiffness.press("End");
+  await expect(stiffness).toHaveAttribute("aria-valuenow", "1200");
+  await workbench.getByRole("button", { name: "Move forward" }).click();
+  await expect.poll(async () => workbench.evaluate((el) => {
+    const track = el.querySelector(".lab-track")!.getBoundingClientRect();
+    const block = el.querySelector(".lab-box")!.getBoundingClientRect();
+    const padding = parseFloat(getComputedStyle(el.querySelector(".lab-track")!).paddingInlineEnd);
+    return Math.abs(track.right - block.right - padding);
+  })).toBeLessThan(4);
+  const puck = page.getByRole("slider", { name: "Fling snap position" });
+  await puck.focus();
+  await puck.press("End");
+  await expect(puck).toHaveAttribute("aria-valuenow", "5");
+  await puck.press("Home");
+  await expect(puck).toHaveAttribute("aria-valuenow", "1");
+});

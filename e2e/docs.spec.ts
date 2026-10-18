@@ -124,7 +124,7 @@ test("mobile navigation opens as a sheet", async ({ page, isMobile }) => {
 });
 
 test("no horizontal overflow on any page", async ({ page }) => {
-  for (const p of ["", "components/", "components/table/", "components/calendar/specs/", "start/examples/", "styles/motion/", "styles/color/", "foundations/edge-cases/", "start/theme-studio/", "components/data-list/"]) {
+  for (const p of ["", "components/", "components/table/", "components/calendar/specs/", "start/examples/", "styles/motion/", "styles/color/", "foundations/edge-cases/", "start/theme-studio/", "develop/devices/", "components/data-list/"]) {
     await page.goto(p);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, `overflow on /${p}`).toBeLessThanOrEqual(0);
@@ -156,6 +156,76 @@ test("theme studio generates an accessible theme", async ({ page, isMobile }) =>
   await page.getByRole("textbox", { name: "Hex colour" }).fill("#FFE600");
   await expect(page.locator(".code pre").first()).toContainText("--orlo-color-accent:");
   await expect(page.getByText(/Adjusted to #/)).toBeVisible();
+});
+
+test("home settings preview resets changes and confirms a local save", async ({ page }) => {
+  await page.goto("");
+  const preview = page.locator(".showcase");
+  const digest = preview.getByRole("switch", { name: "Weekly digest" });
+  await digest.click();
+  await expect(digest).toHaveAttribute("aria-checked", "true");
+  await preview.getByRole("button", { name: "Reset" }).click();
+  await expect(digest).toHaveAttribute("aria-checked", "false");
+  await expect(preview.locator(".showcase__message")).toContainText("Preview changes reset");
+  await preview.getByRole("button", { name: "Save changes" }).click();
+  await expect(preview.locator(".showcase__message")).toContainText("Preview settings saved in this page");
+});
+
+test("home hero uses the page width and its own display typography", async ({ page, isMobile }) => {
+  test.skip(isMobile, "desktop layout assertion");
+  await page.goto("");
+  const result = await page.evaluate(() => {
+    const hero = document.querySelector(".hero2")!;
+    const title = hero.querySelector("h1")!;
+    return { width: hero.getBoundingClientRect().width, viewport: document.documentElement.clientWidth, font: parseFloat(getComputedStyle(title).fontSize) };
+  });
+  expect(result.width).toBeGreaterThan(result.viewport * 0.9);
+  expect(result.font).toBeGreaterThan(60);
+});
+
+test("theme studio settings tabs reveal actual scenes", async ({ page }) => {
+  await page.goto("start/theme-studio/");
+  const settings = page.locator(".scene--settings");
+  await settings.getByRole("tab", { name: "Billing" }).click();
+  await expect(settings.getByRole("tabpanel", { name: "Billing" })).toContainText("Pro plan");
+  await expect(settings.getByRole("textbox", { name: "Display name" })).toHaveCount(0);
+  await settings.getByRole("tab", { name: "Profile" }).click();
+  await settings.getByRole("textbox", { name: "Display name" }).fill("Mira");
+  await settings.getByRole("button", { name: "Save" }).click();
+  await expect(settings.getByRole("status")).toContainText("saved for Mira");
+  await settings.getByRole("button", { name: "Reset" }).click();
+  await expect(settings.getByRole("textbox", { name: "Display name" })).toHaveValue("Theo");
+});
+
+test("device lab controls change the live preview without covering it", async ({ page }) => {
+  await page.goto("develop/devices/");
+  const lab = page.locator(".devicelab");
+  const frame = lab.locator(".devicelab__frame");
+  await expect(frame).toHaveAttribute("data-kind", "phone");
+  await expect(lab.locator(".devicelab__safe")).toHaveCount(2);
+  await page.getByRole("switch", { name: "Show safe areas" }).click();
+  await expect(lab.locator(".devicelab__safe")).toHaveCount(0);
+  await page.getByRole("switch", { name: "Landscape" }).click();
+  await expect(frame.locator("iframe")).toHaveAttribute("style", /inline-size: 844px; block-size: 390px/);
+});
+
+test("example inbox opens and closes a local compose state", async ({ page }) => {
+  await page.goto("start/examples/");
+  await page.getByRole("button", { name: "Compose" }).click();
+  await expect(page.getByRole("textbox", { name: "Message" })).toBeVisible();
+  await page.getByRole("button", { name: "Finish preview" }).click();
+  await expect(page.getByText("Draft preview complete")).toBeVisible();
+});
+
+test("feedback demos have working recovery and next actions", async ({ page }) => {
+  await page.goto("components/alert/");
+  const alertStage = page.locator(".stage").first();
+  await alertStage.getByRole("button", { name: "Retry preview" }).click();
+  await expect(alertStage.getByText("Preview retry complete")).toBeVisible();
+  await page.goto("components/empty-state/");
+  const emptyStage = page.locator(".stage").first();
+  await emptyStage.getByRole("button", { name: "Create draft invoice" }).click();
+  await expect(emptyStage.getByText("Draft invoice created in this preview")).toBeVisible();
 });
 
 test("sign-up flow: validation focus, back keeps input, failure then retry", async ({ page }) => {

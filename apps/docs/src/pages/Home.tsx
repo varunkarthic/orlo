@@ -1,10 +1,31 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Wordmark, Button, Switch, SegmentedControl, Slider, Badge, Avatar, AvatarGroup, Progress, Icons, Stack, Marquee, Sparkline, Steps, manifest, families } from "@orlo/react";
 import { LinkCard } from "../kit.tsx";
 
 export function Home({ root }: { root: string }) {
   const [saving, setSaving] = useState(false);
   const [budget, setBudget] = useState(1800);
+  const [notifications, setNotifications] = useState(true);
+  const [digest, setDigest] = useState(false);
+  const [layout, setLayout] = useState("l");
+  const [message, setMessage] = useState("");
+  const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(saveTimer.current), []);
+  const reset = () => {
+    clearTimeout(saveTimer.current);
+    setSaving(false);
+    setNotifications(true);
+    setDigest(false);
+    setBudget(1800);
+    setLayout("l");
+    setMessage("Preview changes reset.");
+  };
+  const save = () => {
+    setMessage("");
+    setSaving(true);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => { setSaving(false); setMessage("Preview settings saved in this page."); }, 650);
+  };
   return (
     <div className="home">
       <section className="hero2">
@@ -25,14 +46,15 @@ export function Home({ root }: { root: string }) {
             <Badge tone="success" dot>Online</Badge>
           </header>
           <div className="showcase__body">
-            <Switch label="Notifications" description="Mentions and replies only." defaultChecked />
-            <Switch label="Weekly digest" />
-            <Slider label="Monthly budget" value={budget} onValueChange={setBudget} min={0} max={5000} step={50} format={(v) => new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v)} />
-            <SegmentedControl label="Layout" options={[{ value: "l", label: "List" }, { value: "g", label: "Grid" }, { value: "b", label: "Board" }]} />
+            <Switch label="Notifications" description="Mentions and replies only." checked={notifications} onCheckedChange={(value) => { setNotifications(value); setMessage(""); }} />
+            <Switch label="Weekly digest" checked={digest} onCheckedChange={(value) => { setDigest(value); setMessage(""); }} />
+            <Slider label="Monthly budget" value={budget} onValueChange={(value) => { setBudget(value); setMessage(""); }} min={0} max={5000} step={50} format={(v) => new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v)} />
+            <SegmentedControl label="Layout" value={layout} onValueChange={(value) => { setLayout(value); setMessage(""); }} options={[{ value: "l", label: "List" }, { value: "g", label: "Grid" }, { value: "b", label: "Board" }]} />
           </div>
           <footer className="showcase__foot">
-            <Button variant="ghost">Cancel</Button>
-            <Button variant="accent" loading={saving} loadingLabel="Saving" onClick={() => { setSaving(true); setTimeout(() => setSaving(false), 1400); }}>Save changes</Button>
+            <span className="showcase__message" role="status">{message}</span>
+            <Button variant="ghost" onClick={reset}>Reset</Button>
+            <Button variant="accent" loading={saving} loadingLabel="Saving" onClick={save}>Save changes</Button>
           </footer>
         </div>
       </section>
@@ -43,11 +65,11 @@ export function Home({ root }: { root: string }) {
         <h2>Start anywhere</h2>
         <div className="card-grid card-grid--3">
           <LinkCard href={`${root}start/`} title="Get started" body="Install, wrap your app, ship your first screen." art={<Steps steps={[{ label: "Install", state: "complete" }, { label: "Wrap", state: "current" }, { label: "Ship" }]} />} />
-          <LinkCard href={`${root}styles/`} title="Styles" body="Colour, type, shape, elevation, motion and icons." art={<div className="swatchrow">{["#1C1B18", "#5C574C", "#A39D90", "#E2DDD2", "#A8370A", "#F08A57"].map((c) => <span key={c} style={{ background: c }} />)}</div>} />
+          <LinkCard href={`${root}styles/`} title="Styles" body="Colour, type, shape, elevation, motion and icons." art={<div className="swatchrow">{["fg", "fg-muted", "border-control", "surface-sunken", "accent", "accent-subtle"].map((c) => <span key={c} style={{ background: `var(--orlo-color-${c})` }} />)}</div>} />
           <LinkCard href={`${root}components/`} title="Components" body={`${manifest.length} components across ${families.length} families, from buttons to signature pads.`} art={<Stack direction="row" gap={2}><Badge tone="success">Paid</Badge><Badge tone="warning">Due</Badge><Progress label="Sync" value={64} showValue={false} /></Stack>} />
           <LinkCard href={`${root}foundations/`} title="Foundations" body="Principles, accessibility, adaptive layout and layering." art={<AvatarGroup people={[{ name: "Ada Lovelace" }, { name: "Grace Hopper" }, { name: "Alan Turing" }, { name: "Barbara Liskov" }]} max={3} />} />
           <LinkCard href={`${root}styles/motion/`} title="MotionLab" body="Tune a spring and read overshoot and settle time before committing." art={<Sparkline label="Spring" data={[0, 0.5, 0.92, 1.03, 1.01, 1, 1]} width={160} height={40} />} />
-          <LinkCard href={`${root}start/theme-studio/`} title="Theme Studio" body="One brand colour in, an accessible light and dark theme out." art={<div className="swatchrow">{["#1F5FA8", "#8DB8EB", "#D9E3F0", "#1F7A4D", "#6CCB9A", "#DDE7D6"].map((c) => <span key={c} style={{ background: c }} />)}</div>} />
+          <LinkCard href={`${root}start/theme-studio/`} title="Theme Studio" body="One brand colour in, an accessible light and dark theme out." art={<div className="swatchrow">{["accent", "accent-subtle", "surface-selected", "success", "surface-raised", "canvas"].map((c) => <span key={c} style={{ background: `var(--orlo-color-${c})` }} />)}</div>} />
         </div>
       </section>
 
