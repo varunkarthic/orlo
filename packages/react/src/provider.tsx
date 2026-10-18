@@ -27,10 +27,8 @@ export type OrloProviderProps = {
   motionScheme?: Scheme;
   /** `off` renders designed no-image replacements and performs no image requests. */
   images?: ImagePolicy;
-  /** Surface material for overlays and opted-in surfaces. Glass falls back to solid when transparency is reduced. */
+  /** Surface material for overlays and opted-in surfaces: `solid` or frosted `glass`. Glass falls back to solid when transparency is reduced. */
   material?: Material;
-  /** Tint colour for `material="tinted"` (any hex colour). */
-  tint?: string;
   glass?: GlassOptions;
   /** Force solid surfaces regardless of OS preference. */
   reduceTransparency?: boolean;
@@ -42,21 +40,20 @@ export type OrloProviderProps = {
 };
 
 /** CSS variables for a material in both schemes; the stylesheet picks the right one per scheme. */
-export function useMaterialStyle(material: Material, tint?: string, glass?: GlassOptions): CSSProperties | undefined {
+export function useMaterialStyle(material: Material, glass?: GlassOptions): CSSProperties | undefined {
   return useMemo(() => {
-    if (material === "solid") return undefined;
-    const l = materialVars(material, "light", glass, tint), d = materialVars(material, "dark", glass, tint);
+    if (material !== "glass") return undefined;
+    const l = materialVars(material, "light", glass), d = materialVars(material, "dark", glass);
     return {
       "--orlo-material-bg-light": l["--orlo-material-bg"], "--orlo-material-bg-dark": d["--orlo-material-bg"],
       "--orlo-material-blur": l["--orlo-material-blur"], "--orlo-material-saturation": l["--orlo-material-saturation"],
       "--orlo-material-depth-shadow": `var(--orlo-shadow-${Math.max(0, Math.min(5, glass?.depth ?? 3))})`,
-      ...(tint ? { "--orlo-material-tint": tint } : {}),
     } as CSSProperties;
-  }, [material, tint, glass]);
+  }, [material, glass]);
 }
 
-export function OrloProvider({ theme = "system", density, motion = "system", motionScheme = "standard", images = "on", material = "solid", tint, glass, reduceTransparency, dir, locale, className, children }: OrloProviderProps) {
-  const materialStyle = useMaterialStyle(material, tint, glass);
+export function OrloProvider({ theme = "system", density, motion = "system", motionScheme = "standard", images = "on", material = "solid", glass, reduceTransparency, dir, locale, className, children }: OrloProviderProps) {
+  const materialStyle = useMaterialStyle(material, glass);
   const portal = useMemo(() => ({ theme, density, dir, material, materialStyle, reduceTransparency }), [theme, density, dir, material, materialStyle, reduceTransparency]);
   return (
     <OrloMotionProvider mode={motion} scheme={motionScheme}>

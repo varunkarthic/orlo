@@ -47,7 +47,7 @@ export function PasswordField({ label, help, error, showStrength, id, value, onK
           <span className="orlo-hint" aria-live="polite">Strength: {typeof value === "string" && value ? words[strength] : "—"}</span>
         </div>
       )}
-      <p id={`${fid}-msg`} className="orlo-field__msg" role={error ? "alert" : undefined} data-warn={caps && !error ? "" : undefined}>{error ? <span aria-hidden="true">! </span> : null}{msg}</p>
+      <p id={`${fid}-msg`} className="orlo-field__msg" role={error ? "alert" : undefined} data-warn={caps && !error ? "" : undefined}>{error ? <svg className="orlo-field__status" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" strokeWidth="1.5" /><path d="M8 4.75v3.75M8 11h.01" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg> : null}{msg}</p>
     </div>
   );
 }

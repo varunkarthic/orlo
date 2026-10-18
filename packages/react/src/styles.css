@@ -1,4 +1,5 @@
-/* Orlo component styles. Colour comes from tokens, except the always-dark media viewer chrome. */
+/* Orlo component styles — "quiet precision": a minimal neutral base with exact geometry, calm states and purposeful motion.
+   Colour comes from tokens, except the always-dark media viewer chrome. */
 @layer orlo.base, orlo.components, orlo.extended;
 @import "./extended.css" layer(orlo.extended);
 @import "./extended2.css" layer(orlo.extended);
@@ -14,18 +15,25 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    /* Shorthand transitions shared by every component. */
-    --orlo-t-press: transform var(--orlo-duration-spatial-fast) var(--orlo-ease-spatial-fast), border-radius var(--orlo-duration-spatial-fast) var(--orlo-ease-spatial-fast);
+    /* Shared transitions. Geometry (radius, size) never animates on press. */
+    --orlo-t-press: transform var(--orlo-duration-spatial-fast) var(--orlo-ease-spatial-fast);
     --orlo-t-color: background-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), border-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
     --orlo-t-shadow: box-shadow var(--orlo-duration-effects-default) var(--orlo-ease-effects-default);
+    /* One focus ring everywhere: a gap in the canvas colour, then the focus colour, following the control's radius. */
     --orlo-ring: 0 0 0 2px var(--orlo-color-canvas), 0 0 0 4px var(--orlo-color-focus);
+    --orlo-hover: color-mix(in oklab, var(--orlo-color-fg) 6%, transparent);
+    --orlo-press: color-mix(in oklab, var(--orlo-color-fg) 10%, transparent);
+    /* Disabled: recognisable, never invisible. */
+    --orlo-disabled-fg: var(--orlo-color-fg-subtle);
+    --orlo-disabled-bg: var(--orlo-color-surface-sunken);
+    --orlo-disabled-border: var(--orlo-color-border);
   }
   .orlo-root { background: var(--orlo-color-canvas); }
   .orlo-root *, .orlo-portal * { box-sizing: border-box; }
   :is(.orlo-root, .orlo-portal):lang(zh), :is(.orlo-root, .orlo-portal):lang(ja), :is(.orlo-root, .orlo-portal):lang(ko) { font-family: var(--orlo-font-sans), var(--orlo-font-cjk); line-break: strict; word-break: keep-all; }
   :is(.orlo-root, .orlo-portal):lang(ar), :is(.orlo-root, .orlo-portal):lang(fa), :is(.orlo-root, .orlo-portal):lang(ur) { font-family: var(--orlo-font-arabic); line-height: var(--orlo-leading-relaxed); letter-spacing: 0 !important; }
   :is(.orlo-root, .orlo-portal):lang(hi), :is(.orlo-root, .orlo-portal):lang(mr) { font-family: var(--orlo-font-sans), var(--orlo-font-devanagari); line-height: var(--orlo-leading-relaxed); }
-  .orlo-root ::selection, .orlo-portal ::selection { background: color-mix(in oklab, var(--orlo-color-accent) 28%, transparent); color: inherit; }
+  .orlo-root ::selection, .orlo-portal ::selection { background: color-mix(in oklab, var(--orlo-color-accent) 22%, transparent); color: inherit; }
   .orlo-visually-hidden {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
     clip-path: inset(50%); white-space: nowrap; border: 0;
@@ -33,7 +41,7 @@
   .orlo-root :focus-visible, .orlo-portal :focus-visible { outline: 2px solid var(--orlo-color-focus); outline-offset: 2px; }
   .orlo-hint { display: block; color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); font-weight: 400; }
 
-  /* Materials: solid by default; glass and tinted glass via the provider. */
+  /* Materials: solid by default; frosted glass via the provider. */
   .orlo-root, .orlo-portal, [data-orlo-theme="light"] { --orlo-material-bg: var(--orlo-material-bg-light, var(--orlo-color-surface-raised)); }
   @media (prefers-color-scheme: dark) {
     :root:not([data-orlo-theme="light"]) :is(.orlo-root, .orlo-portal):not([data-orlo-theme="light"]) { --orlo-material-bg: var(--orlo-material-bg-dark, var(--orlo-color-surface-raised)); }
@@ -51,55 +59,55 @@
     -webkit-backdrop-filter: blur(var(--orlo-material-blur)) saturate(var(--orlo-material-saturation));
     backdrop-filter: blur(var(--orlo-material-blur)) saturate(var(--orlo-material-saturation));
   }
-  :is([data-orlo-material="glass"], [data-orlo-material="tinted"]) :is(.orlo-menu, .orlo-popover, .orlo-modal__panel, .orlo-toast, .orlo-material),
-  :is([data-orlo-material="glass"], [data-orlo-material="tinted"]):is(.orlo-portal) :is(.orlo-menu, .orlo-popover, .orlo-modal__panel, .orlo-toast) {
-    border-color: color-mix(in oklab, var(--orlo-color-fg) 10%, transparent);
-    box-shadow: inset 0 1px 0 color-mix(in oklab, white 35%, transparent), inset 0 0 0 1px color-mix(in oklab, white 8%, transparent), var(--orlo-material-depth-shadow, var(--orlo-shadow-3));
+  [data-orlo-material="glass"] :is(.orlo-menu, .orlo-popover, .orlo-modal__panel, .orlo-toast, .orlo-material),
+  [data-orlo-material="glass"]:is(.orlo-portal) :is(.orlo-menu, .orlo-popover, .orlo-modal__panel, .orlo-toast) {
+    border-color: color-mix(in oklab, var(--orlo-color-fg) 9%, transparent);
+    box-shadow: inset 0 1px 0 color-mix(in oklab, white 30%, transparent), var(--orlo-material-depth-shadow, var(--orlo-shadow-3));
   }
-  [data-orlo-material="tinted"] .orlo-scrim, [data-orlo-material="glass"] .orlo-scrim { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  [data-orlo-material="glass"] .orlo-scrim { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 
   /* ---------- Buttons ---------- */
   .orlo-button, .orlo-icon-button {
     position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--orlo-space-2);
     min-block-size: var(--orlo-control-h);
     border: 1px solid transparent; border-radius: var(--orlo-radius-md);
-    font: inherit; font-weight: var(--orlo-weight-semibold); line-height: 1.2; letter-spacing: -0.006em; cursor: pointer; text-decoration: none; white-space: nowrap;
+    font: inherit; font-size: var(--orlo-text-sm); font-weight: var(--orlo-weight-medium); line-height: 1.2; letter-spacing: 0; cursor: pointer; text-decoration: none; white-space: nowrap;
     color: var(--orlo-color-fg); background: transparent;
-    transition: var(--orlo-t-press), var(--orlo-t-color), var(--orlo-t-shadow), opacity var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
+    transition: var(--orlo-t-press), var(--orlo-t-color), var(--orlo-t-shadow);
     -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none;
   }
   .orlo-button { padding-inline: var(--orlo-control-pad); min-inline-size: var(--orlo-control-h); }
   .orlo-button[data-full] { inline-size: 100%; }
-  .orlo-icon-button { inline-size: var(--orlo-control-h); padding: 0; flex: none; }
-  .orlo-button[data-size="sm"], .orlo-icon-button[data-size="sm"] { min-block-size: 2rem; font-size: var(--orlo-text-sm); border-radius: var(--orlo-radius-sm); }
-  .orlo-button[data-size="sm"] { padding-inline: var(--orlo-space-3); }
+  /* Icon-only controls are circles; their hover, press and focus backplates follow the circle. */
+  .orlo-icon-button { inline-size: var(--orlo-control-h); padding: 0; flex: none; border-radius: var(--orlo-radius-full); color: var(--orlo-color-fg-muted); }
+  .orlo-button[data-size="sm"], .orlo-icon-button[data-size="sm"] { min-block-size: 2rem; font-size: var(--orlo-text-sm); }
+  .orlo-button[data-size="sm"] { padding-inline: var(--orlo-space-3); border-radius: var(--orlo-radius-sm); }
   .orlo-icon-button[data-size="sm"] { inline-size: 2rem; }
-  .orlo-button[data-size="lg"] { min-block-size: calc(var(--orlo-control-h) + 8px); padding-inline: calc(var(--orlo-control-pad) + 6px); font-size: var(--orlo-text-lg); border-radius: var(--orlo-radius-lg); }
+  .orlo-button[data-size="lg"] { min-block-size: calc(var(--orlo-control-h) + 8px); padding-inline: calc(var(--orlo-control-pad) + 6px); font-size: var(--orlo-text-md); }
   .orlo-button__label { display: inline-flex; align-items: center; gap: var(--orlo-space-2); transition: opacity var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast); }
   .orlo-button__icon { display: inline-flex; margin-inline: -2px; }
   .orlo-button:focus-visible, .orlo-icon-button:focus-visible { outline: none; box-shadow: var(--orlo-ring); }
 
-  [data-variant="solid"]:is(.orlo-button, .orlo-icon-button) {
-    background: linear-gradient(to bottom, color-mix(in oklab, var(--orlo-color-accent), white 7%), var(--orlo-color-accent));
-    color: var(--orlo-color-accent-fg);
-    box-shadow: inset 0 1px 0 color-mix(in oklab, white 22%, transparent), var(--orlo-shadow-1);
-  }
-  [data-variant="tonal"]:is(.orlo-button, .orlo-icon-button) { background: var(--orlo-color-surface-selected); color: var(--orlo-color-accent-text); }
-  [data-variant="tonal-success"].orlo-button { background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-success) 14%); color: var(--orlo-color-success); }
-  [data-variant="subtle"]:is(.orlo-button, .orlo-icon-button) { background: var(--orlo-color-surface-raised); border-color: var(--orlo-color-border-control); box-shadow: var(--orlo-shadow-1); }
-  [data-variant="danger"].orlo-button { color: var(--orlo-color-error); border-color: color-mix(in oklab, var(--orlo-color-error) 70%, transparent); background: var(--orlo-color-surface-raised); }
-  [data-variant="solid"]:is(.orlo-button, .orlo-icon-button):focus-visible { box-shadow: var(--orlo-ring), inset 0 1px 0 color-mix(in oklab, white 22%, transparent); }
+  [data-variant="solid"]:is(.orlo-button, .orlo-icon-button) { background: var(--orlo-color-fg); color: var(--orlo-color-fg-inverse); }
+  [data-variant="accent"]:is(.orlo-button, .orlo-icon-button) { background: var(--orlo-color-accent); color: var(--orlo-color-accent-fg); }
+  [data-variant="tonal"]:is(.orlo-button, .orlo-icon-button) { background: var(--orlo-color-accent-subtle); color: var(--orlo-color-accent-text); }
+  [data-variant="tonal-success"].orlo-button { background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-success) 12%); color: var(--orlo-color-success); }
+  [data-variant="subtle"]:is(.orlo-button, .orlo-icon-button) { background: var(--orlo-color-surface-raised); border-color: var(--orlo-color-border); box-shadow: var(--orlo-shadow-1); color: var(--orlo-color-fg); }
+  [data-variant="danger"].orlo-button { color: var(--orlo-color-error); border-color: var(--orlo-color-border); background: var(--orlo-color-surface-raised); }
 
-  /* Press is tactile without changing the component's established geometry. */
-  :is(.orlo-button, .orlo-icon-button):active:not(:disabled):not([aria-disabled="true"]) { transform: scale(0.98); }
+  /* Press: a 2% compression and a slightly deeper fill. Radius and layout box never change. */
+  :is(.orlo-button, .orlo-icon-button):active:not(:disabled):not([aria-disabled="true"]) { transform: scale(0.98); transition-duration: 60ms; }
   @media (hover: hover) and (pointer: fine) {
-    [data-variant="solid"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: linear-gradient(to bottom, color-mix(in oklab, var(--orlo-color-accent), white 2%), color-mix(in oklab, var(--orlo-color-accent), var(--orlo-color-fg) 12%)); box-shadow: inset 0 1px 0 color-mix(in oklab, white 22%, transparent), var(--orlo-shadow-2); }
-    [data-variant="tonal"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-surface-selected), var(--orlo-color-accent) 10%); }
-    [data-variant="subtle"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { border-color: var(--orlo-color-fg-muted); box-shadow: var(--orlo-shadow-2); }
-    [data-variant="ghost"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: color-mix(in oklab, transparent, var(--orlo-color-fg) 7%); }
-    [data-variant="danger"].orlo-button:hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-error) 9%); }
+    [data-variant="solid"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-fg), var(--orlo-color-canvas) 14%); }
+    [data-variant="accent"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-accent), var(--orlo-color-fg) 12%); }
+    [data-variant="tonal"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-accent-subtle), var(--orlo-color-accent) 8%); }
+    [data-variant="subtle"]:is(.orlo-button, .orlo-icon-button):hover:not(:disabled) { border-color: color-mix(in oklab, var(--orlo-color-border), var(--orlo-color-fg) 18%); }
+    :is([data-variant="ghost"].orlo-button, .orlo-icon-button:not([data-variant="solid"], [data-variant="accent"], [data-variant="subtle"], [data-variant="tonal"])):hover:not(:disabled) { background: var(--orlo-hover); color: var(--orlo-color-fg); }
+    [data-variant="danger"].orlo-button:hover:not(:disabled) { background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-error) 7%); border-color: color-mix(in oklab, var(--orlo-color-error) 45%, transparent); }
   }
-  :is(.orlo-button, .orlo-icon-button):disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; filter: saturate(0.6); }
+  :is([data-variant="ghost"].orlo-button, .orlo-icon-button:not([data-variant="solid"], [data-variant="accent"], [data-variant="subtle"], [data-variant="tonal"])):active:not(:disabled) { background: var(--orlo-press); }
+  :is(.orlo-button, .orlo-icon-button):disabled { cursor: not-allowed; box-shadow: none; color: var(--orlo-disabled-fg); background: var(--orlo-disabled-bg); border-color: var(--orlo-disabled-border); }
+  :is([data-variant="ghost"].orlo-button, .orlo-icon-button:not([data-variant])):disabled { background: transparent; border-color: transparent; }
   .orlo-button[aria-disabled="true"] { cursor: progress; }
   .orlo-button[data-loading] .orlo-button__label { opacity: 0; }
   .orlo-button__busy { position: absolute; inset: 0; display: grid; place-items: center; }
@@ -127,19 +135,16 @@
   .orlo-spinner svg { width: 1.25rem; height: 1.25rem; animation: orlo-spin 0.85s linear infinite; }
   .orlo-spinner[data-size="sm"] svg { width: 1rem; height: 1rem; }
   @keyframes orlo-spin { to { transform: rotate(360deg); } }
-  .orlo-skeleton {
-    display: inline-block; vertical-align: middle; border-radius: var(--orlo-radius-sm);
-    background: linear-gradient(100deg, var(--orlo-color-border) 30%, color-mix(in oklab, var(--orlo-color-border), var(--orlo-color-surface-raised) 65%) 50%, var(--orlo-color-border) 70%) 0 0 / 250% 100%;
-    animation: orlo-shimmer 1.8s var(--orlo-ease-effects-slow) infinite;
-  }
-  @keyframes orlo-shimmer { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+  /* A slow breathing tint rather than a glossy shimmer: low noise, no gradient sweep across large areas. */
+  .orlo-skeleton { display: inline-block; vertical-align: middle; border-radius: var(--orlo-radius-sm); background: var(--orlo-color-surface-sunken); animation: orlo-breathe 1.6s var(--orlo-ease-effects-slow) infinite alternate; }
+  @keyframes orlo-breathe { to { background: color-mix(in oklab, var(--orlo-color-surface-sunken), var(--orlo-color-fg) 6%); } }
 
   /* ---------- Badge / Kbd / Divider ---------- */
   .orlo-badge {
-    display: inline-flex; align-items: center; gap: 0.3em; padding: 0.1rem 0.45rem;
-    border-radius: var(--orlo-radius-sm); border: 1px solid color-mix(in oklab, currentColor 40%, transparent);
-    background: color-mix(in oklab, var(--orlo-color-surface-raised), currentColor 7%);
-    font-size: var(--orlo-text-xs); font-weight: 600; line-height: 1.45; white-space: nowrap; vertical-align: middle;
+    display: inline-flex; align-items: center; gap: 0.35em; padding: 0.125rem 0.5rem;
+    border-radius: var(--orlo-radius-full); border: 0;
+    background: color-mix(in oklab, var(--orlo-color-surface-raised), currentColor 11%);
+    font-size: var(--orlo-text-xs); font-weight: 500; line-height: 1.4; white-space: nowrap; vertical-align: middle; letter-spacing: 0.005em;
   }
   .orlo-badge[data-tone="neutral"] { color: var(--orlo-color-fg-muted); }
   .orlo-badge[data-tone="accent"] { color: var(--orlo-color-accent-text); }
@@ -147,10 +152,13 @@
   .orlo-badge[data-tone="warning"] { color: var(--orlo-color-warning); }
   .orlo-badge[data-tone="error"] { color: var(--orlo-color-error); }
   .orlo-badge[data-tone="info"] { color: var(--orlo-color-info); }
+  .orlo-badge[data-dot]::before { content: ""; inline-size: 6px; block-size: 6px; border-radius: 50%; background: currentColor; flex: none; }
+  .orlo-badge[data-count] { min-inline-size: 1.25rem; justify-content: center; padding-inline: 0.375rem; font-variant-numeric: tabular-nums; }
+  .orlo-badge > * { color: var(--orlo-color-fg); }
   .orlo-kbd {
     display: inline-flex; align-items: center; min-inline-size: 1.5em; justify-content: center; padding: 0 0.4em;
     font-family: var(--orlo-font-mono); font-size: 0.75rem; line-height: 1.6; color: var(--orlo-color-fg-muted);
-    border: 1px solid var(--orlo-color-border); border-block-end-width: 2px; border-radius: var(--orlo-radius-sm); background: var(--orlo-color-surface);
+    border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-xs); background: var(--orlo-color-surface);
   }
   hr.orlo-divider { border: 0; border-block-start: 1px solid var(--orlo-color-border); margin: var(--orlo-space-4) 0; }
   .orlo-divider[data-label] { display: flex; align-items: center; gap: var(--orlo-space-3); color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); margin: var(--orlo-space-4) 0; }
@@ -160,72 +168,82 @@
   .orlo-card {
     background: var(--orlo-color-surface); border: 1px solid var(--orlo-color-border);
     border-radius: var(--orlo-radius-lg); padding: var(--orlo-space-5); container-type: inline-size;
-    box-shadow: var(--orlo-shadow-1); transition: var(--orlo-t-shadow), var(--orlo-t-press), var(--orlo-t-color);
+    transition: var(--orlo-t-shadow), var(--orlo-t-press), var(--orlo-t-color);
   }
 
   /* ---------- Fields ---------- */
-  .orlo-field { display: grid; gap: 0.375rem; min-inline-size: 0; }
-  .orlo-field__label { font-weight: 600; font-size: var(--orlo-text-sm); }
+  .orlo-field { display: grid; gap: var(--orlo-space-2); min-inline-size: 0; }
+  .orlo-field__label { font-weight: var(--orlo-weight-medium); font-size: var(--orlo-text-sm); color: var(--orlo-color-fg); }
   .orlo-field__input {
     min-block-size: var(--orlo-control-h); padding-inline: var(--orlo-space-3); inline-size: 100%;
     background: var(--orlo-color-surface-raised); color: inherit; font: inherit;
     border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-md);
     transition: var(--orlo-t-color), box-shadow var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
   }
-  .orlo-field__input::placeholder { color: var(--orlo-color-fg-muted); opacity: 0.8; }
-  .orlo-field__input:focus-visible, .orlo-field__input:focus-within:not(button) { outline: none; border-color: var(--orlo-color-focus); box-shadow: 0 0 0 4px color-mix(in oklab, var(--orlo-color-focus) 22%, transparent); }
-  @media (hover: hover) and (pointer: fine) { .orlo-field__input:hover:not(:focus-visible):not(:disabled) { border-color: var(--orlo-color-fg-muted); } }
-  .orlo-field__input:disabled { opacity: 0.55; cursor: not-allowed; }
-  .orlo-field[data-invalid] .orlo-field__input { border-color: var(--orlo-color-error); box-shadow: inset 0 0 0 1px var(--orlo-color-error); }
-  .orlo-field__msg { margin: 0; min-block-size: 1.4em; font-size: var(--orlo-text-sm); color: var(--orlo-color-fg-muted); }
-  .orlo-field[data-invalid] .orlo-field__msg { color: var(--orlo-color-error); font-weight: 500; }
+  .orlo-field__input::placeholder { color: var(--orlo-color-fg-subtle); opacity: 1; }
+  .orlo-field__input:focus-visible, .orlo-field__input:focus-within:not(button) { outline: none; border-color: var(--orlo-color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--orlo-color-focus) 18%, transparent); }
+  @media (hover: hover) and (pointer: fine) { .orlo-field__input:hover:not(:focus-visible):not(:focus-within):not(:disabled) { border-color: color-mix(in oklab, var(--orlo-color-border-control), var(--orlo-color-fg) 30%); } }
+  .orlo-field__input:disabled, .orlo-field__input[aria-disabled="true"] { cursor: not-allowed; color: var(--orlo-disabled-fg); background: var(--orlo-disabled-bg); border-color: var(--orlo-disabled-border); }
+  .orlo-field__input:read-only:not(button) { background: var(--orlo-color-surface-sunken); border-style: dashed; }
+  .orlo-field[data-invalid] .orlo-field__input { border-color: var(--orlo-color-error); }
+  .orlo-field[data-invalid] .orlo-field__input:focus-visible, .orlo-field[data-invalid] .orlo-field__input:focus-within { box-shadow: 0 0 0 3px color-mix(in oklab, var(--orlo-color-error) 16%, transparent); }
+  /* The message line is always reserved, so a new error never pushes the form. */
+  .orlo-field__msg { margin: 0; min-block-size: 1.45em; font-size: var(--orlo-text-sm); line-height: 1.45; color: var(--orlo-color-fg-muted); transition: color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast); }
+  .orlo-field[data-invalid] .orlo-field__msg { color: var(--orlo-color-error); }
+  .orlo-field__status { display: inline-block; vertical-align: -2px; margin-inline-end: 6px; flex: none; }
   .orlo-field__foot { display: flex; justify-content: space-between; gap: var(--orlo-space-3); }
   .orlo-textarea { padding-block: var(--orlo-space-2); min-block-size: 5.5rem; resize: vertical; field-sizing: content; max-block-size: 20rem; line-height: var(--orlo-leading-snug); }
   .orlo-select { display: flex; align-items: center; justify-content: space-between; gap: var(--orlo-space-2); text-align: start; cursor: pointer; }
-  .orlo-select [data-placeholder] { color: var(--orlo-color-fg-muted); }
-  .orlo-select svg { flex: none; color: var(--orlo-color-fg-muted); transition: transform var(--orlo-motion-duration-quick) var(--orlo-motion-ease-out); }
+  .orlo-select [data-placeholder] { color: var(--orlo-color-fg-subtle); }
+  .orlo-select svg { flex: none; color: var(--orlo-color-fg-muted); transition: transform var(--orlo-duration-spatial-fast) var(--orlo-ease-spatial-fast); }
   .orlo-select[aria-expanded="true"] svg { transform: rotate(180deg); }
 
   /* ---------- Checkbox / Radio ---------- */
   .orlo-check { display: inline-flex; align-items: flex-start; gap: var(--orlo-space-3); cursor: pointer; position: relative; min-block-size: 1.5rem; }
   .orlo-check__input { position: absolute; opacity: 0; inline-size: 1.25rem; block-size: 1.25rem; margin: 0.15rem 0 0; cursor: inherit; }
   .orlo-check__box {
-    flex: none; inline-size: 1.25rem; block-size: 1.25rem; margin-block-start: 0.15rem; display: grid; place-items: center;
-    border: 1.5px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-sm); background: var(--orlo-color-surface-raised);
-    transition: background-color var(--orlo-motion-duration-instant), border-color var(--orlo-motion-duration-instant);
+    flex: none; inline-size: 1.125rem; block-size: 1.125rem; margin-block-start: 0.2rem; display: grid; place-items: center;
+    border: 1.5px solid var(--orlo-color-border-control); border-radius: 5px; background: var(--orlo-color-surface-raised);
+    transition: background-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), border-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), transform var(--orlo-duration-spatial-fast) var(--orlo-ease-spatial-fast);
   }
+  .orlo-check:active .orlo-check__box { transform: scale(0.92); }
   .orlo-check[data-radio] .orlo-check__box { border-radius: 50%; }
-  .orlo-check__box svg { inline-size: 0.875rem; block-size: 0.875rem; fill: none; stroke: var(--orlo-color-accent-fg); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
-  .orlo-check__box .tick { stroke-dasharray: 16; stroke-dashoffset: 16; transition: stroke-dashoffset var(--orlo-motion-duration-quick) var(--orlo-motion-ease-out); }
+  .orlo-check__box svg { inline-size: 0.8125rem; block-size: 0.8125rem; fill: none; stroke: var(--orlo-color-accent-fg); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .orlo-check__box .tick { stroke-dasharray: 16; stroke-dashoffset: 16; transition: stroke-dashoffset var(--orlo-duration-effects-default) var(--orlo-ease-effects-default); }
   .orlo-check__box .dash { opacity: 0; }
-  .orlo-check__box .dot { inline-size: 0.5rem; block-size: 0.5rem; border-radius: 50%; background: var(--orlo-color-accent-fg); transform: scale(0); transition: transform var(--orlo-motion-duration-quick) var(--orlo-motion-ease-out); }
+  .orlo-check__box .dot { inline-size: 0.4375rem; block-size: 0.4375rem; border-radius: 50%; background: var(--orlo-color-accent-fg); transform: scale(0); transition: transform var(--orlo-duration-spatial-fast) var(--orlo-ease-spatial-fast); }
   .orlo-check__input:checked + .orlo-check__box, .orlo-check__input:indeterminate + .orlo-check__box { background: var(--orlo-color-accent); border-color: var(--orlo-color-accent); }
   .orlo-check__input:checked + .orlo-check__box .tick { stroke-dashoffset: 0; }
   .orlo-check__input:indeterminate + .orlo-check__box .tick { opacity: 0; }
   .orlo-check__input:indeterminate + .orlo-check__box .dash { opacity: 1; }
   .orlo-check__input:checked + .orlo-check__box .dot { transform: scale(1); }
-  .orlo-check__input:focus-visible + .orlo-check__box { outline: 2px solid var(--orlo-color-focus); outline-offset: 2px; }
-  .orlo-check__input:disabled ~ * { opacity: 0.55; }
+  .orlo-check__input:focus-visible + .orlo-check__box { box-shadow: var(--orlo-ring); }
+  .orlo-check__input:disabled + .orlo-check__box { background: var(--orlo-disabled-bg); border-color: var(--orlo-disabled-border); }
+  .orlo-check__input:disabled:checked + .orlo-check__box { background: var(--orlo-color-fg-subtle); border-color: var(--orlo-color-fg-subtle); }
+  .orlo-check__input:disabled ~ .orlo-check__text { color: var(--orlo-disabled-fg); }
   .orlo-check:has(.orlo-check__input:disabled) { cursor: not-allowed; }
   .orlo-check__text { display: grid; gap: 0.1rem; }
   .orlo-radio-group { border: 0; padding: 0; margin: 0; display: grid; gap: var(--orlo-space-3); min-inline-size: 0; }
   .orlo-radio-group[data-orientation="horizontal"] { display: flex; flex-wrap: wrap; gap: var(--orlo-space-3) var(--orlo-space-6); }
-  .orlo-radio-group legend { font-weight: 600; font-size: var(--orlo-text-sm); padding: 0; margin-block-end: var(--orlo-space-2); }
+  .orlo-radio-group legend { font-weight: var(--orlo-weight-medium); font-size: var(--orlo-text-sm); padding: 0; margin-block-end: var(--orlo-space-2); }
 
   /* ---------- Switch ---------- */
   .orlo-switch-row { display: inline-flex; align-items: flex-start; gap: var(--orlo-space-3); }
   .orlo-switch {
     flex: none; position: relative; inline-size: 2.75rem; block-size: 1.625rem; padding: 0.1875rem; margin: 0; cursor: pointer;
     display: flex; justify-content: flex-start; align-items: center;
-    border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-full); background: var(--orlo-color-surface);
+    border: 1px solid transparent; border-radius: var(--orlo-radius-full); background: color-mix(in oklab, var(--orlo-color-surface-sunken), var(--orlo-color-fg) 14%);
     transition: background-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), border-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), box-shadow var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
   }
   .orlo-switch::after { content: ""; position: absolute; inset: -0.5rem; } /* larger touch target without visual bulk */
   .orlo-switch[data-checked] { justify-content: flex-end; background: var(--orlo-color-accent); border-color: var(--orlo-color-accent); }
-  .orlo-switch__thumb { display: block; flex: none; inline-size: 1.125rem; block-size: 1.125rem; border-radius: var(--orlo-radius-full); background: var(--orlo-color-fg-muted); box-shadow: var(--orlo-shadow-1); }
+  .orlo-switch__thumb { display: block; flex: none; inline-size: 1.125rem; block-size: 1.125rem; border-radius: var(--orlo-radius-full); background: #FFFFFF; box-shadow: 0 1px 2px rgb(0 0 0 / 0.18), 0 0 0 0.5px rgb(0 0 0 / 0.06); }
+  .orlo-switch:focus-visible { outline: none; box-shadow: var(--orlo-ring); }
   .orlo-switch[data-checked] .orlo-switch__thumb { background: var(--orlo-color-accent-fg); }
-  .orlo-switch:disabled { opacity: 1; cursor: not-allowed; border-color: var(--orlo-color-border); background: var(--orlo-color-surface-raised); }
-  .orlo-switch:disabled .orlo-switch__thumb { background: var(--orlo-color-border-control); box-shadow: none; }
+  .orlo-switch:disabled { cursor: not-allowed; background: var(--orlo-disabled-bg); border-color: var(--orlo-disabled-border); }
+  .orlo-switch[data-checked]:disabled { background: color-mix(in oklab, var(--orlo-color-accent) 40%, var(--orlo-disabled-bg)); }
+  .orlo-switch:disabled .orlo-switch__thumb { background: var(--orlo-color-surface-raised); box-shadow: 0 0 0 1px var(--orlo-color-border); }
+  .orlo-switch-row:has(.orlo-switch:disabled) .orlo-switch__text { color: var(--orlo-disabled-fg); }
   .orlo-switch__text { display: grid; gap: 0.1rem; padding-block-start: 0.125rem; }
   .orlo-switch__text label { cursor: pointer; }
 
@@ -234,19 +252,19 @@
   .orlo-slider__head { display: flex; justify-content: space-between; align-items: baseline; }
   .orlo-slider__value { font-variant-numeric: tabular-nums; color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); }
   .orlo-slider__track { position: relative; block-size: 2rem; margin-inline: 0.75rem; cursor: pointer; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
-  .orlo-slider__rail, .orlo-slider__fill { position: absolute; inset-block-start: 50%; block-size: 0.375rem; transform: translateY(-50%); border-radius: 999px; pointer-events: none; }
-  .orlo-slider__rail { inset-inline: -0.75rem; background: var(--orlo-color-border); }
+  .orlo-slider__rail, .orlo-slider__fill { position: absolute; inset-block-start: 50%; block-size: 0.25rem; transform: translateY(-50%); border-radius: 999px; pointer-events: none; }
+  .orlo-slider__rail { inset-inline: -0.75rem; background: color-mix(in oklab, var(--orlo-color-surface-sunken), var(--orlo-color-fg) 10%); }
   .orlo-slider__fill { inset-inline-start: -0.75rem; padding-inline-start: 0.75rem; background: var(--orlo-color-accent); box-sizing: content-box; }
   .orlo-range .orlo-slider__fill { padding: 0; }
   .orlo-slider__thumb {
     position: absolute; inset-block-start: 50%; inline-size: 1.375rem; block-size: 1.375rem; margin-block-start: -0.6875rem; margin-inline-start: -0.6875rem;
-    border-radius: 50%; background: var(--orlo-color-surface-raised); border: 2px solid var(--orlo-color-accent);
-    box-shadow: var(--orlo-shadow-2); cursor: grab; touch-action: none; outline: none; transition: var(--orlo-t-shadow);
+    border-radius: 50%; background: #FFFFFF; border: 0;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.2), 0 0 0 0.5px rgb(0 0 0 / 0.08); cursor: grab; touch-action: none; outline: none; transition: var(--orlo-t-shadow);
   }
   [dir="rtl"] .orlo-slider__thumb { margin-inline-start: 0; margin-inline-end: -0.6875rem; }
   .orlo-slider__thumb:active { cursor: grabbing; }
-  .orlo-slider__thumb:focus-visible { box-shadow: var(--orlo-shadow-2), 0 0 0 6px color-mix(in oklab, var(--orlo-color-focus) 30%, transparent); }
-  @media (hover: hover) and (pointer: fine) { .orlo-slider__track:hover .orlo-slider__thumb { box-shadow: var(--orlo-shadow-3), 0 0 0 6px color-mix(in oklab, var(--orlo-color-accent) 12%, transparent); } }
+  .orlo-slider__thumb:focus-visible { box-shadow: 0 1px 3px rgb(0 0 0 / 0.2), var(--orlo-ring); }
+  @media (hover: hover) and (pointer: fine) { .orlo-slider__track:hover .orlo-slider__thumb:not(:focus-visible) { box-shadow: 0 1px 3px rgb(0 0 0 / 0.2), 0 0 0 6px var(--orlo-hover); } }
   .orlo-slider__bubble {
     position: absolute; inset-block-end: calc(100% + 10px); inset-inline-start: 50%; translate: -50% 0; padding: 3px 8px; border-radius: var(--orlo-radius-sm);
     background: var(--orlo-color-fg); color: var(--orlo-color-fg-inverse); font-size: var(--orlo-text-xs); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; box-shadow: var(--orlo-shadow-2);
@@ -256,7 +274,9 @@
   .orlo-slider__mark[data-on] { background: var(--orlo-color-accent-fg); opacity: 0.8; }
   .orlo-slider__mark-label { position: absolute; inset-block-start: 14px; inset-inline-start: 50%; translate: -50% 0; font-size: var(--orlo-text-xs); color: var(--orlo-color-fg-muted); white-space: nowrap; }
   .orlo-slider:has(.orlo-slider__mark-label) { padding-block-end: 1.25rem; }
-  .orlo-slider[data-disabled] { opacity: 0.5; pointer-events: none; }
+  .orlo-slider[data-disabled] { pointer-events: none; color: var(--orlo-disabled-fg); }
+  .orlo-slider[data-disabled] .orlo-slider__fill { background: var(--orlo-color-fg-subtle); }
+  .orlo-slider[data-disabled] .orlo-slider__thumb { box-shadow: 0 0 0 1px var(--orlo-color-border); }
   .orlo-slider[data-orientation="vertical"] .orlo-slider__track { inline-size: 2rem; block-size: 10rem; margin: 0.75rem 0; touch-action: pan-x; }
   .orlo-slider[data-orientation="vertical"] .orlo-slider__rail, .orlo-slider[data-orientation="vertical"] .orlo-slider__fill { inset-inline-start: 50%; inset-block: auto; transform: translateX(-50%); inline-size: 0.375rem; block-size: auto; }
   .orlo-slider[data-orientation="vertical"] .orlo-slider__rail { inset-block: -0.75rem; }
@@ -264,27 +284,29 @@
   .orlo-slider[data-orientation="vertical"] .orlo-slider__thumb { inset-block-start: auto; inset-inline-start: 50%; margin: 0 0 -0.6875rem -0.6875rem; }
 
   /* ---------- Segmented control ---------- */
-  .orlo-segmented { max-inline-size: 100%; overflow-x: auto; scrollbar-width: none; display: inline-flex; padding: 3px; gap: 2px; border-radius: calc(var(--orlo-radius-md) + 3px); background: color-mix(in oklab, var(--orlo-color-border) 70%, transparent); }
+  .orlo-segmented { max-inline-size: 100%; overflow-x: auto; scrollbar-width: none; display: inline-flex; padding: 2px; gap: 2px; border-radius: calc(var(--orlo-radius-md) + 2px); background: var(--orlo-color-surface-sunken); box-shadow: inset 0 0 0 1px var(--orlo-color-border); }
   .orlo-segmented__item {
     position: relative; min-block-size: calc(var(--orlo-control-h) - 6px); padding-inline: var(--orlo-space-3);
-    border: 0; background: transparent; color: var(--orlo-color-fg-muted); font: inherit; font-weight: 500; cursor: pointer; border-radius: var(--orlo-radius-md);
-    display: inline-flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent;
+    border: 0; background: transparent; color: var(--orlo-color-fg-muted); font: inherit; font-size: var(--orlo-text-sm); font-weight: 500; cursor: pointer; border-radius: var(--orlo-radius-md);
+    display: inline-flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; transition: color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
   }
   .orlo-segmented[data-size="sm"] .orlo-segmented__item { min-block-size: 1.75rem; padding-inline: var(--orlo-space-2); font-size: var(--orlo-text-sm); }
-  .orlo-segmented__item[aria-checked="true"] { color: var(--orlo-color-fg); font-weight: 600; }
-  .orlo-segmented__thumb { position: absolute; inset: 0; border-radius: var(--orlo-radius-md); background: var(--orlo-color-surface-raised); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 0 0 1px var(--orlo-color-border); }
+  .orlo-segmented__item[aria-checked="true"] { color: var(--orlo-color-fg); }
+  .orlo-segmented__item:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--orlo-color-focus); }
+  @media (hover: hover) and (pointer: fine) { .orlo-segmented__item:not([aria-checked="true"]):hover { color: var(--orlo-color-fg); } }
+  .orlo-segmented__thumb { position: absolute; inset: 0; border-radius: var(--orlo-radius-md); background: var(--orlo-color-surface-raised); box-shadow: 0 1px 2px rgb(28 27 24 / 0.08), 0 0 0 1px var(--orlo-color-border); }
   .orlo-segmented__label { position: relative; display: inline-flex; align-items: center; gap: var(--orlo-space-1); }
 
   /* ---------- Tabs ---------- */
   .orlo-tabs__list { display: flex; gap: var(--orlo-space-1); border-block-end: 1px solid var(--orlo-color-border); overflow-x: auto; scrollbar-width: none; }
   .orlo-tabs__tab {
     position: relative; flex: none; min-block-size: var(--orlo-control-h); padding-inline: var(--orlo-space-3); margin-block-end: -1px;
-    background: transparent; border: 0; color: var(--orlo-color-fg-muted); font: inherit; font-weight: 500; cursor: pointer; border-radius: var(--orlo-radius-md) var(--orlo-radius-md) 0 0;
+    background: transparent; border: 0; color: var(--orlo-color-fg-muted); font: inherit; font-size: var(--orlo-text-sm); font-weight: 500; cursor: pointer; border-radius: var(--orlo-radius-sm) var(--orlo-radius-sm) 0 0;
   }
-  .orlo-tabs__tab[aria-selected="true"] { color: var(--orlo-color-fg); font-weight: 600; }
-  .orlo-tabs__tab:disabled { opacity: 0.45; cursor: not-allowed; }
+  .orlo-tabs__tab[aria-selected="true"] { color: var(--orlo-color-fg); }
+  .orlo-tabs__tab:disabled { color: var(--orlo-disabled-fg); cursor: not-allowed; }
   @media (hover: hover) and (pointer: fine) { .orlo-tabs__tab:hover:not(:disabled):not([aria-selected="true"]) { color: var(--orlo-color-fg); } }
-  .orlo-tabs__indicator { position: absolute; inset-inline: var(--orlo-space-2); inset-block-end: 0; block-size: 2px; border-radius: 2px; background: var(--orlo-color-accent); }
+  .orlo-tabs__indicator { position: absolute; inset-inline: var(--orlo-space-2); inset-block-end: 0; block-size: 2px; border-radius: 2px; background: var(--orlo-color-fg); }
   .orlo-tabs__panel { padding-block: var(--orlo-space-4); }
   .orlo-tabs__panel:focus-visible { outline-offset: 4px; border-radius: var(--orlo-radius-sm); }
 
@@ -304,22 +326,23 @@
   /* ---------- Alert ---------- */
   .orlo-alert {
     display: flex; gap: var(--orlo-space-3); align-items: flex-start; padding: var(--orlo-space-3) var(--orlo-space-4);
-    border: 1px solid color-mix(in oklab, var(--orlo-tone) 45%, transparent); border-inline-start: 3px solid var(--orlo-tone); border-radius: var(--orlo-radius-md);
-    background: color-mix(in oklab, var(--orlo-color-surface), var(--orlo-tone) 6%);
+    border: 1px solid color-mix(in oklab, var(--orlo-tone) 22%, var(--orlo-color-border)); border-radius: var(--orlo-radius-lg);
+    background: color-mix(in oklab, var(--orlo-color-surface), var(--orlo-tone) 5%);
   }
   .orlo-alert[data-tone="info"] { --orlo-tone: var(--orlo-color-info); }
   .orlo-alert[data-tone="success"] { --orlo-tone: var(--orlo-color-success); }
   .orlo-alert[data-tone="warning"] { --orlo-tone: var(--orlo-color-warning); }
   .orlo-alert[data-tone="error"] { --orlo-tone: var(--orlo-color-error); }
   .orlo-alert__glyph { flex: none; display: inline-flex; color: var(--orlo-tone); margin-block-start: 0.125rem; }
-  .orlo-alert__body { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; }
+  .orlo-alert__body { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; font-size: var(--orlo-text-sm); line-height: var(--orlo-leading-normal); }
+  .orlo-alert__body strong { font-weight: 600; }
   .orlo-alert__body > div { color: var(--orlo-color-fg-muted); }
 
   /* ---------- Progress ---------- */
   .orlo-progress { display: grid; gap: var(--orlo-space-2); min-inline-size: 10rem; }
   .orlo-progress__head { display: flex; justify-content: space-between; align-items: baseline; }
   .orlo-progress__head .orlo-hint { font-variant-numeric: tabular-nums; }
-  .orlo-progress__track { position: relative; block-size: 0.375rem; border-radius: 999px; background: var(--orlo-color-border); overflow: hidden; }
+  .orlo-progress__track { position: relative; block-size: 0.25rem; border-radius: 999px; background: color-mix(in oklab, var(--orlo-color-surface-sunken), var(--orlo-color-fg) 10%); overflow: hidden; }
   .orlo-progress__bar { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: inherit; background: var(--orlo-color-accent); }
   .orlo-progress[data-tone="success"] .orlo-progress__bar { background: var(--orlo-color-success); }
   .orlo-progress[data-tone="error"] .orlo-progress__bar { background: var(--orlo-color-error); }
@@ -332,6 +355,10 @@
     border-radius: 50%; font-weight: 600; font-size: calc(var(--s) * 0.38); letter-spacing: 0.02em;
     background: var(--orlo-avatar-bg, var(--orlo-color-border)); color: var(--orlo-avatar-fg, var(--orlo-color-fg));
   }
+  .orlo-avatar__art { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border-radius: 50%; overflow: hidden; }
+  .orlo-avatar::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--orlo-color-fg) 8%, transparent); pointer-events: none; }
+  .orlo-avatar[data-variant="more"] { --orlo-avatar-bg: var(--orlo-color-surface-sunken); --orlo-avatar-fg: var(--orlo-color-fg-muted); font-size: calc(var(--s) * 0.32); }
+  .orlo-avatar[data-size="xl"] { --s: 4.5rem; }
   .orlo-avatar[data-size="sm"] { --s: 1.75rem; }
   .orlo-avatar[data-size="lg"] { --s: 3.25rem; }
   .orlo-avatar img { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border-radius: 50%; object-fit: cover; }
@@ -341,7 +368,7 @@
   .orlo-avatar[data-hue="3"] { --orlo-avatar-bg: var(--orlo-tint-3-bg); --orlo-avatar-fg: var(--orlo-tint-3-fg); }
   .orlo-avatar[data-hue="4"] { --orlo-avatar-bg: var(--orlo-tint-4-bg); --orlo-avatar-fg: var(--orlo-tint-4-fg); }
   .orlo-avatar[data-hue="5"] { --orlo-avatar-bg: var(--orlo-tint-5-bg); --orlo-avatar-fg: var(--orlo-tint-5-fg); }
-  .orlo-avatar__status { position: absolute; inset-inline-end: -1px; inset-block-end: -1px; inline-size: 30%; block-size: 30%; border-radius: 50%; border: 2px solid var(--orlo-color-canvas); }
+  .orlo-avatar__status { z-index: 1; position: absolute; inset-inline-end: -1px; inset-block-end: -1px; inline-size: 30%; block-size: 30%; border-radius: 50%; border: 2px solid var(--orlo-color-canvas); }
   .orlo-avatar__status[data-status="online"] { background: var(--orlo-color-success); }
   .orlo-avatar__status[data-status="away"] { background: var(--orlo-color-warning); }
   .orlo-avatar__status[data-status="offline"] { background: var(--orlo-color-canvas); box-shadow: inset 0 0 0 2px var(--orlo-color-fg-muted); }
@@ -404,14 +431,14 @@
   .orlo-scrim { position: absolute; inset: 0; background: var(--orlo-color-scrim); }
   .orlo-modal__panel {
     position: relative; display: flex; flex-direction: column; inline-size: min(100%, 32rem); max-block-size: min(85dvh, 48rem);
-    border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-2xl);
+    border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-xl);
     box-shadow: var(--orlo-shadow-5); outline: none; overflow: hidden;
   }
   .orlo-modal__panel[data-size="sm"] { inline-size: min(100%, 24rem); }
   .orlo-modal__panel[data-size="lg"] { inline-size: min(100%, 44rem); }
   .orlo-modal__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--orlo-space-3); padding: var(--orlo-space-5) var(--orlo-space-5) 0; }
   .orlo-modal__header .orlo-icon-button { margin: calc(var(--orlo-space-2) * -1) calc(var(--orlo-space-2) * -1) 0 0; }
-  .orlo-modal__title { margin: 0; font-size: var(--orlo-text-lg); line-height: var(--orlo-leading-snug); font-weight: 650; letter-spacing: -0.01em; }
+  .orlo-modal__title { margin: 0; font-size: var(--orlo-text-lg); line-height: var(--orlo-leading-snug); font-weight: 600; letter-spacing: -0.01em; }
   .orlo-modal__desc { margin: var(--orlo-space-2) var(--orlo-space-5) 0; color: var(--orlo-color-fg-muted); }
   .orlo-modal__body { padding: var(--orlo-space-4) var(--orlo-space-5); overflow: auto; overscroll-behavior: contain; }
   .orlo-modal__footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--orlo-space-2); padding: var(--orlo-space-4) var(--orlo-space-5) var(--orlo-space-5); }
@@ -450,10 +477,10 @@
     display: flex; align-items: center; gap: var(--orlo-space-3); min-block-size: 2.25rem; padding: var(--orlo-space-1) var(--orlo-space-3);
     border-radius: var(--orlo-radius-md); cursor: pointer; outline: none; user-select: none; scroll-margin: var(--orlo-space-1);
   }
-  .orlo-menu__item:focus, .orlo-menu__item[data-active] { background: var(--orlo-color-surface-selected); }
-  .orlo-menu__item[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+  .orlo-menu__item:focus, .orlo-menu__item[data-active] { background: var(--orlo-hover); }
+  .orlo-menu__item[aria-disabled="true"] { color: var(--orlo-disabled-fg); cursor: not-allowed; }
   .orlo-menu__item[data-tone="danger"] { color: var(--orlo-color-error); }
-  .orlo-menu__item[aria-selected="true"] { font-weight: 600; }
+  .orlo-menu__item[aria-selected="true"] { font-weight: 500; }
   .orlo-menu__text { flex: 1; min-inline-size: 0; display: grid; }
   .orlo-menu__icon { display: inline-flex; color: var(--orlo-color-fg-muted); }
   .orlo-menu__sep { block-size: 1px; margin: var(--orlo-space-1) calc(var(--orlo-space-1) * -1); background: var(--orlo-color-border); }

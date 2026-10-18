@@ -113,7 +113,7 @@ export function AudioPlayer({ src, title, artist }: AudioPlayerProps) {
       </button>
       <div className="orlo-audio__body">
         <div className="orlo-audio__meta"><strong>{title}</strong>{artist && <span className="orlo-hint">{artist}</span>}</div>
-        {m.state === "error" ? <p className="orlo-field__msg" role="alert" style={{ color: "var(--orlo-color-error)" }}>! This audio couldn’t be loaded.</p> : (
+        {m.state === "error" ? <p className="orlo-field__msg" role="alert" style={{ color: "var(--orlo-color-error)" }}>This audio couldn’t be loaded. Check the file or try again later.</p> : (
           <div className="orlo-audio__row">
             <span className="orlo-player__time">{fmtTime(m.time)}</span>
             <div style={{ flex: 1, minInlineSize: 0 }}><Slider label="Seek" hideLabel bubble={false} min={0} max={Math.max(1, m.duration || 1)} step={0.1} value={Math.min(m.time, m.duration || 0)} onValueChange={seek} format={fmtTime} /></div>

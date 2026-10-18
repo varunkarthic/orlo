@@ -27,7 +27,7 @@ export { Accordion, type AccordionProps, type AccordionItem } from "./components
 // Data display
 export { Badge, type BadgeProps } from "./components/Badge.tsx";
 export { Card } from "./components/Card.tsx";
-export { Avatar, AvatarGroup, initials, type AvatarProps } from "./components/Avatar.tsx";
+export { Avatar, AvatarGroup, initials, hashSeed, avatarArt, type AvatarProps, type AvatarVariant } from "./components/Avatar.tsx";
 export { Table, type TableProps, type Column } from "./components/Table.tsx";
 export { Kbd, Divider, Stack, EmptyState, AnimatedNumber, type StackProps } from "./components/Misc.tsx";
 // Feedback

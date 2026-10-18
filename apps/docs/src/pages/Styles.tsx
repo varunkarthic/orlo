@@ -42,7 +42,7 @@ export function Color() {
         {pairs.map(([a, b, min]) => <tr key={a + b}><td><code>{a}</code> on <code>{b}</code></td>{(["light", "dark"] as const).map((s) => { const t = semantic[s] as Record<string, string>; const c = contrast(t[a], t[b]); return <td key={s}>{c.toFixed(2)}:1 {c >= min ? <Badge tone="success">pass</Badge> : <Badge tone="error">fail</Badge>}</td>; })}<td>{min}:1</td></tr>)}
       </tbody></table>
       <H2>Never colour alone</H2>
-      <Stage label="Status with redundant cues"><Badge tone="success">✓ Paid</Badge><Badge tone="warning">! Due soon</Badge><Badge tone="error">! Overdue</Badge></Stage>
+      <Stage label="Status with redundant cues"><Badge tone="success" dot>Paid</Badge><Badge tone="warning" dot>Due soon</Badge><Badge tone="error" dot>Overdue</Badge></Stage>
     </>
   );
 }

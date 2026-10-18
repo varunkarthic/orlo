@@ -18,6 +18,8 @@ export function useThumbMotion(percent: number) {
 
   useEffect(() => {
     if (dragging.current) return;
+    // No-op guard: already at the target (within half a pixel's worth), so don't restart or wobble.
+    if (Math.abs(pos.get() - percent) < 0.05) { anim.current?.stop(); pos.set(percent); return; }
     anim.current?.stop();
     anim.current = animate(pos, percent, tRef.current("thumb") as never);
   }, [percent, pos]);
