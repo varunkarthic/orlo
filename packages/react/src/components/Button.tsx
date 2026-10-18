@@ -2,7 +2,7 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { Spinner } from "./Spinner.tsx";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "solid" | "tonal" | "subtle" | "ghost" | "danger";
+  variant?: "solid" | "accent" | "tonal" | "subtle" | "ghost" | "danger";
   size?: "sm" | "md" | "lg";
   /** Icon before the label (decorative). */
   start?: ReactNode;

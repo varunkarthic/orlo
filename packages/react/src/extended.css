@@ -240,12 +240,12 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 
 /* ---------- TOC ---------- */
 .orlo-toc { font-size: var(--orlo-text-sm); }
-.orlo-toc__title { margin: 0 0 8px; font-size: var(--orlo-text-xs); font-weight: 650; text-transform: uppercase; letter-spacing: 0.06em; color: var(--orlo-color-fg-muted); }
+.orlo-toc__title { margin: 0 0 8px; font-size: var(--orlo-text-xs); font-weight: 600; color: var(--orlo-color-fg-muted); }
 .orlo-toc ul { list-style: none; margin: 0; padding: 0; border-inline-start: 1px solid var(--orlo-color-border); }
 .orlo-toc li[data-level="3"] a { padding-inline-start: 24px; }
 .orlo-toc a { display: block; padding: 5px 12px; margin-inline-start: -1px; border-inline-start: 2px solid transparent; color: var(--orlo-color-fg-muted); text-decoration: none; line-height: 1.35; }
 .orlo-toc a:hover { color: var(--orlo-color-fg); }
-.orlo-toc a[aria-current] { color: var(--orlo-color-fg); border-inline-start-color: var(--orlo-color-accent); font-weight: 600; }
+.orlo-toc a[aria-current] { color: var(--orlo-color-fg); border-inline-start-color: var(--orlo-color-fg); font-weight: 500; }
 
 /* ---------- Context / hover card / tour ---------- */
 .orlo-context-area { border-radius: var(--orlo-radius-md); -webkit-touch-callout: none; }
