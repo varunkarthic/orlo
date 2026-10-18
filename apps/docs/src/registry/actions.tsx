@@ -41,8 +41,8 @@ export const actions: Record<string, Doc> = {
   button: {
     demo: () => <><Button>Continue</Button><Button variant="subtle">Cancel</Button><Button variant="ghost">Skip</Button><Button variant="danger">Delete</Button><LoadingButton /></>,
     variants: [
-      { title: "Emphasis", body: "One solid button per view for the primary action. Subtle for secondary, ghost for tertiary.", demo: () => <><Button>Primary</Button><Button variant="subtle">Secondary</Button><Button variant="ghost">Tertiary</Button></> },
-      { title: "Variants", demo: () => <><Button>Solid</Button><Button variant="tonal">Tonal</Button><Button variant="subtle">Subtle</Button><Button variant="ghost">Ghost</Button><Button variant="danger">Danger</Button></> },
+      { title: "Emphasis", body: "One emphasised button per view. Solid (ink) is the default primary; accent is for the single brand moment, such as a sign-up or checkout. Subtle for secondary, ghost for tertiary.", demo: () => <><Button variant="accent">Accent</Button><Button>Primary</Button><Button variant="subtle">Secondary</Button><Button variant="ghost">Tertiary</Button></> },
+      { title: "Variants", demo: () => <><Button>Solid</Button><Button variant="accent">Accent</Button><Button variant="tonal">Tonal</Button><Button variant="subtle">Subtle</Button><Button variant="ghost">Ghost</Button><Button variant="danger">Danger</Button></> },
       { title: "Sizes", demo: () => <><Button size="sm">Small</Button><Button>Medium</Button><Button size="lg">Large</Button></> },
       { title: "With icons", demo: () => <><Button start={<Icons.Plus size={18} />}>New file</Button><Button variant="subtle" end={<Icons.ChevronRight size={18} />}>Next</Button></> },
       { title: "States", body: "Disabled and loading look different on purpose: one is unavailable, the other is busy.", demo: () => <><Button disabled>Disabled</Button><Button loading>Loading</Button><Button variant="danger" disabled>Delete</Button></> },

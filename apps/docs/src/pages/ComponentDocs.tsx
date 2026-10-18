@@ -62,7 +62,7 @@ export function ComponentPage({ slug, doc: d, root, tab }: { slug: string; doc?:
   const importName = entry.name === "Toast" ? "useToast" : entry.name;
   return (
     <>
-      <PageHeader eyebrow={entry.family} title={entry.name} badge={entry.maturity} lead={entry.summary} />
+      <PageHeader eyebrow={entry.family} title={entry.name} lead={entry.summary} />
       <div className="ctabs-wrap">
         <nav className="ctabs" aria-label={`${entry.name} documentation`}>
           {TABS.map((t) => <a key={t} href={`${root}components/${slug}/${t === "overview" ? "" : t + "/"}`} aria-current={t === tab ? "page" : undefined}>{tabTitle[t]}</a>)}
@@ -133,7 +133,7 @@ export function ComponentPage({ slug, doc: d, root, tab }: { slug: string; doc?:
           <p><a href={`https://github.com/varunkarthic/orlo/tree/main/packages/react/src/components`}>packages/react/src/components</a> on GitHub.</p>
         </>
       )}
-      <p className="maturity-note"><Badge tone="accent">{entry.maturity}</Badge> {entry.family} · tested: {entry.tested.join(", ") || "visual"}</p>
+      <p className="maturity-note">Maturity: {entry.maturity} · {entry.family} · tested: {entry.tested.join(", ") || "visual"}</p>
     </>
   );
 }

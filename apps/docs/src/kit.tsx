@@ -31,13 +31,13 @@ export function Stage({ children, label, tall, plain }: { children: ReactNode; l
   const [mode, setMode] = useState("page");
   return (
     <figure className="stage" data-tall={tall || undefined}>
+      <div className="stage__canvas orlo-root" data-orlo-theme={mode === "light" || mode === "dark" ? mode : undefined} dir={mode === "rtl" ? "rtl" : undefined}>{children}</div>
       {!plain && (
         <figcaption className="stage__bar">
           <span className="stage__label">{label}</span>
-          <SegmentedControl label="Preview mode" size="sm" value={mode} onValueChange={setMode} options={[{ value: "page", label: "Page" }, { value: "light", label: "Light" }, { value: "dark", label: "Dark" }, { value: "rtl", label: "RTL" }]} />
+          <SegmentedControl label={`Preview ${label} as`} size="sm" value={mode} onValueChange={setMode} options={[{ value: "page", label: "Page" }, { value: "light", label: "Light" }, { value: "dark", label: "Dark" }, { value: "rtl", label: "RTL" }]} />
         </figcaption>
       )}
-      <div className="stage__canvas orlo-root" data-orlo-theme={mode === "light" || mode === "dark" ? mode : undefined} dir={mode === "rtl" ? "rtl" : undefined}>{children}</div>
     </figure>
   );
 }

@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Wordmark, Button, Card, Switch, SegmentedControl, Slider, Badge, AvatarGroup, Progress, Menu, Icons, AnimatedNumber, OrloImage, Stack, Rating, Chip, Knob, Calendar, Marquee, Sparkline, Steps, manifest, families } from "@orlo/react";
-import { sampleImage } from "../registry/shared.tsx";
+import { Wordmark, Button, Switch, SegmentedControl, Slider, Badge, Avatar, AvatarGroup, Progress, Icons, Stack, Marquee, Sparkline, Steps, manifest, families } from "@orlo/react";
 import { LinkCard } from "../kit.tsx";
 
 export function Home({ root }: { root: string }) {
@@ -14,18 +13,27 @@ export function Home({ root }: { root: string }) {
           <h1>Nothing is an afterthought.</h1>
           <p className="lead">A design framework for React that finishes the edges: the press, the frame between two states, the image that never arrives, the focus that has to come back. {manifest.length} components, one motion grammar, all built in.</p>
           <div className="hero2__actions">
-            <a className="orlo-button" data-variant="solid" href={`${root}start/`}>Get started</a>
+            <a className="orlo-button" data-variant="accent" href={`${root}start/`}>Get started</a>
             <a className="orlo-button" data-variant="subtle" href={`${root}components/`}>Browse components</a>
             <a className="orlo-button" data-variant="ghost" href={`${root}foundations/edge-cases/`}>See the details <Icons.ChevronRight size={16} /></a>
           </div>
         </div>
-        <div className="hero2__collage" aria-label="Live components">
-          <Card className="hc hc--a"><Stack direction="row" gap={2}><Button loading={saving} loadingLabel="Saving" onClick={() => { setSaving(true); setTimeout(() => setSaving(false), 1400); }}>Save</Button><Menu trigger={<Button variant="subtle">More <Icons.ChevronDown size={16} /></Button>} items={[{ label: "Duplicate" }, { label: "Share…" }, { type: "separator" }, { label: "Delete", tone: "danger" }]} /></Stack></Card>
-          <Card className="hc hc--b"><Switch label="Notifications" defaultChecked /><SegmentedControl label="Layout" size="sm" options={[{ value: "l", label: "List" }, { value: "g", label: "Grid" }, { value: "b", label: "Board" }]} /></Card>
-          <Card className="hc hc--c"><span className="orlo-hint">Budget</span><span className="hc__num"><AnimatedNumber value={budget} format={{ style: "currency", currency: "EUR", maximumFractionDigits: 0 }} /></span><Slider label="Monthly" value={budget} onValueChange={setBudget} min={0} max={5000} step={50} format={(v) => new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v)} /></Card>
-          <Card className="hc hc--d"><Calendar /></Card>
-          <Card className="hc hc--e"><Stack direction="row" gap={3} align="center"><Knob label="Gain" defaultValue={64} size={60} format={(v) => `${v}%`} /><Stack gap={2}><Rating label="Rate" defaultValue={4} /><Stack direction="row" gap={2} wrap><Chip defaultSelected>Spring</Chip><Chip>Fade</Chip></Stack></Stack></Stack></Card>
-          <Card className="hc hc--f"><Stack direction="row" gap={2}><OrloImage src={sampleImage} alt="Hills at sunset" ratio="1 / 1" /><OrloImage src="./__missing__.png" alt="Missing photo" ratio="1 / 1" maxRetries={0} /></Stack></Card>
+        <div className="showcase orlo-material" aria-label="Live example: account settings">
+          <header className="showcase__head">
+            <Avatar name="Mira Okafor" size="lg" />
+            <div className="showcase__who"><strong>Mira Okafor</strong><span className="orlo-hint">Design lead · Lisbon</span></div>
+            <Badge tone="success" dot>Online</Badge>
+          </header>
+          <div className="showcase__body">
+            <Switch label="Notifications" description="Mentions and replies only." defaultChecked />
+            <Switch label="Weekly digest" />
+            <Slider label="Monthly budget" value={budget} onValueChange={setBudget} min={0} max={5000} step={50} format={(v) => new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v)} />
+            <SegmentedControl label="Layout" options={[{ value: "l", label: "List" }, { value: "g", label: "Grid" }, { value: "b", label: "Board" }]} />
+          </div>
+          <footer className="showcase__foot">
+            <Button variant="ghost">Cancel</Button>
+            <Button variant="accent" loading={saving} loadingLabel="Saving" onClick={() => { setSaving(true); setTimeout(() => setSaving(false), 1400); }}>Save changes</Button>
+          </footer>
         </div>
       </section>
 
