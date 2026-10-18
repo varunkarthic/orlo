@@ -1,5 +1,5 @@
 import { useLocale } from "../provider.tsx";
-import { Fragment, useEffect, useId, useMemo, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useId, useMemo, useState, type ReactNode, type CSSProperties } from "react";
 import { Icons } from "../internal/icons.tsx";
 import { useControllable } from "../internal/hooks.ts";
 
@@ -140,7 +140,7 @@ export function Heatmap({ data, end = new Date(), weeks = 20, label, locale: loc
   const level = (n: number) => (n <= 0 ? 0 : Math.min(4, Math.ceil((n / max) * 4)));
   const total = days.reduce((s, d) => s + (data[key(d)] ?? 0), 0);
   return (
-    <div className="orlo-heatmap">
+    <div className="orlo-heatmap" style={{ "--orlo-heatmap-weeks": weeks } as CSSProperties}>
       <div role="grid" aria-label={`${label}: ${total} ${unit}`} className="orlo-heatmap__grid" style={{ gridTemplateRows: "repeat(7, 1fr)" }}
         onKeyDown={(e) => {
           const d = { ArrowUp: -1, ArrowDown: 1, ArrowLeft: -7, ArrowRight: 7 }[e.key];

@@ -116,8 +116,8 @@ test("off switch keeps a visible thumb and toggles cleanly", async ({ page }) =>
 test("mobile navigation opens as a sheet", async ({ page, isMobile }) => {
   test.skip(!isMobile, "mobile only");
   await page.goto("components/");
-  await page.getByRole("button", { name: "Open navigation" }).click();
-  const nav = page.getByRole("dialog", { name: "Orlo" });
+  await page.getByRole("button", { name: "Open menu" }).click();
+  const nav = page.getByRole("dialog", { name: "Menu" });
   await expect(nav).toBeVisible();
   await nav.getByRole("link", { name: "Select" }).click();
   await expect(page.getByRole("heading", { level: 1, name: /Select/ })).toBeVisible();

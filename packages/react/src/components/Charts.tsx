@@ -2,6 +2,7 @@ import { useLocale } from "../provider.tsx";
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { useOrloMotion } from "@orlo/motion";
+import { svgOrigin } from "../internal/svg-origin.ts";
 
 /** "Nice" axis ticks (1, 2, 2.5, 5 × 10ⁿ) covering [min, max]; always includes 0 when the range crosses it. Exported for tests. */
 export function niceTicks(min: number, max: number, count = 5): number[] {
@@ -228,7 +229,7 @@ export function DonutChart({ title, description, data, format: fmtProp, centerLa
           {arcs.map((a, i) => (
             <motion.path key={data[i].label} role="listitem" tabIndex={0} aria-label={`${data[i].label}: ${format(data[i].value)}, ${pct(data[i].value)}`} d={arc(a.a0 + 0.012, a.a1 - 0.012, active === i ? R + 5 : R)}
               fill={color(i)} className="orlo-donut__seg" onFocus={() => setActive(i)} onBlur={() => setActive(null)} onPointerEnter={() => setActive(i)} onPointerLeave={() => setActive(null)}
-              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: active === null || active === i ? 1 : 0.45, scale: 1 }} transition={{ ...transition("reveal"), delay: i * 0.04 }} style={{ originX: "100px", originY: "100px" }} />
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: active === null || active === i ? 1 : 0.45, scale: 1 }} transition={{ ...transition("reveal"), delay: i * 0.04 }} style={svgOrigin(100, 100)} />
           ))}
           <text x="100" y="94" className="orlo-donut__label">{shown ? shown.label : centerLabel}</text>
           <text x="100" y="118" className="orlo-donut__value">{shown ? pct(shown.value) : format(total)}</text>

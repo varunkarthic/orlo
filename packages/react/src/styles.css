@@ -68,7 +68,7 @@
 
   /* ---------- Buttons ---------- */
   .orlo-button, .orlo-icon-button {
-    position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--orlo-space-2);
+    position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--orlo-gap-icon);
     min-block-size: var(--orlo-control-h);
     border: 1px solid transparent; border-radius: var(--orlo-radius-md);
     font: inherit; font-size: var(--orlo-text-sm); font-weight: var(--orlo-weight-medium); line-height: 1.2; letter-spacing: 0; cursor: pointer; text-decoration: none; white-space: nowrap;
@@ -81,11 +81,14 @@
   /* Icon-only controls are circles; their hover, press and focus backplates follow the circle. */
   .orlo-icon-button { inline-size: var(--orlo-control-h); padding: 0; flex: none; border-radius: var(--orlo-radius-full); color: var(--orlo-color-fg-muted); }
   .orlo-button[data-size="sm"], .orlo-icon-button[data-size="sm"] { min-block-size: 2rem; font-size: var(--orlo-text-sm); }
-  .orlo-button[data-size="sm"] { padding-inline: var(--orlo-space-3); border-radius: var(--orlo-radius-sm); }
+  .orlo-button[data-size="sm"] { padding-inline: var(--orlo-space-3); border-radius: var(--orlo-radius-sm); --orlo-button-gap: var(--orlo-gap-icon-sm); }
   .orlo-icon-button[data-size="sm"] { inline-size: 2rem; }
-  .orlo-button[data-size="lg"] { min-block-size: calc(var(--orlo-control-h) + 8px); padding-inline: calc(var(--orlo-control-pad) + 6px); font-size: var(--orlo-text-md); }
-  .orlo-button__label { display: inline-flex; align-items: center; gap: var(--orlo-space-2); transition: opacity var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast); }
-  .orlo-button__icon { display: inline-flex; margin-inline: -2px; }
+  .orlo-button[data-size="lg"] { min-block-size: calc(var(--orlo-control-h) + 8px); padding-inline: calc(var(--orlo-control-pad) + 6px); font-size: var(--orlo-text-md); --orlo-button-gap: var(--orlo-gap-icon-lg); }
+  .orlo-button__label { display: inline-flex; align-items: center; gap: var(--orlo-button-gap, var(--orlo-gap-icon)); transition: opacity var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast); }
+  /* Icons sit optically closer to the edge than text does, so the outer side gives back 2px; the gap to the label stays the full role. */
+  .orlo-button__icon { display: inline-flex; }
+  .orlo-button__label > .orlo-button__icon:first-child { margin-inline-start: -2px; }
+  .orlo-button__label > .orlo-button__icon:last-child { margin-inline-end: -2px; }
   .orlo-button:focus-visible, .orlo-icon-button:focus-visible { outline: none; box-shadow: var(--orlo-ring); }
 
   [data-variant="solid"]:is(.orlo-button, .orlo-icon-button) { background: var(--orlo-color-fg); color: var(--orlo-color-fg-inverse); }
@@ -110,7 +113,7 @@
   :is([data-variant="ghost"].orlo-button, .orlo-icon-button:not([data-variant])):disabled { background: transparent; border-color: transparent; }
   .orlo-button[aria-disabled="true"] { cursor: progress; }
   .orlo-button[data-loading] .orlo-button__label { opacity: 0; }
-  .orlo-button__busy { position: absolute; inset: 0; display: grid; place-items: center; }
+  .orlo-button__busy { position: absolute; inset: 0; display: grid; place-items: center; animation: orlo-fade-in var(--orlo-duration-effects-default) var(--orlo-ease-effects-default) both; }
 
   /* Button group: attached buttons share borders and outer corners only. */
   .orlo-button-group { display: inline-flex; }
@@ -119,7 +122,7 @@
   .orlo-button-group[data-attached] > :is(.orlo-button, .orlo-icon-button):last-child { border-start-end-radius: var(--orlo-radius-md); border-end-end-radius: var(--orlo-radius-md); }
   .orlo-button-group[data-attached] > [data-variant="subtle"] + [data-variant="subtle"] { margin-inline-start: -1px; }
   .orlo-button-group[data-attached] > :focus-visible { z-index: 1; }
-  .orlo-button-group:not([data-attached]) { gap: var(--orlo-space-2); }
+  .orlo-button-group:not([data-attached]) { gap: var(--orlo-gap-icon); }
 
   /* AsyncButton */
   .orlo-async { overflow: hidden; }
@@ -131,9 +134,15 @@
   .orlo-async__bar--spin { transform-origin: 50% 50%; animation: orlo-spin 0.9s linear infinite; }
 
   /* ---------- Spinner / Skeleton ---------- */
+  /* The arc grows and shrinks while it turns, so progress reads as continuous rather than a stuck wedge. */
   .orlo-spinner { display: inline-grid; place-items: center; }
-  .orlo-spinner svg { width: 1.25rem; height: 1.25rem; animation: orlo-spin 0.85s linear infinite; }
+  .orlo-spinner svg { width: 1.25rem; height: 1.25rem; animation: orlo-spin 1.4s linear infinite; }
   .orlo-spinner[data-size="sm"] svg { width: 1rem; height: 1rem; }
+  .orlo-spinner__track, .orlo-spinner__arc { fill: none; stroke: currentColor; stroke-width: 2.5; }
+  .orlo-spinner__track { opacity: 0.18; }
+  .orlo-spinner__arc { stroke-linecap: round; stroke-dasharray: 28 100; transform: rotate(-90deg); transform-origin: 12px 12px; animation: orlo-spinner-arc 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+  @keyframes orlo-spinner-arc { 0% { stroke-dasharray: 4 100; stroke-dashoffset: 0; } 50% { stroke-dasharray: 58 100; stroke-dashoffset: -14; } 100% { stroke-dasharray: 4 100; stroke-dashoffset: -96; } }
+  @keyframes orlo-fade-in { from { opacity: 0; transform: scale(0.85); } }
   @keyframes orlo-spin { to { transform: rotate(360deg); } }
   /* A slow breathing tint rather than a glossy shimmer: low noise, no gradient sweep across large areas. */
   .orlo-skeleton { display: inline-block; vertical-align: middle; border-radius: var(--orlo-radius-sm); background: var(--orlo-color-surface-sunken); animation: orlo-breathe 1.6s var(--orlo-ease-effects-slow) infinite alternate; }
@@ -141,7 +150,7 @@
 
   /* ---------- Badge / Kbd / Divider ---------- */
   .orlo-badge {
-    display: inline-flex; align-items: center; gap: 0.35em; padding: 0.125rem 0.5rem;
+    display: inline-flex; align-items: center; gap: 0.4em; padding: 0.1875rem 0.5625rem;
     border-radius: var(--orlo-radius-full); border: 0;
     background: color-mix(in oklab, var(--orlo-color-surface-raised), currentColor 11%);
     font-size: var(--orlo-text-xs); font-weight: 500; line-height: 1.4; white-space: nowrap; vertical-align: middle; letter-spacing: 0.005em;
@@ -167,15 +176,15 @@
   /* ---------- Card ---------- */
   .orlo-card {
     background: var(--orlo-color-surface); border: 1px solid var(--orlo-color-border);
-    border-radius: var(--orlo-radius-lg); padding: var(--orlo-space-5); container-type: inline-size;
+    border-radius: var(--orlo-radius-lg); padding: var(--orlo-inset); container-type: inline-size;
     transition: var(--orlo-t-shadow), var(--orlo-t-press), var(--orlo-t-color);
   }
 
   /* ---------- Fields ---------- */
-  .orlo-field { display: grid; gap: var(--orlo-space-2); min-inline-size: 0; }
+  .orlo-field { display: grid; gap: var(--orlo-gap-label); min-inline-size: 0; }
   .orlo-field__label { font-weight: var(--orlo-weight-medium); font-size: var(--orlo-text-sm); color: var(--orlo-color-fg); }
   .orlo-field__input {
-    min-block-size: var(--orlo-control-h); padding-inline: var(--orlo-space-3); inline-size: 100%;
+    min-block-size: var(--orlo-control-h); padding-inline: 0.875rem; inline-size: 100%;
     background: var(--orlo-color-surface-raised); color: inherit; font: inherit;
     border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-md);
     transition: var(--orlo-t-color), box-shadow var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
@@ -188,9 +197,9 @@
   .orlo-field[data-invalid] .orlo-field__input { border-color: var(--orlo-color-error); }
   .orlo-field[data-invalid] .orlo-field__input:focus-visible, .orlo-field[data-invalid] .orlo-field__input:focus-within { box-shadow: 0 0 0 3px color-mix(in oklab, var(--orlo-color-error) 16%, transparent); }
   /* The message line is always reserved, so a new error never pushes the form. */
-  .orlo-field__msg { margin: 0; min-block-size: 1.45em; font-size: var(--orlo-text-sm); line-height: 1.45; color: var(--orlo-color-fg-muted); transition: color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast); }
+  .orlo-field__msg { margin: calc(var(--orlo-gap-message) - var(--orlo-gap-label)) 0 0; min-block-size: 1.45em; font-size: var(--orlo-text-sm); line-height: 1.45; color: var(--orlo-color-fg-muted); transition: color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast); }
   .orlo-field[data-invalid] .orlo-field__msg { color: var(--orlo-color-error); }
-  .orlo-field__status { display: inline-block; vertical-align: -2px; margin-inline-end: 6px; flex: none; }
+  .orlo-field__status { display: inline-block; vertical-align: -2px; margin-inline-end: var(--orlo-gap-icon-sm); flex: none; }
   .orlo-field__foot { display: flex; justify-content: space-between; gap: var(--orlo-space-3); }
   .orlo-textarea { padding-block: var(--orlo-space-2); min-block-size: 5.5rem; resize: vertical; field-sizing: content; max-block-size: 20rem; line-height: var(--orlo-leading-snug); }
   .orlo-select { display: flex; align-items: center; justify-content: space-between; gap: var(--orlo-space-2); text-align: start; cursor: pointer; }
@@ -199,7 +208,7 @@
   .orlo-select[aria-expanded="true"] svg { transform: rotate(180deg); }
 
   /* ---------- Checkbox / Radio ---------- */
-  .orlo-check { display: inline-flex; align-items: flex-start; gap: var(--orlo-space-3); cursor: pointer; position: relative; min-block-size: 1.5rem; }
+  .orlo-check { display: inline-flex; align-items: flex-start; gap: var(--orlo-gap-inline); cursor: pointer; position: relative; min-block-size: 1.5rem; }
   .orlo-check__input { position: absolute; opacity: 0; inline-size: 1.25rem; block-size: 1.25rem; margin: 0.15rem 0 0; cursor: inherit; }
   .orlo-check__box {
     flex: none; pointer-events: none; inline-size: 1.125rem; block-size: 1.125rem; margin-block-start: 0.2rem; display: grid; place-items: center;
@@ -222,13 +231,13 @@
   .orlo-check__input:disabled:checked + .orlo-check__box { background: var(--orlo-color-fg-subtle); border-color: var(--orlo-color-fg-subtle); }
   .orlo-check__input:disabled ~ .orlo-check__text { color: var(--orlo-disabled-fg); }
   .orlo-check:has(.orlo-check__input:disabled) { cursor: not-allowed; }
-  .orlo-check__text { display: grid; gap: 0.1rem; }
-  .orlo-radio-group { border: 0; padding: 0; margin: 0; display: grid; gap: var(--orlo-space-3); min-inline-size: 0; }
+  .orlo-check__text { display: grid; gap: 0.125rem; }
+  .orlo-radio-group { border: 0; padding: 0; margin: 0; display: grid; gap: 0.875rem; min-inline-size: 0; }
   .orlo-radio-group[data-orientation="horizontal"] { display: flex; flex-wrap: wrap; gap: var(--orlo-space-3) var(--orlo-space-6); }
-  .orlo-radio-group legend { font-weight: var(--orlo-weight-medium); font-size: var(--orlo-text-sm); padding: 0; margin-block-end: var(--orlo-space-2); }
+  .orlo-radio-group legend { font-weight: var(--orlo-weight-medium); font-size: var(--orlo-text-sm); padding: 0; margin-block-end: var(--orlo-gap-inline); }
 
   /* ---------- Switch ---------- */
-  .orlo-switch-row { display: inline-flex; align-items: flex-start; gap: var(--orlo-space-3); }
+  .orlo-switch-row { display: inline-flex; align-items: flex-start; gap: var(--orlo-gap-inline); }
   .orlo-switch {
     flex: none; position: relative; inline-size: 2.75rem; block-size: 1.625rem; padding: 0.1875rem; margin: 0; cursor: pointer;
     display: flex; justify-content: flex-start; align-items: center;
@@ -243,11 +252,11 @@
   .orlo-switch[data-checked]:disabled { background: color-mix(in oklab, var(--orlo-color-accent) 40%, var(--orlo-disabled-bg)); }
   .orlo-switch:disabled .orlo-switch__thumb { background: var(--orlo-color-surface-raised); box-shadow: 0 0 0 1px var(--orlo-color-border); }
   .orlo-switch-row:has(.orlo-switch:disabled) .orlo-switch__text { color: var(--orlo-disabled-fg); }
-  .orlo-switch__text { display: grid; gap: 0.1rem; padding-block-start: 0.125rem; }
+  .orlo-switch__text { display: grid; gap: 0.125rem; padding-block-start: 0.125rem; }
   .orlo-switch__text label { cursor: pointer; }
 
   /* ---------- Slider ---------- */
-  .orlo-slider { display: grid; gap: var(--orlo-space-2); min-inline-size: 12rem; }
+  .orlo-slider { display: grid; gap: var(--orlo-gap-label); min-inline-size: 12rem; }
   .orlo-slider__head { display: flex; justify-content: space-between; align-items: baseline; }
   .orlo-slider__value { font-variant-numeric: tabular-nums; color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); }
   .orlo-slider__track { position: relative; block-size: 2rem; margin-inline: 0.75rem; cursor: pointer; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
@@ -285,7 +294,7 @@
   /* ---------- Segmented control ---------- */
   .orlo-segmented { max-inline-size: 100%; overflow-x: auto; scrollbar-width: none; display: inline-flex; padding: 2px; gap: 2px; border-radius: calc(var(--orlo-radius-md) + 2px); background: var(--orlo-color-surface-sunken); box-shadow: inset 0 0 0 1px var(--orlo-color-border); }
   .orlo-segmented__item {
-    position: relative; min-block-size: calc(var(--orlo-control-h) - 6px); padding-inline: var(--orlo-space-3);
+    position: relative; min-block-size: calc(var(--orlo-control-h) - 6px); padding-inline: 0.875rem;
     border: 0; background: transparent; color: var(--orlo-color-fg-muted); font: inherit; font-size: var(--orlo-text-sm); font-weight: 500; cursor: pointer; border-radius: var(--orlo-radius-md);
     display: inline-flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; transition: color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
   }
@@ -294,19 +303,19 @@
   .orlo-segmented__item:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--orlo-color-focus); }
   @media (hover: hover) and (pointer: fine) { .orlo-segmented__item:not([aria-checked="true"]):hover { color: var(--orlo-color-fg); } }
   .orlo-segmented__thumb { position: absolute; inset: 0; border-radius: var(--orlo-radius-md); background: var(--orlo-color-surface-raised); box-shadow: 0 1px 2px rgb(28 27 24 / 0.08), 0 0 0 1px var(--orlo-color-border); }
-  .orlo-segmented__label { position: relative; display: inline-flex; align-items: center; gap: var(--orlo-space-1); }
+  .orlo-segmented__label { position: relative; display: inline-flex; align-items: center; gap: var(--orlo-gap-icon-sm); }
 
   /* ---------- Tabs ---------- */
-  .orlo-tabs__list { display: flex; gap: var(--orlo-space-1); border-block-end: 1px solid var(--orlo-color-border); overflow-x: auto; scrollbar-width: none; }
+  .orlo-tabs__list { display: flex; gap: var(--orlo-space-2); border-block-end: 1px solid var(--orlo-color-border); overflow-x: auto; scrollbar-width: none; }
   .orlo-tabs__tab {
-    position: relative; flex: none; min-block-size: var(--orlo-control-h); padding-inline: var(--orlo-space-3); margin-block-end: -1px;
+    position: relative; flex: none; display: inline-flex; align-items: center; gap: var(--orlo-gap-icon-sm); min-block-size: calc(var(--orlo-control-h) + 4px); padding-inline: var(--orlo-space-3); margin-block-end: -1px;
     background: transparent; border: 0; color: var(--orlo-color-fg-muted); font: inherit; font-size: var(--orlo-text-sm); font-weight: 500; cursor: pointer; border-radius: var(--orlo-radius-sm) var(--orlo-radius-sm) 0 0;
   }
   .orlo-tabs__tab[aria-selected="true"] { color: var(--orlo-color-fg); }
   .orlo-tabs__tab:disabled { color: var(--orlo-disabled-fg); cursor: not-allowed; }
   @media (hover: hover) and (pointer: fine) { .orlo-tabs__tab:hover:not(:disabled):not([aria-selected="true"]) { color: var(--orlo-color-fg); } }
   .orlo-tabs__indicator { position: absolute; inset-inline: var(--orlo-space-2); inset-block-end: 0; block-size: 2px; border-radius: 2px; background: var(--orlo-color-fg); }
-  .orlo-tabs__panel { padding-block: var(--orlo-space-4); }
+  .orlo-tabs__panel { padding-block: var(--orlo-inset-sm) 0; }
   .orlo-tabs__panel:empty { padding-block: 0; }
   .orlo-tabs__panel:focus-visible { outline-offset: 4px; border-radius: var(--orlo-radius-sm); }
 
@@ -316,16 +325,16 @@
   .orlo-accordion__heading { margin: 0; font-size: inherit; }
   .orlo-accordion__trigger {
     display: flex; inline-size: 100%; align-items: center; justify-content: space-between; gap: var(--orlo-space-3);
-    min-block-size: calc(var(--orlo-control-h) + 0.75rem); padding: var(--orlo-space-2) var(--orlo-space-1); background: none; border: 0;
+    min-block-size: calc(var(--orlo-control-h) + 1rem); padding: var(--orlo-space-3) var(--orlo-space-1); background: none; border: 0;
     color: inherit; font: inherit; font-weight: 600; text-align: start; cursor: pointer;
   }
   .orlo-accordion__trigger svg { color: var(--orlo-color-fg-muted); }
   .orlo-accordion__region { overflow: hidden; }
-  .orlo-accordion__content { padding: 0 var(--orlo-space-1) var(--orlo-space-4); color: var(--orlo-color-fg-muted); }
+  .orlo-accordion__content { padding: 0 var(--orlo-space-1) var(--orlo-inset); color: var(--orlo-color-fg-muted); line-height: var(--orlo-leading-relaxed); }
 
   /* ---------- Alert ---------- */
   .orlo-alert {
-    display: flex; gap: var(--orlo-space-3); align-items: flex-start; padding: var(--orlo-space-3) var(--orlo-space-4);
+    display: flex; gap: var(--orlo-gap-inline); align-items: flex-start; padding: 0.875rem var(--orlo-inset-sm);
     border: 1px solid color-mix(in oklab, var(--orlo-tone) 22%, var(--orlo-color-border)); border-radius: var(--orlo-radius-lg);
     background: color-mix(in oklab, var(--orlo-color-surface), var(--orlo-tone) 5%);
   }
@@ -336,10 +345,10 @@
   .orlo-alert__glyph { flex: none; display: inline-flex; color: var(--orlo-tone); margin-block-start: 0.125rem; }
   .orlo-alert__body { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; font-size: var(--orlo-text-sm); line-height: var(--orlo-leading-normal); }
   .orlo-alert__body strong { font-weight: 600; }
-  .orlo-alert__body > div { color: var(--orlo-color-fg-muted); }
+  .orlo-alert__body > div { color: var(--orlo-color-fg-muted); margin-block-start: 0.125rem; }
 
   /* ---------- Progress ---------- */
-  .orlo-progress { display: grid; gap: var(--orlo-space-2); min-inline-size: 10rem; }
+  .orlo-progress { display: grid; gap: var(--orlo-gap-label); min-inline-size: 10rem; }
   .orlo-progress__head { display: flex; justify-content: space-between; align-items: baseline; }
   .orlo-progress__head .orlo-hint { font-variant-numeric: tabular-nums; }
   .orlo-progress__track { position: relative; block-size: 0.25rem; border-radius: 999px; background: color-mix(in oklab, var(--orlo-color-surface-sunken), var(--orlo-color-fg) 10%); overflow: hidden; }
@@ -379,8 +388,8 @@
   /* ---------- Table ---------- */
   .orlo-table-wrap { overflow: auto; border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-lg); max-inline-size: 100%; background: var(--orlo-color-surface); }
   .orlo-table { border-collapse: separate; border-spacing: 0; inline-size: 100%; font-size: var(--orlo-text-sm); }
-  .orlo-table caption { text-align: start; padding: var(--orlo-space-3) var(--orlo-space-4); font-weight: 600; font-size: var(--orlo-text-md); }
-  .orlo-table th, .orlo-table td { padding: var(--orlo-space-2) var(--orlo-space-4); text-align: start; border-block-start: 1px solid var(--orlo-color-border); vertical-align: middle; }
+  .orlo-table caption { text-align: start; padding: var(--orlo-inset-sm) var(--orlo-inset-sm) var(--orlo-space-3); font-weight: 600; font-size: var(--orlo-text-md); }
+  .orlo-table th, .orlo-table td { padding: 0.75rem var(--orlo-inset-sm); text-align: start; border-block-start: 1px solid var(--orlo-color-border); vertical-align: middle; }
   .orlo-table th { position: sticky; inset-block-start: 0; background: var(--orlo-color-surface); color: var(--orlo-color-fg-muted); font-weight: 600; white-space: nowrap; z-index: 1; }
   .orlo-table [data-align="end"] { text-align: end; font-variant-numeric: tabular-nums; }
   .orlo-table__sort { display: inline-flex; align-items: center; gap: var(--orlo-space-1); padding: var(--orlo-space-1); margin: calc(var(--orlo-space-1) * -1); background: none; border: 0; color: inherit; font: inherit; cursor: pointer; border-radius: var(--orlo-radius-sm); }
@@ -394,9 +403,11 @@
   .orlo-pagination ul { display: flex; gap: var(--orlo-space-1); list-style: none; margin: 0; padding: 0; }
   .orlo-pagination__page { min-inline-size: var(--orlo-control-h); min-block-size: var(--orlo-control-h); border: 1px solid transparent; border-radius: var(--orlo-radius-md); background: none; color: var(--orlo-color-fg-muted); font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; }
   .orlo-pagination__page[aria-current="page"] { color: var(--orlo-color-fg); font-weight: 700; border-color: var(--orlo-color-border-control); background: var(--orlo-color-surface-raised); }
+  /* Narrow screens keep first, current and last pages; the gaps still say pages were skipped. */
+  @media (max-width: 479px) { .orlo-pagination li[data-far] { display: none; } }
   .orlo-pagination__gap { display: inline-grid; place-items: center; min-inline-size: 1.5rem; min-block-size: var(--orlo-control-h); color: var(--orlo-color-fg-muted); }
-  .orlo-breadcrumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: var(--orlo-space-1); list-style: none; margin: 0; padding: 0; font-size: var(--orlo-text-sm); }
-  .orlo-breadcrumbs li { display: inline-flex; align-items: center; gap: var(--orlo-space-1); color: var(--orlo-color-fg-muted); }
+  .orlo-breadcrumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: var(--orlo-gap-icon-sm); list-style: none; margin: 0; padding: 0; font-size: var(--orlo-text-sm); }
+  .orlo-breadcrumbs li { display: inline-flex; align-items: center; gap: var(--orlo-gap-icon-sm); color: var(--orlo-color-fg-muted); }
   .orlo-breadcrumbs a { color: var(--orlo-color-fg-muted); text-decoration: none; padding: 0.125rem 0.25rem; border-radius: var(--orlo-radius-sm); }
   .orlo-breadcrumbs a:hover { color: var(--orlo-color-fg); text-decoration: underline; }
   .orlo-breadcrumbs [aria-current="page"] { color: var(--orlo-color-fg); font-weight: 500; }
@@ -404,10 +415,10 @@
   [dir="rtl"] .orlo-breadcrumbs__sep, [dir="rtl"] .orlo-pagination svg { transform: scaleX(-1); }
 
   /* ---------- Empty state ---------- */
-  .orlo-empty { display: grid; justify-items: center; text-align: center; gap: var(--orlo-space-2); padding: var(--orlo-space-8) var(--orlo-space-4); }
-  .orlo-empty__icon { display: grid; place-items: center; inline-size: 3.5rem; block-size: 3.5rem; border-radius: 50%; background: var(--orlo-color-surface-raised); border: 1px solid var(--orlo-color-border); color: var(--orlo-color-fg-muted); margin-block-end: var(--orlo-space-2); }
+  .orlo-empty { display: grid; justify-items: center; text-align: center; gap: var(--orlo-space-2); padding: var(--orlo-space-10) var(--orlo-inset); }
+  .orlo-empty__icon { display: grid; place-items: center; inline-size: 3.5rem; block-size: 3.5rem; border-radius: 50%; background: var(--orlo-color-surface-raised); border: 1px solid var(--orlo-color-border); color: var(--orlo-color-fg-muted); margin-block-end: var(--orlo-space-3); }
   .orlo-empty__title { margin: 0; font-weight: 600; font-size: var(--orlo-text-lg); }
-  .orlo-empty__desc { margin: 0 0 var(--orlo-space-3); color: var(--orlo-color-fg-muted); max-inline-size: 36ch; }
+  .orlo-empty__desc { margin: 0 0 var(--orlo-space-4); line-height: var(--orlo-leading-normal); color: var(--orlo-color-fg-muted); max-inline-size: 36ch; }
 
   .orlo-number { font-variant-numeric: tabular-nums; }
 
@@ -436,13 +447,13 @@
   }
   .orlo-modal__panel[data-size="sm"] { inline-size: min(100%, 24rem); }
   .orlo-modal__panel[data-size="lg"] { inline-size: min(100%, 44rem); }
-  .orlo-modal__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--orlo-space-3); padding: var(--orlo-space-5) var(--orlo-space-5) 0; }
+  .orlo-modal__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--orlo-gap-inline); padding: var(--orlo-inset) var(--orlo-inset) 0; }
   .orlo-modal__header .orlo-icon-button { margin: calc(var(--orlo-space-2) * -1) calc(var(--orlo-space-2) * -1) 0 0; }
   .orlo-modal__title { margin: 0; font-size: var(--orlo-text-lg); line-height: var(--orlo-leading-snug); font-weight: 600; letter-spacing: -0.01em; }
-  .orlo-modal__desc { margin: var(--orlo-space-2) var(--orlo-space-5) 0; color: var(--orlo-color-fg-muted); }
-  .orlo-modal__body { padding: var(--orlo-space-4) var(--orlo-space-5); overflow: auto; overscroll-behavior: contain; }
-  .orlo-modal__footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--orlo-space-2); padding: var(--orlo-space-4) var(--orlo-space-5) var(--orlo-space-5); }
-  .orlo-modal__desc + .orlo-modal__footer, .orlo-modal__header + .orlo-modal__footer { padding-block-start: var(--orlo-space-5); }
+  .orlo-modal__desc { margin: var(--orlo-space-2) var(--orlo-inset) 0; line-height: var(--orlo-leading-normal); color: var(--orlo-color-fg-muted); }
+  .orlo-modal__body { padding: var(--orlo-space-5) var(--orlo-inset); overflow: auto; overscroll-behavior: contain; }
+  .orlo-modal__footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--orlo-gap-icon-lg); padding: var(--orlo-space-4) var(--orlo-inset) var(--orlo-inset); }
+  .orlo-modal__desc + .orlo-modal__footer, .orlo-modal__header + .orlo-modal__footer { padding-block-start: var(--orlo-inset); }
   @media (max-width: 519px) {
     .orlo-modal[data-kind="dialog"] { place-items: end stretch; padding: 0; }
     .orlo-modal[data-kind="dialog"] .orlo-modal__panel { inline-size: 100%; border-end-start-radius: 0; border-end-end-radius: 0; padding-block-end: env(safe-area-inset-bottom); }
@@ -460,13 +471,13 @@
 
   .orlo-popover, .orlo-menu, .orlo-tooltip { position: fixed; z-index: var(--orlo-layer-popover); }
   .orlo-popover {
-    inline-size: max-content; max-inline-size: min(22rem, calc(100vw - 1rem)); padding: var(--orlo-space-4); overflow: auto; outline: none;
+    inline-size: max-content; max-inline-size: min(22rem, calc(100vw - 1rem)); padding: var(--orlo-inset-sm); overflow: auto; outline: none;
     border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-lg);
     box-shadow: var(--orlo-shadow-4);
   }
   .orlo-popover[data-docked] { inset: auto 0 0 0; inline-size: auto; max-inline-size: none; border-radius: var(--orlo-radius-xl) var(--orlo-radius-xl) 0 0; padding-block-end: calc(var(--orlo-space-4) + env(safe-area-inset-bottom)); box-shadow: 0 -12px 40px -8px rgb(0 0 0 / 0.3); }
   .orlo-menu {
-    z-index: var(--orlo-layer-menu); min-inline-size: 12rem; max-inline-size: min(20rem, calc(100vw - 1rem)); padding: var(--orlo-space-1); margin: 0; list-style: none; overflow-y: auto; overscroll-behavior: contain;
+    z-index: var(--orlo-layer-menu); min-inline-size: 13rem; max-inline-size: min(20rem, calc(100vw - 1rem)); padding: 0.375rem; margin: 0; list-style: none; overflow-y: auto; overscroll-behavior: contain;
     border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-lg);
     box-shadow: var(--orlo-shadow-4); outline: none;
     /* Fade hint when content continues below. */
@@ -474,8 +485,8 @@
     background-repeat: no-repeat; background-size: 100% 24px, 100% 24px, 100% 8px, 100% 8px; background-position: top, bottom, top, bottom; background-attachment: local, local, scroll, scroll;
   }
   .orlo-menu__item {
-    display: flex; align-items: center; gap: var(--orlo-space-3); min-block-size: 2.25rem; padding: var(--orlo-space-1) var(--orlo-space-3);
-    border-radius: var(--orlo-radius-md); cursor: pointer; outline: none; user-select: none; scroll-margin: var(--orlo-space-1);
+    display: flex; align-items: center; gap: var(--orlo-gap-icon-lg); min-block-size: 2.5rem; padding: var(--orlo-space-1) 0.75rem;
+    border-radius: var(--orlo-radius-sm); cursor: pointer; outline: none; user-select: none; scroll-margin: var(--orlo-space-1);
   }
   .orlo-menu__item:focus, .orlo-menu__item[data-active] { background: var(--orlo-hover); }
   .orlo-menu__item[aria-disabled="true"] { color: var(--orlo-disabled-fg); cursor: not-allowed; }
@@ -483,18 +494,18 @@
   .orlo-menu__item[aria-selected="true"] { font-weight: 500; }
   .orlo-menu__text { flex: 1; min-inline-size: 0; display: grid; }
   .orlo-menu__icon { display: inline-flex; color: var(--orlo-color-fg-muted); }
-  .orlo-menu__sep { block-size: 1px; margin: var(--orlo-space-1) calc(var(--orlo-space-1) * -1); background: var(--orlo-color-border); }
-  .orlo-menu__label { padding: var(--orlo-space-2) var(--orlo-space-3) var(--orlo-space-1); font-size: var(--orlo-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--orlo-color-fg-muted); }
+  .orlo-menu__sep { block-size: 1px; margin: 0.375rem -0.375rem; background: var(--orlo-color-border); }
+  .orlo-menu__label { padding: var(--orlo-space-2) 0.75rem var(--orlo-space-1); font-size: var(--orlo-text-xs); font-weight: 600; color: var(--orlo-color-fg-muted); }
   @media (pointer: coarse) { .orlo-menu__item { min-block-size: 2.75rem; } }
   .orlo-tooltip {
-    z-index: var(--orlo-layer-tooltip); max-inline-size: 18rem; padding: 0.375rem 0.625rem; pointer-events: none;
+    z-index: var(--orlo-layer-tooltip); max-inline-size: 18rem; padding: 0.4375rem 0.75rem; pointer-events: none;
     background: var(--orlo-color-fg); color: var(--orlo-color-fg-inverse); border-radius: var(--orlo-radius-sm);
     font-size: var(--orlo-text-sm); line-height: var(--orlo-leading-snug); box-shadow: 0 4px 12px rgb(0 0 0 / 0.18);
   }
 
   /* ---------- Command palette ---------- */
   .orlo-palette { inline-size: min(100%, 36rem); }
-  .orlo-palette__search { display: flex; align-items: center; gap: var(--orlo-space-3); padding: 0 var(--orlo-space-4); border-block-end: 1px solid var(--orlo-color-border); color: var(--orlo-color-fg-muted); }
+  .orlo-palette__search { display: flex; align-items: center; gap: var(--orlo-gap-inline); padding: 0 var(--orlo-inset-sm); border-block-end: 1px solid var(--orlo-color-border); color: var(--orlo-color-fg-muted); }
   .orlo-palette__search input { flex: 1; min-inline-size: 0; min-block-size: 3.5rem; border: 0; outline: none; background: none; color: var(--orlo-color-fg); font: inherit; font-size: var(--orlo-text-lg); }
   .orlo-palette__list { list-style: none; margin: 0; padding: var(--orlo-space-2); overflow-y: auto; max-block-size: min(60dvh, 26rem); }
   .orlo-palette__list .orlo-menu__item { min-block-size: 2.75rem; }
@@ -503,10 +514,10 @@
   /* ---------- Toasts ---------- */
   .orlo-toasts {
     position: fixed; z-index: var(--orlo-layer-toast); inset-block-end: max(var(--orlo-space-4), env(safe-area-inset-bottom)); inset-inline-end: var(--orlo-space-4);
-    display: flex; flex-direction: column; gap: var(--orlo-space-2); inline-size: min(24rem, calc(100vw - 2rem));
+    display: flex; flex-direction: column; gap: var(--orlo-space-3); inline-size: min(24rem, calc(100vw - 2rem));
   }
   .orlo-toast {
-    display: flex; align-items: flex-start; gap: var(--orlo-space-2); padding: var(--orlo-space-3) var(--orlo-space-2) var(--orlo-space-3) var(--orlo-space-4);
+    display: flex; align-items: flex-start; gap: var(--orlo-gap-inline); padding: 0.875rem var(--orlo-space-3) 0.875rem var(--orlo-inset-sm);
     border: 1px solid var(--orlo-color-border); border-inline-start: 3px solid var(--orlo-tone, var(--orlo-color-border-control));
     border-radius: var(--orlo-radius-lg); box-shadow: var(--orlo-shadow-4);
   }
@@ -519,6 +530,8 @@
   /* ---------- Environment ---------- */
   @media (prefers-reduced-motion: reduce) {
     .orlo-spinner svg { animation-duration: 2.4s; }
+    .orlo-spinner__arc { animation: none; stroke-dasharray: 28 100; }
+    .orlo-button__busy { animation: none; }
     .orlo-skeleton { animation: none; }
     .orlo-progress__bar--indeterminate { animation-duration: 3s; }
     :is(.orlo-button, .orlo-icon-button):active:not(:disabled) { transform: none; }

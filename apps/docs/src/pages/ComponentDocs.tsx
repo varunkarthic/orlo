@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { manifest, families, Badge, Chip, SearchField, Stack, EmptyState, Button, ProgressiveBlur } from "@orlo/react";
+import { manifest, families, Chip, SearchField, Stack, EmptyState, Button, CopyButton, Icons } from "@orlo/react";
 import type { Doc } from "../registry/types.ts";
 import { TABS, tabTitle, type Tab } from "../site.ts";
 import { Anatomy, Bullets, Code, DoDont, H2, H3, KeyTable, PageHeader, SpecTable, Stage } from "../kit.tsx";
@@ -25,7 +25,7 @@ export function ComponentsIndex({ root, docs }: { root: string; docs: Record<str
   const list = manifest.filter((c) => (!fam || c.family === fam) && (!q || `${c.name} ${c.summary} ${c.family}`.toLowerCase().includes(q.toLowerCase())));
   return (
     <div className="wide">
-      <PageHeader eyebrow="Components" title="All components" lead={<>{manifest.length} components, every one designed and built for Orlo. <strong>Beta</strong> means it works and is tested in code but hasn't yet cleared manual screen-reader and visual review.</>} />
+      <PageHeader eyebrow="Components" title="All components" lead={`${manifest.length} components, each designed and built for Orlo, grouped into ${families.length} families.`} />
       <Stack gap={3}>
         <div style={{ maxInlineSize: "24rem" }}><SearchField label="Filter components" hideLabel value={q} onValueChange={setQ} placeholder={`Filter ${manifest.length} components`} /></div>
         <div className="cindex__chips" role="group" aria-label="Family">
@@ -62,16 +62,17 @@ export function ComponentPage({ slug, doc: d, root, tab }: { slug: string; doc?:
   const importName = entry.name === "Toast" ? "useToast" : entry.name;
   return (
     <>
-      <PageHeader eyebrow={entry.family} title={entry.name} lead={entry.summary} />
-      <div className="ctabs-wrap">
-        <nav className="ctabs" aria-label={`${entry.name} documentation`}>
-          {TABS.map((t) => <a key={t} href={`${root}components/${slug}/${t === "overview" ? "" : t + "/"}`} aria-current={t === tab ? "page" : undefined}>{tabTitle[t]}</a>)}
-        </nav>
-        <ProgressiveBlur side="top" size="32px" />
-      </div>
+      <PageHeader eyebrow={entry.family} title={entry.name} lead={entry.summary}>
+        <span className="import"><code>{`import { ${importName} } from "@orlo/react"`}</code><CopyButton text={`import { ${importName} } from "@orlo/react";`} label="Copy import" /></span>
+        <a className="page-header__link" href={`https://github.com/varunkarthic/orlo/tree/main/packages/react/src/components`}><Icons.Code size={16} aria-hidden="true" />Source</a>
+        <span className="page-header__status">{entry.maturity === "beta" ? "Beta" : entry.maturity}</span>
+      </PageHeader>
+      <nav className="ctabs" aria-label={`${entry.name} documentation`}>
+        {TABS.map((t) => <a key={t} href={`${root}components/${slug}/${t === "overview" ? "" : t + "/"}`} aria-current={t === tab ? "page" : undefined}>{tabTitle[t]}</a>)}
+      </nav>
       {tab === "overview" && (
         <>
-          <Stage label="Live example">{d.demo()}</Stage>
+          <Stage label="Example" code={`import { ${importName} } from "@orlo/react";\n\n${d.code}`}>{d.demo()}</Stage>
           {d.playground && <><H2>Playground</H2><Playground def={d.playground} /></>}
           <LifecycleContract entry={entry} doc={d} root={root} />
           <H2>Highlights</H2>
@@ -133,7 +134,7 @@ export function ComponentPage({ slug, doc: d, root, tab }: { slug: string; doc?:
           <p><a href={`https://github.com/varunkarthic/orlo/tree/main/packages/react/src/components`}>packages/react/src/components</a> on GitHub.</p>
         </>
       )}
-      <p className="maturity-note">Maturity: {entry.maturity} · {entry.family} · tested: {entry.tested.join(", ") || "visual"}</p>
+      <p className="maturity-note">Beta means it works and is tested in code ({entry.tested.join(", ") || "visual review so far"}) but hasn't yet had a manual screen-reader review.</p>
     </>
   );
 }

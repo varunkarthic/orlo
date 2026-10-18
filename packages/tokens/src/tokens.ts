@@ -55,6 +55,22 @@ export const chart = {
 
 /** 4px base scale. */
 export const space = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40, 12: 48, 16: 64 } as const;
+/**
+ * Spacing standards. Every gap in Orlo names one of these roles instead of a raw number.
+ * - icon-sm / icon / icon-lg: between an icon and the text beside it (small, default, large controls).
+ * - label: label to its control. message: control to its hint or error.
+ * - inline: sibling controls in a row. field: between form fields. group: between groups in a panel.
+ * - section: between page sections. inset-sm / inset / inset-lg: padding inside small, default and large surfaces.
+ */
+export const rhythm = {
+  "icon-sm": 6, icon: 8, "icon-lg": 10,
+  label: 8, message: 6,
+  inline: 12, field: 24, group: 32, section: 72,
+  "inset-sm": 16, inset: 24, "inset-lg": 32,
+} as const;
+/** The icon size that pairs with each text size: about 1.15 to 1.25 times the font size, so strokes match text weight. */
+export const iconSize = { xs: 14, sm: 16, md: 20, lg: 22, xl: 24 } as const;
+
 /** Radius roles: xs badges/keycaps · sm chips, menu items · md buttons, fields · lg cards, menus · xl dialogs, sheets · full icon buttons, avatars, switches. */
 export const radius = { xs: 4, sm: 8, md: 10, lg: 14, xl: 20, "2xl": 28, full: 9999 } as const;
 

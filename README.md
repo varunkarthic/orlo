@@ -5,29 +5,31 @@
 
 <p align="center"><strong>Nothing is an afterthought.</strong><br>A design framework for React.</p>
 
-<p align="center"><img src="docs/media/home-light.png#gh-light-mode-only" alt="The Orlo documentation home page: a large headline beside a collage of live components" width="900"><img src="docs/media/home-dark.png#gh-dark-mode-only" alt="The Orlo documentation home page in dark mode" width="900"></p>
+<p align="center"><img src="docs/media/v3-after/home-light.png#gh-light-mode-only" alt="The refined Orlo documentation home page" width="900"><img src="docs/media/v3-after/home-dark.png#gh-dark-mode-only" alt="The refined Orlo documentation home page in dark mode" width="900"></p>
 
 Orlo is built on the idea that an interface is shaped as much by what happens *between* moments as by what appears on screen. The press, the frame between two states, the image that never arrives, the focus that has to come back: Orlo designs those on purpose.
 
 The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is the finish that holds the whole together, even when nobody notices it.
 
-> **Status: beta, pre-release.** 121 components are documented in source; automated coverage is recorded per component in [`components.json`](components.json). None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
+> **Status: beta, pre-release.** 122 components are documented in source; automated coverage is recorded per component in [`components.json`](components.json). None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
 
-## What makes it different
+**Start here:** [browse components](https://orlo-react.readthedocs.io/en/latest/components/) · [learn the design language](https://orlo-react.readthedocs.io/en/latest/foundations/) · [try Theme Studio](https://orlo-react.readthedocs.io/en/latest/start/theme-studio/) · [read the lifecycle guide](https://orlo-react.readthedocs.io/en/latest/foundations/lifecycle/)
+
+## Why Orlo
 
 **Everything is built in.** Every component, plus positioning, focus scopes, scroll locking, the layer stack, the icon set and the theme generator, is written for Orlo. The only runtime dependencies are React and the [Motion](https://motion.dev) animation engine. It is not a wrapper around another component library.
 
-**Finished edges.** The Details Lab puts each careless version beside the deliberate one: half-clipped text under a growing card, focus sent to a trigger that no longer exists, repeated-click races.
+**Finished edges.** The Details Lab puts careless behaviour beside deliberate behaviour: half-clipped text under a growing card, focus sent to a trigger that no longer exists, and repeated-click races.
 
 <img src="docs/media/details-lab.png" alt="Details Lab: a flawed card slicing through text beside Orlo's version with a scrim" width="800">
 
-**One motion grammar.** Components ask for a purpose (`press`, `reveal`, `overlay`, `shared`) and Orlo supplies a spring. A test enforces that every preset stays under 5% overshoot and settles within 700 ms. Interrupt an animation and it redirects from its current velocity. Reduced motion turns movement into a fade, and `off` makes changes instant.
+**One motion grammar.** Components ask for a purpose (`press`, `reveal`, `overlay`, `shared`) and Orlo supplies an interruptible spring. Reduced motion replaces travel with a fade; `off` makes changes instant.
 
 **A lifecycle, not a resting frame.** Every component page now carries the same behavioural contract: stable entry, equivalent input acknowledgement, meaningful change, clear resolution, interruption and safe recovery. The [Lifecycle & composition guide](apps/docs/src/pages/FoundationsPages.tsx) defines how overlays, fields, asynchronous actions and nested surfaces hand off focus, layers, state and failure.
 
 **Failure is designed.** Images reserve their space before loading, decode before they appear, retry a limited number of times and fall back to a designed placeholder. `images="off"` makes every managed image a placeholder and stops all image requests.
 
-**Accessibility lives in behaviour.** Orlo follows the WAI-ARIA keyboard patterns for menus, tabs, trees, grids, comboboxes and sliders. Modals make the page inert, lock scrolling once and return focus to a valid element. Colour is never the only signal. Token contrast and axe-core checks run in CI.
+**Accessibility lives in behaviour.** Orlo follows WAI-ARIA keyboard patterns for menus, tabs, trees, grids, comboboxes and sliders. Modals make the page inert, lock scrolling once and return focus to a valid element. Colour is never the only signal.
 
 **Locale-aware.** The calendar's week start, digits and names come from `Intl`. Number fields parse "1.234,5" in German. Arrow keys and layouts mirror in right-to-left text. The tag input, combobox and command palette ignore keystrokes during IME composition.
 
@@ -44,21 +46,21 @@ The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is th
 | Data display | Badge, Avatar, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime |
 | Feedback | Alert, Progress, Spinner, Skeleton, EmptyState, Banner, OfflineIndicator, ProgressRing |
 | Media | OrloImage, Carousel, BeforeAfter, Lightbox |
-| Specialty | Knob, HoldToConfirm, SignaturePad, ShortcutRecorder, ReorderableList, Heatmap, JsonTree, DiffViewer, CodeBlock, Countdown, Marquee |
+| Specialty | Knob, HoldToConfirm, SignaturePad, ShortcutRecorder, ReorderableList, Heatmap, JsonTree, DiffViewer, CodeBlock, Countdown, Marquee, BuiltWithOrlo |
 
 The machine-readable list is [`components.json`](components.json).
 
-## Documentation
+## Documentation that behaves like the library
 
 The docs are an Orlo application in their own right:
-- **Five tabs per component.** Overview, Specs, Guidelines, Accessibility and Code, with live anatomy callouts, a lifecycle contract and spec values read from the stylesheet.
-- **Sections.** Foundations, Styles and Develop.
-- **Tools.** A MotionLab, a Theme Studio and ⌘K search.
-- **Static hosting.** Every route is prerendered as a separate HTML file, so the site runs on Read the Docs without a server ([`.readthedocs.yaml`](.readthedocs.yaml)).
+- **Live examples.** Each component has a calm preview, alternate states, usage code, anatomy, keyboard behaviour and semantics where relevant.
+- **A coherent shell.** Search, preferences, navigation, code and demos use the same tokens and controls as the package.
+- **Practical labs.** MotionLab, Theme Studio, Details Lab, failure states and device-focused checks make behaviour inspectable.
+- **Static by design.** Every route is prerendered for Read the Docs; deep links work without an application server ([`.readthedocs.yaml`](.readthedocs.yaml)).
 
-<img src="docs/media/component-dialog.png" alt="Dialog documentation page with tabs, live example and table of contents" width="800">
+<img src="docs/media/v3-after/theme-studio-light.png" alt="Orlo Theme Studio with a composed settings scene" width="800">
 
-## Use it
+## Run it locally
 
 Orlo is not on npm yet. From a clone:
 
@@ -106,13 +108,13 @@ docs/             research notes, decisions, status, README media
 e2e/              Playwright + axe tests
 ```
 
-## Verification
+## Verification and limits
 
 | Check | Status |
 |---|---|
-| Unit and component tests (Vitest) | passing in CI |
-| Playwright end-to-end tests: deep links, focus, menus at edges, search, overflow | passing in CI |
-| axe-core on key pages, desktop and mobile | passing in CI |
+| Unit and component tests (Vitest) | automated |
+| Playwright end-to-end: deep links, focus, menus at edges, search, overflow | automated |
+| axe-core on key pages, desktop and mobile | automated |
 | Manual screen-reader testing | **not yet done** |
 | Visual regression snapshots | not yet automated |
 

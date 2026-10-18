@@ -141,6 +141,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [CodeBlock](components/code-block/): Code with copy, line numbers, highlights and wrap.
 - [Countdown](components/countdown/): Live timer that announces only meaningful moments.
 - [Marquee](components/marquee/): Ambient scroller that pauses on hover, focus and reduced motion.
+- [BuiltWithOrlo](components/built-with-orlo/): Optional “Built with Orlo” badge for apps made with Orlo, in badge and inline forms.
 - [Text](components/text/): Type scale, tones, whole-line truncation and tabular numbers.
 - [Heading](components/heading/): Semantic level and visual size chosen independently.
 - [Prose](components/prose/): Long-form content with measure, rhythm and multilingual line breaking.

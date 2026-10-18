@@ -1,5 +1,7 @@
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, type ReactNode } from "react";
+import { motion, animate, useMotionValue, useReducedMotion } from "motion/react";
 import { useOrloMotion } from "@orlo/motion";
+import { svgOrigin } from "./svg-origin.ts";
 
 export type AnimatedIconName = "check" | "spinner" | "alert" | "menu" | "play" | "heart" | "bell" | "copy" | "plus" | "chevron" | "refresh" | "upload" | "dots" | "sparkle";
 export type AnimatedIconProps = {
@@ -11,6 +13,30 @@ export type AnimatedIconProps = {
   label?: string;
   className?: string;
 };
+
+const CENTER = svgOrigin(12, 12);
+
+/**
+ * Continuous rotation that stops gracefully: when `spinning` turns off, it eases to the end of the
+ * current turn instead of snapping back to 0. Reduced motion slows the loop rather than removing it,
+ * because a spinner is information ("still working"), not decoration.
+ */
+function Spin({ spinning, period, children }: { spinning: boolean; period: number; children: ReactNode }) {
+  const rotate = useMotionValue(0);
+  useEffect(() => {
+    if (spinning) {
+      const from = rotate.get() % 360;
+      rotate.set(from);
+      const a = animate(rotate, from + 360, { duration: period, ease: "linear", repeat: Infinity });
+      return () => a.stop();
+    }
+    const r = rotate.get();
+    if (r % 360 === 0) return;
+    const a = animate(rotate, Math.ceil(r / 360) * 360, { duration: 0.35, ease: [0.2, 0.8, 0.2, 1] });
+    return () => a.stop();
+  }, [spinning, period, rotate]);
+  return <motion.g style={{ ...CENTER, rotate }}>{children}</motion.g>;
+}
 
 /**
  * Icons whose motion carries meaning: a check that draws itself, a menu that becomes a close,
@@ -27,13 +53,13 @@ export function AnimatedIcon({ name, size = 20, active = false, label, className
     case "check":
       return <svg {...common}><motion.path d="M5 12.5l4.5 4.5L19 7.5" {...draw} /></svg>;
     case "alert":
-      return <svg {...common}><motion.g initial={{ scale: still ? 1 : 0.4, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={transition("error")} style={{ originX: "12px", originY: "12px" }}><circle cx="12" cy="12" r="9" /><path d="M12 7.5V13M12 16.5h.01" /></motion.g></svg>;
+      return <svg {...common}><motion.g initial={{ scale: still ? 1 : 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={transition("error")} style={CENTER}><circle cx="12" cy="12" r="9" /><path d="M12 7.5V13M12 16.5h.01" /></motion.g></svg>;
     case "spinner":
-      return <svg {...common}><circle cx="12" cy="12" r="8.5" opacity="0.25" /><motion.path d="M20.5 12A8.5 8.5 0 0 0 12 3.5" animate={{ rotate: 360 }} transition={{ duration: still ? 2.4 : 0.8, ease: "linear", repeat: Infinity }} style={{ originX: "12px", originY: "12px" }} /></svg>;
+      return <svg {...common}><circle cx="12" cy="12" r="8.5" opacity="0.2" /><Spin spinning period={still ? 2.4 : 0.8}><path d="M12 3.5A8.5 8.5 0 0 1 20.5 12" /></Spin></svg>;
     case "menu":
       return <svg {...common}>
         <motion.path d={active ? "M6 6L18 18" : "M4 7H20"} initial={false} animate={{ d: active ? "M6 6L18 18" : "M4 7H20" }} transition={t} />
-        <motion.path d="M4 12H20" animate={{ opacity: active ? 0 : 1, scaleX: active ? 0.2 : 1 }} transition={t} style={{ originX: "12px" }} />
+        <motion.path d="M4 12H20" initial={false} animate={{ opacity: active ? 0 : 1, scaleX: active ? 0.2 : 1 }} transition={t} style={CENTER} />
         <motion.path d={active ? "M6 18L18 6" : "M4 17H20"} initial={false} animate={{ d: active ? "M6 18L18 6" : "M4 17H20" }} transition={t} />
       </svg>;
     case "play":
@@ -43,26 +69,26 @@ export function AnimatedIcon({ name, size = 20, active = false, label, className
       </svg>;
     case "heart":
       return <svg {...common}>
-        <motion.path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.5 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z" animate={{ fill: active ? "currentColor" : "rgba(0,0,0,0)", scale: active && !still ? [1, 1.25, 1] : 1 }} transition={{ ...transition("success"), scale: { duration: 0.35 } }} style={{ originX: "12px", originY: "13px" }} />
+        <motion.path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.5 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z" initial={false} animate={{ fillOpacity: active ? 1 : 0, scale: active && !still ? [1, 1.22, 1] : 1 }} transition={{ ...transition("success"), scale: { duration: 0.38, ease: [0.2, 0.8, 0.2, 1] } }} fill="currentColor" style={svgOrigin(12, 13)} />
         {active && !still && [0, 60, 120, 180, 240, 300].map((a) => (
           <motion.circle key={a} cx={12} cy={13} r={1} fill="currentColor" stroke="none" initial={{ opacity: 1, x: 0, y: 0 }} animate={{ opacity: 0, x: Math.cos((a * Math.PI) / 180) * 10, y: Math.sin((a * Math.PI) / 180) * 10 }} transition={{ duration: 0.5, ease: "easeOut" }} />
         ))}
       </svg>;
     case "bell":
-      return <svg {...common}><motion.path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5h4" animate={{ rotate: active && !still ? [0, 14, -12, 8, -5, 0] : 0 }} transition={{ duration: 0.7 }} style={{ originX: "12px", originY: "4px" }} /></svg>;
+      return <svg {...common}><motion.path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5h4" initial={false} animate={{ rotate: active && !still ? [0, 14, -12, 8, -5, 0] : 0 }} transition={{ duration: 0.7, ease: "easeInOut" }} style={svgOrigin(12, 4)} /></svg>;
     case "copy":
       return <svg {...common}>{active ? <motion.path d="M5 12.5l4.5 4.5L19 7.5" {...draw} /> : <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V6a2 2 0 0 1 2-2h8" /></>}</svg>;
     case "plus":
-      return <svg {...common}><motion.g animate={{ rotate: active ? 45 : 0 }} transition={transition("press")} style={{ originX: "12px", originY: "12px" }}><path d="M12 5v14M5 12h14" /></motion.g></svg>;
+      return <svg {...common}><motion.g initial={false} animate={{ rotate: active ? 45 : 0 }} transition={transition("press")} style={CENTER}><path d="M12 5v14M5 12h14" /></motion.g></svg>;
     case "chevron":
-      return <svg {...common}><motion.path d="M6 9.5l6 6 6-6" animate={{ rotate: active ? 180 : 0 }} transition={transition("press")} style={{ originX: "12px", originY: "12px" }} /></svg>;
+      return <svg {...common}><motion.path d="M6 9.5l6 6 6-6" initial={false} animate={{ rotate: active ? 180 : 0 }} transition={transition("press")} style={CENTER} /></svg>;
     case "refresh":
-      return <svg {...common}><motion.g animate={active ? { rotate: 360 } : { rotate: 0 }} transition={active ? { duration: still ? 2.4 : 0.9, ease: "linear", repeat: Infinity } : { duration: 0 }} style={{ originX: "12px", originY: "12px" }}><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4.5h-4.5" /></motion.g></svg>;
+      return <svg {...common}><Spin spinning={active} period={still ? 2.4 : 0.9}><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4.5h-4.5" /></Spin></svg>;
     case "upload":
-      return <svg {...common}><motion.g animate={active && !still ? { y: [0, -2.5, 0] } : { y: 0 }} transition={active ? { duration: 0.9, repeat: Infinity, ease: "easeInOut" } : { duration: 0 }}><path d="M12 15.5V4M7 8.5l5-5 5 5" /></motion.g><path d="M4 15v5h16v-5" /></svg>;
+      return <svg {...common}><motion.g animate={active && !still ? { y: [0, -2.5, 0] } : { y: 0 }} transition={active && !still ? { duration: 0.9, repeat: Infinity, ease: "easeInOut" } : transition("press")}><path d="M12 15.5V4M7 8.5l5-5 5 5" /></motion.g><path d="M4 15v5h16v-5" /></svg>;
     case "dots":
-      return <svg {...common} fill="currentColor" stroke="none">{[6, 12, 18].map((x, i) => <motion.circle key={x} cx={x} cy={12} r={1.9} animate={still ? { opacity: 0.8 } : { opacity: [0.25, 1, 0.25], y: [0, -2, 0] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }} />)}</svg>;
+      return <svg {...common} fill="currentColor" stroke="none">{[6, 12, 18].map((x, i) => <motion.circle key={x} cx={x} cy={12} r={1.9} animate={still ? { opacity: 0.8 } : { opacity: [0.3, 1, 0.3], y: [0, -2, 0] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }} />)}</svg>;
     case "sparkle":
-      return <svg {...common}><motion.path d="M12 3.5l1.8 5.2 5.2 1.8-5.2 1.8L12 17.5l-1.8-5.2L5 10.5l5.2-1.8z" animate={active && !still ? { scale: [1, 1.15, 1], rotate: [0, 12, 0] } : { scale: 1 }} transition={{ duration: 0.6 }} style={{ originX: "12px", originY: "10.5px" }} /></svg>;
+      return <svg {...common}><motion.path d="M12 3.5l1.8 5.2 5.2 1.8-5.2 1.8L12 17.5l-1.8-5.2L5 10.5l5.2-1.8z" initial={false} animate={active && !still ? { scale: [1, 1.15, 1], rotate: [0, 12, 0] } : { scale: 1, rotate: 0 }} transition={{ duration: 0.6, ease: "easeInOut" }} style={svgOrigin(12, 10.5)} /></svg>;
   }
 }

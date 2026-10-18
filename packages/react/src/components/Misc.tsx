@@ -3,6 +3,7 @@ import { forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes, typ
 import { animate } from "motion/react";
 import { useOrloMotion } from "@orlo/motion";
 import { Icons } from "../internal/icons.tsx";
+import { AnimatedIcon } from "../internal/animated-icons.tsx";
 
 /** Keyboard key. */
 export const Kbd = ({ children }: { children: ReactNode }) => <kbd className="orlo-kbd">{children}</kbd>;
@@ -52,7 +53,7 @@ export function CopyButton({ text, label = "Copy" }: { text: string; label?: str
   };
   return (
     <button type="button" className="orlo-button orlo-copy" data-variant="ghost" data-size="sm" onClick={copy}>
-      {state === "copied" ? <Icons.Check size={16} /> : <Icons.Copy size={16} />}
+      <AnimatedIcon name="copy" active={state === "copied"} size={16} />
       <span aria-live="polite">{state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : label}</span>
     </button>
   );

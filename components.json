@@ -924,6 +924,17 @@
       "docs": "components/marquee/"
     },
     {
+      "name": "BuiltWithOrlo",
+      "slug": "built-with-orlo",
+      "family": "Specialty",
+      "maturity": "beta",
+      "summary": "Optional “Built with Orlo” badge for apps made with Orlo, in badge and inline forms.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/built-with-orlo/"
+    },
+    {
       "name": "Text",
       "slug": "text",
       "family": "Typography",

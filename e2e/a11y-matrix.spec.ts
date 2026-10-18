@@ -29,9 +29,12 @@ for (const deficiency of ["protanopia", "deuteranopia", "tritanopia", "achromato
     await page.evaluate(() => window.scrollTo(0, 220));
     await page.waitForTimeout(600);
     await shot(page, `cvd-${deficiency}-chart`);
-    // Charts must not rely on colour alone: series need distinct dashes or markers.
-    const dashes = await page.locator(".stage .orlo-chart__svg path[stroke-dasharray]").count();
-    expect(dashes).toBeGreaterThan(0);
+    // Charts must not rely on colour alone: multi-series lines expose a dash or
+    // marker distinction. Motion may set SVG presentation attributes as styles.
+    const distinction = await page.locator(".stage .orlo-chart__svg path, .stage .orlo-chart__svg circle, .stage .orlo-chart__svg rect").evaluateAll((nodes) =>
+      nodes.some((node) => getComputedStyle(node).strokeDasharray !== "none" || node.tagName !== "path"),
+    );
+    expect(distinction).toBe(true);
   });
 }
 

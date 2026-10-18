@@ -39,7 +39,7 @@ export { Skeleton } from "./components/Skeleton.tsx";
 export { OrloImage, type OrloImageProps } from "./components/OrloImage.tsx";
 export { useImageState, type ImageState } from "./components/useImageState.ts";
 // Brand, icons, positioning
-export { Wordmark, Mark } from "./components/Brand.tsx";
+export { Wordmark, Mark, BuiltWithOrlo, type BuiltWithOrloProps } from "./components/Brand.tsx";
 export { Icons, Icon, iconNames, type IconName, type IconProps, type IconWeight } from "./internal/icons.tsx";
 export { AnimatedIcon, type AnimatedIconName, type AnimatedIconProps } from "./internal/animated-icons.tsx";
 export { computePosition, type Placement } from "./internal/position.ts";

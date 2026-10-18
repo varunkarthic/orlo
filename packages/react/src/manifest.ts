@@ -110,6 +110,7 @@ export const manifest: ManifestEntry[] = [
   { name: "CodeBlock", slug: "code-block", family: "Specialty", maturity: "beta", summary: "Code with copy, line numbers, highlights and wrap.", tested: [] },
   { name: "Countdown", slug: "countdown", family: "Specialty", maturity: "beta", summary: "Live timer that announces only meaningful moments.", tested: [] },
   { name: "Marquee", slug: "marquee", family: "Specialty", maturity: "beta", summary: "Ambient scroller that pauses on hover, focus and reduced motion.", tested: [] },
+  { name: "BuiltWithOrlo", slug: "built-with-orlo", family: "Specialty", maturity: "beta", summary: "Optional “Built with Orlo” badge for apps made with Orlo, in badge and inline forms.", tested: ["unit"] },
   { name: "Text", slug: "text", family: "Typography", maturity: "beta", summary: "Type scale, tones, whole-line truncation and tabular numbers.", tested: [] },
   { name: "Heading", slug: "heading", family: "Typography", maturity: "beta", summary: "Semantic level and visual size chosen independently.", tested: [] },
   { name: "Prose", slug: "prose", family: "Typography", maturity: "beta", summary: "Long-form content with measure, rhythm and multilingual line breaking.", tested: [] },

@@ -1,5 +1,5 @@
 import { Children, isValidElement, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { CopyButton, SegmentedControl, Badge, Icons, TableOfContents } from "@orlo/react";
+import { CopyButton, SegmentedControl, Icons, TableOfContents } from "@orlo/react";
 
 export const slug = (s: string) => s.toLowerCase().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
 const text = (n: ReactNode): string => typeof n === "string" || typeof n === "number" ? String(n) : Array.isArray(n) ? n.map(text).join("") : isValidElement(n) ? text((n.props as { children?: ReactNode }).children) : "";
@@ -11,13 +11,13 @@ export function H2({ children, id }: { children: ReactNode; id?: string }) {
 }
 export function H3({ children }: { children: ReactNode }) { return <h3 id={slug(text(children))}>{children}</h3>; }
 
-export function PageHeader({ eyebrow, title, lead, badge, children }: { eyebrow?: string; title: ReactNode; lead?: ReactNode; badge?: string; children?: ReactNode }) {
+export function PageHeader({ eyebrow, title, lead, children }: { eyebrow?: string; title: ReactNode; lead?: ReactNode; children?: ReactNode }) {
   return (
     <header className="page-header">
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <h1>{title} {badge && <Badge tone="accent">{badge}</Badge>}</h1>
+      <h1>{title}</h1>
       {lead && <p className="lead">{lead}</p>}
-      {children}
+      {children && <div className="page-header__meta">{children}</div>}
     </header>
   );
 }
@@ -26,18 +26,26 @@ export const Code = ({ children, label = "Code example" }: { children: string; l
   <div className="code"><pre tabIndex={0} aria-label={label}><code>{children}</code></pre><CopyButton text={children} /></div>
 );
 
-/** Live demo canvas. Its own Light/Dark/RTL switches prove a component in each mode without touching the page. */
-export function Stage({ children, label, tall, plain }: { children: ReactNode; label: string; tall?: boolean; plain?: boolean }) {
+/**
+ * Example block: a live preview with its own Light/Dark/RTL switch (so a component can be checked in each mode
+ * without touching the page) and, when code is given, a Code toggle that reveals the snippet underneath.
+ */
+export function Stage({ children, label, tall, plain, code }: { children: ReactNode; label: string; tall?: boolean; plain?: boolean; code?: string }) {
   const [mode, setMode] = useState("page");
+  const [open, setOpen] = useState(false);
   return (
-    <figure className="stage" data-tall={tall || undefined}>
-      <div className="stage__canvas orlo-root" data-orlo-theme={mode === "light" || mode === "dark" ? mode : undefined} dir={mode === "rtl" ? "rtl" : undefined}>{children}</div>
+    <figure className="example stage" data-tall={tall || undefined}>
+      <div className="example__preview orlo-root" data-orlo-theme={mode === "light" || mode === "dark" ? mode : undefined} dir={mode === "rtl" ? "rtl" : undefined}>{children}</div>
       {!plain && (
-        <figcaption className="stage__bar">
-          <span className="stage__label">{label}</span>
-          <SegmentedControl label={`Preview ${label} as`} size="sm" value={mode} onValueChange={setMode} options={[{ value: "page", label: "Page" }, { value: "light", label: "Light" }, { value: "dark", label: "Dark" }, { value: "rtl", label: "RTL" }]} />
+        <figcaption className="example__bar">
+          <span className="example__label">{label}</span>
+          <span className="example__tools">
+            <SegmentedControl label={`Preview ${label} as`} size="sm" value={mode} onValueChange={setMode} options={[{ value: "page", label: "Page" }, { value: "light", label: "Light" }, { value: "dark", label: "Dark" }, { value: "rtl", label: "RTL" }]} />
+            {code && <button type="button" className="example__toggle" aria-expanded={open} onClick={() => setOpen((o) => !o)}><Icons.Code size={16} aria-hidden="true" />Code</button>}
+          </span>
         </figcaption>
       )}
+      {code && <div className="example__code" data-open={open || undefined} inert={!open}><div><Code>{code}</Code></div></div>}
     </figure>
   );
 }

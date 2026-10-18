@@ -18,7 +18,7 @@ export function Pagination({ page, count, onPageChange, label = "Pagination" }: 
       <button type="button" className="orlo-icon-button" data-variant="ghost" aria-label="Previous page" disabled={page <= 1} onClick={() => onPageChange(page - 1)}><Icons.ChevronLeft size={18} /></button>
       <ul>
         {pageRange(page, count).map((p, i) => (
-          <li key={i}>
+          <li key={i} data-far={p !== "…" && p !== 1 && p !== count && Math.abs(p - page) > 0 ? true : undefined}>
             {p === "…" ? <span className="orlo-pagination__gap" aria-hidden="true">…</span> : (
               <button type="button" className="orlo-pagination__page" aria-current={p === page ? "page" : undefined} aria-label={`Page ${p}`} onClick={() => onPageChange(p)}>{p}</button>
             )}

@@ -322,9 +322,11 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 .orlo-meter__track { stroke: var(--orlo-color-border); }
 .orlo-meter__fill { stroke: var(--orlo-zone); }
 .orlo-meter__value { margin-block-start: -2.4rem; font-size: 1.375rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.orlo-heatmap { display: grid; gap: 8px; max-inline-size: 100%; overflow-x: auto; padding: 2px; }
-.orlo-heatmap__grid { display: grid; grid-auto-flow: column; grid-auto-columns: 0.875rem; gap: 3px; inline-size: max-content; }
-.orlo-heatmap__cell { display: block; inline-size: 0.875rem; block-size: 0.875rem; border-radius: 3px; background: var(--orlo-color-border); outline-offset: 1px; }
+/* Fluid: cells shrink to fit the container (never a horizontal scroller) and stop growing at 14px. */
+.orlo-heatmap { display: grid; gap: var(--orlo-space-2); inline-size: 100%; max-inline-size: calc(var(--orlo-heatmap-weeks, 20) * (0.875rem + 3px)); padding: 2px; }
+.orlo-heatmap__grid { display: grid; grid-auto-flow: column; grid-template-columns: repeat(var(--orlo-heatmap-weeks, 20), minmax(0, 1fr)); gap: clamp(1px, 0.5vw, 3px); }
+.orlo-heatmap__cell { display: block; inline-size: 100%; aspect-ratio: 1; border-radius: 22%; background: var(--orlo-color-border); outline-offset: 1px; }
+.orlo-heatmap__legend .orlo-heatmap__cell { inline-size: 0.75rem; }
 .orlo-heatmap__cell[data-level="1"] { background: color-mix(in oklab, var(--orlo-color-accent) 30%, var(--orlo-color-surface)); }
 .orlo-heatmap__cell[data-level="2"] { background: color-mix(in oklab, var(--orlo-color-accent) 55%, var(--orlo-color-surface)); }
 .orlo-heatmap__cell[data-level="3"] { background: color-mix(in oklab, var(--orlo-color-accent) 78%, var(--orlo-color-surface)); }

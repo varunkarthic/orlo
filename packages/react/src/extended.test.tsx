@@ -244,3 +244,20 @@ describe("Icons", () => {
     for (const n of Orlo.iconNames) expect(n).toMatch(/^[A-Z][A-Za-z0-9]*$/);
   });
 });
+
+describe("BuiltWithOrlo", () => {
+  it("is one link with a plain-text name and hides the artwork", async () => {
+    const { BuiltWithOrlo } = await import("./index.ts");
+    render(<BuiltWithOrlo kind="designed" tone="light" />);
+    const link = screen.getByRole("link", { name: "Designed with Orlo" });
+    expect(link.getAttribute("href")).toBe("https://orlo-react.readthedocs.io/");
+    expect(link.dataset.tone).toBe("light");
+    expect(link.querySelectorAll('svg[aria-hidden="true"]').length).toBe(1);
+  });
+  it("renders a static image when href is null", async () => {
+    const { BuiltWithOrlo } = await import("./index.ts");
+    render(<BuiltWithOrlo href={null} layout="inline" />);
+    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.getByRole("img", { name: "Built with Orlo" }).dataset.layout).toBe("inline");
+  });
+});
