@@ -42,8 +42,16 @@ test("slider: track click springs the thumb smoothly; drag tracks the pointer 1:
 
 test("overlays blur and fade in rather than popping", async ({ page }) => {
   await page.goto("components/menu/");
+  // Record the lowest opacity the menu shows on any frame, so a slow test runner can't miss the fade.
+  await page.evaluate(() => {
+    const w = window as unknown as { __minOpacity: number };
+    w.__minOpacity = 1;
+    const tick = () => { const m = document.querySelector('[role="menu"]'); if (m) w.__minOpacity = Math.min(w.__minOpacity, Number(getComputedStyle(m).opacity)); requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  });
   await page.locator(".stage").first().getByRole("button", { name: /Actions/ }).click();
-  const first = await page.getByRole("menu").evaluate((el) => getComputedStyle(el).opacity);
+  await page.getByRole("menu").waitFor();
+  const first = await page.evaluate(() => (window as unknown as { __minOpacity: number }).__minOpacity);
   await page.waitForTimeout(500);
   const settled = await page.getByRole("menu").evaluate((el) => ({ o: getComputedStyle(el).opacity, f: getComputedStyle(el).filter }));
   expect(Number(first)).toBeLessThan(1);

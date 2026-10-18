@@ -66,7 +66,7 @@ test("search palette navigates to a page", async ({ page, isMobile }) => {
   // Chromium reserves Ctrl+K on some Linux runners for browser chrome. The
   // component hotkey has unit coverage; this browser journey exercises the
   // visible, accessible trigger on every platform.
-  await page.getByRole("button", { name: "Search documentation" }).click();
+  await page.getByRole("button", { name: "Search components and guides" }).click();
   const input = page.getByRole("combobox", { name: "Search" });
   await expect(input).toBeFocused();
   await input.fill("motion");
@@ -89,11 +89,14 @@ test("preferences: images off removes image requests and persists", async ({ pag
 });
 
 test("theme toggle switches to dark without reload", async ({ page, isMobile }) => {
-  test.skip(isMobile, "theme control hidden on narrow screens; in preferences");
+  test.skip(isMobile, "covered by preferences on narrow screens");
   await page.goto("");
-  await page.getByRole("radio", { name: "Dark" }).click();
+  // Cycle: Auto → Light → Dark.
+  await page.getByRole("button", { name: /^Theme: Auto/ }).click();
+  await page.getByRole("button", { name: /^Theme: Light/ }).click();
+  await expect(page.getByRole("button", { name: /^Theme: Dark/ })).toBeVisible();
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(bg).toBe("rgb(18, 17, 16)");
+  expect(bg).toBe("rgb(19, 18, 17)");
 });
 
 test("off switch keeps a visible thumb and toggles cleanly", async ({ page }) => {
