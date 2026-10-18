@@ -176,3 +176,22 @@ test("sign-up flow: validation focus, back keeps input, failure then retry", asy
   await wiz.getByRole("button", { name: "Try again" }).click();
   await expect(page.getByText("Welcome, Grace")).toBeVisible({ timeout: 5000 });
 });
+
+test("disabled toggles stay visible, pressed or not", async ({ page }) => {
+  await page.goto("components/toggle-button/");
+  for (const name of ["Off, disabled", "On, disabled"]) {
+    const t = page.getByRole("button", { name });
+    await expect(t).toBeVisible();
+    await expect(t).toBeDisabled();
+    const o = await t.evaluate((el) => { let n: Element | null = el, o = 1; while (n) { o *= Number(getComputedStyle(n).opacity); n = n.parentElement; } return o; });
+    expect(o).toBeGreaterThanOrEqual(0.6);
+  }
+});
+
+test("validation messages carry no glyph prefix", async ({ page }) => {
+  await page.goto("start/examples/");
+  await page.locator("#wizard").getByRole("button", { name: "Continue" }).click();
+  const msg = page.locator("#wizard .orlo-field__msg").first();
+  await expect(msg).toBeVisible();
+  expect((await msg.innerText()).trim().startsWith("!")).toBe(false);
+});

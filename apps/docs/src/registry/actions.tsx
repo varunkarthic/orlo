@@ -92,6 +92,7 @@ export const actions: Record<string, Doc> = {
   "toggle-button": {
     demo: () => <><ToggleButton aria-label="Bold"><strong>B</strong></ToggleButton><ToggleButton aria-label="Italic" defaultPressed><em>I</em></ToggleButton><ToggleButton><Icons.Star size={18} /> Favourite</ToggleButton></>,
     code: `<ToggleButton pressed={bold} onPressedChange={setBold} aria-label="Bold"><strong>B</strong></ToggleButton>`,
+    variants: [{ title: "Disabled", body: "Disabled toggles keep their label and a dashed outline at full opacity, pressed or not, so they never disappear.", demo: () => <><ToggleButton disabled>Off, disabled</ToggleButton><ToggleButton disabled defaultPressed>On, disabled</ToggleButton></> }],
     props: [["pressed / defaultPressed / onPressedChange", "", ""]], notes: ["Uses aria-pressed; the pressed state is a filled surface plus border, not colour alone."],
     useWhen: ["Formatting and view toggles inside a toolbar."], avoidWhen: ["Settings that persist and apply immediately: use Switch."],
     keyboard: [["Enter / Space", "Toggle"]], semantics: ["<button aria-pressed>. Do not change the label when pressed; the state is announced."],

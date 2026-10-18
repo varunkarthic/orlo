@@ -96,15 +96,15 @@ _Written 2026-10-18 after reading `context/ORLO_MASTER_BUILD_PROMPT.md`, `contex
 
 | Complaint | Plan item | Status |
 | --- | --- | --- |
-| Look better; minimal + elegant | §2, M1–M3, docs 13–19 | planned |
-| Remove tint option | M1.2, docs 14, 18 | planned |
-| Beta badge / count in search | docs 13, 15 | planned |
-| Dense preferences | docs 14 | planned |
-| Square hover beside circular theme switch | M1.3, docs 13 | planned |
-| Disabled toggle disappears | M2.5 | planned |
-| Ugly validation “!” | M2.6 | planned |
-| MotionLab reset/race replays unchanged | M1.4 | planned |
-| Right-side home showcase | docs 17 | planned |
-| Theme Studio too simple | docs 19 | planned |
-| RTD “latest” flyout | docs 20 | planned |
-| Default initials avatars | M2.9 | planned |
+| Look better; minimal + elegant | §2, M1–M3, docs 13–19 | in progress: tokens, controls, shell, home, studio done |
+| Remove tint option | M1.2, docs 14, 18 | done (API, tokens, provider, docs, tests) |
+| Beta badge / count in search | docs 13, 15 | done |
+| Dense preferences | docs 14 | done (grouped + More) |
+| Square hover beside circular theme switch | M1.3, docs 13 | done (circular icon buttons + cycle button) |
+| Disabled toggle disappears | M2.5 | done (CSS + Playwright opacity check) |
+| Ugly validation “!” | M2.6 | done |
+| MotionLab reset/race replays unchanged | M1.4 | done |
+| Right-side home showcase | docs 17 | done |
+| Theme Studio too simple | docs 19 | done (workshop, 4 scenes) |
+| RTD “latest” flyout | docs 20 | done locally; hosted check pending |
+| Default initials avatars | M2.9 | done (marble default) |
