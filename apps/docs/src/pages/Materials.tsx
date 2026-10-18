@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { materialVars, mixHex, contrast, semantic, type Material } from "@orlo/tokens";
-import { SegmentedControl, Slider, ColorPicker, Button, Switch, Badge, Stack, Card, Icons, useMaterialStyle } from "@orlo/react";
+import { SegmentedControl, Slider, Button, Switch, Badge, Stack, Card, Icons, useMaterialStyle } from "@orlo/react";
 import { Code, H2, PageHeader } from "../kit.tsx";
 
 function Backdrop() {
@@ -8,18 +8,16 @@ function Backdrop() {
 }
 
 export function Materials() {
-  const [material, setMaterial] = useState<Material>("tinted");
-  const [tint, setTint] = useState("#1F5FA8");
+  const [material, setMaterial] = useState<Material>("glass");
   const [blur, setBlur] = useState(20);
   const [opacity, setOpacity] = useState(55);
   const [sat, setSat] = useState(16);
   const [depth, setDepth] = useState(3);
-  const [strength, setStrength] = useState(22);
   const [reduced, setReduced] = useState(false);
-  const glass = useMemo(() => ({ blur, opacity: opacity / 100, saturation: sat / 10, depth, tintStrength: strength / 100 }), [blur, opacity, sat, depth, strength]);
-  const style = useMaterialStyle(material, tint, glass);
+  const glass = useMemo(() => ({ blur, opacity: opacity / 100, saturation: sat / 10, depth }), [blur, opacity, sat, depth]);
+  const style = useMaterialStyle(material, glass);
   const panel = (scheme: "light" | "dark") => {
-    const v = materialVars(material, scheme, glass, tint);
+    const v = materialVars(material, scheme, glass);
     const alpha = Number(v["--orlo-material-alpha"] ?? 1);
     return (
       <div className="mat-stage orlo-root" data-orlo-theme={scheme} data-orlo-material={material} data-orlo-transparency={reduced ? "reduced" : undefined} style={style}>
@@ -32,20 +30,18 @@ export function Materials() {
       </div>
     );
   };
-  const vL = materialVars(material, "light", glass, tint);
+  const vL = materialVars(material, "light", glass);
   const raised = Number(vL["--orlo-material-alpha"] ?? 1) > opacity / 100 + 0.005;
   return (
     <div className="wide">
-      <PageHeader eyebrow="Styles" title="Materials" lead="Solid, frosted glass and tinted glass in any colour, each with light and dark appearances. Glass is applied selectively (overlays, sticky chrome, opted-in surfaces) and never at the cost of reading." />
+      <PageHeader eyebrow="Styles" title="Materials" lead="Two materials, solid and frosted glass, each with light and dark appearances. Glass is applied selectively (overlays, sticky chrome, opted-in surfaces) and never at the cost of reading." />
       <div className="studio">
         <Card className="studio__controls">
-          <SegmentedControl label="Material" value={material} onValueChange={(v) => setMaterial(v as Material)} options={[{ value: "solid", label: "Solid" }, { value: "glass", label: "Glass" }, { value: "tinted", label: "Tinted" }]} />
-          {material === "tinted" && <ColorPicker label="Tint" value={tint} onValueChange={setTint} swatches={["#1F5FA8", "#A8370A", "#1F7A4D", "#7C3AED", "#FFE600", "#FFFFFF", "#000000"]} />}
+          <SegmentedControl label="Material" value={material} onValueChange={(v) => setMaterial(v as Material)} options={[{ value: "solid", label: "Solid" }, { value: "glass", label: "Glass" }] } />
           {material !== "solid" && <>
             <Slider label="Blur" value={blur} onValueChange={setBlur} min={0} max={48} format={(v) => `${v}px`} />
             <Slider label="Requested opacity" value={opacity} onValueChange={setOpacity} min={10} max={100} format={(v) => `${v}%`} />
             <Slider label="Saturation" value={sat} onValueChange={setSat} min={5} max={25} format={(v) => `${(v / 10).toFixed(1)}×`} />
-            {material === "tinted" && <Slider label="Tint strength" value={strength} onValueChange={setStrength} min={0} max={40} format={(v) => `${v}%`} />}
           </>}
           <Slider label="Depth" value={depth} onValueChange={setDepth} min={0} max={5} marks={[0, 1, 2, 3, 4, 5]} />
           <Switch label="Reduce transparency" description="What people with the OS setting see." checked={reduced} onCheckedChange={setReduced} />
@@ -54,14 +50,14 @@ export function Materials() {
         <div className="mat-pair">{panel("light")}{panel("dark")}</div>
       </div>
       <H2>How the guard works</H2>
-      <p>Text on glass sits on a mix of the surface and whatever is behind it. Orlo can’t know the backdrop, so it checks the worst cases, pure black and pure white, and raises opacity until body text passes 4.5:1 against both. Tints that would make the surface itself unreadable (yellow under light text, for example) are weakened first.</p>
+      <p>Text on glass sits on a mix of the surface and whatever is behind it. Orlo can’t know the backdrop, so it checks the worst cases, pure black and pure white, and raises opacity until body text passes 4.5:1 against both.</p>
       <table className="doc" tabIndex={0}><thead><tr><th>Scheme</th><th>Surface</th><th>Text on black backdrop</th><th>Text on white backdrop</th></tr></thead><tbody>
-        {(["light", "dark"] as const).map((sc) => { const v = materialVars(material, sc, glass, tint); const a = Number(v["--orlo-material-alpha"] ?? 1); const [r, g, b] = (v["--orlo-material-bg"].match(/\d+/g) ?? ["255", "255", "255"]).map(Number); const hex = "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join(""); return <tr key={sc}><td>{sc}</td><td><span className="swatch-dot" style={{ background: v["--orlo-material-bg"] }} />{Math.round(a * 100)}%</td><td>{contrast(semantic[sc].fg, mixHex("#000000", hex, a)).toFixed(2)}:1</td><td>{contrast(semantic[sc].fg, mixHex("#FFFFFF", hex, a)).toFixed(2)}:1</td></tr>; })}
+        {(["light", "dark"] as const).map((sc) => { const v = materialVars(material, sc, glass); const a = Number(v["--orlo-material-alpha"] ?? 1); const [r, g, b] = (v["--orlo-material-bg"].match(/\d+/g) ?? ["255", "255", "255"]).map(Number); const hex = "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join(""); return <tr key={sc}><td>{sc}</td><td><span className="swatch-dot" style={{ background: v["--orlo-material-bg"] }} />{Math.round(a * 100)}%</td><td>{contrast(semantic[sc].fg, mixHex("#000000", hex, a)).toFixed(2)}:1</td><td>{contrast(semantic[sc].fg, mixHex("#FFFFFF", hex, a)).toFixed(2)}:1</td></tr>; })}
       </tbody></table>
       <H2>Fallbacks</H2>
       <ul className="notes"><li><code>prefers-reduced-transparency</code> or <code>reduceTransparency</code>: solid surfaces, no blur.</li><li>No <code>backdrop-filter</code> support: solid surface.</li><li>Forced colours: system Canvas with visible borders.</li><li>Progressive blur bands degrade to a plain fade.</li></ul>
       <H2>Use it</H2>
-      <Code>{`<OrloProvider material="${material}"${material === "tinted" ? ` tint="${tint}"` : ""} glass={{ blur: ${blur}, opacity: ${opacity / 100}, saturation: ${sat / 10}, depth: ${depth}${material === "tinted" ? `, tintStrength: ${strength / 100}` : ""} }}>\n  <App />\n</OrloProvider>\n\n// Opt a surface in: <div className="orlo-material">…</div>`}</Code>
+      <Code>{`<OrloProvider material="${material}" glass={{ blur: ${blur}, opacity: ${opacity / 100}, saturation: ${sat / 10}, depth: ${depth} }}>\n  <App />\n</OrloProvider>\n\n// Opt a surface in: <div className="orlo-material">…</div>`}</Code>
     </div>
   );
 }

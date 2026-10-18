@@ -42,7 +42,7 @@ export const pages: Page[] = [
   { path: "styles/typography", title: "Typography", section: "styles", summary: "Type scale, rhythm and numerals." },
   { path: "styles/shape", title: "Shape", section: "styles", summary: "Radii, strokes and corners." },
   { path: "styles/elevation", title: "Elevation", section: "styles", summary: "Surfaces, shadows and scrims." },
-  { path: "styles/materials", title: "Materials", section: "styles", summary: "Solid, glass and tinted glass with a readability guard." },
+  { path: "styles/materials", title: "Materials", section: "styles", summary: "Solid and frosted glass, with a readability guard." },
   { path: "styles/motion", title: "Motion", section: "styles", summary: "Springs, presets and the MotionLab." },
   { path: "styles/icons", title: "Icons", section: "styles", summary: "Orlo's own 24px icon set." },
   { path: "styles/density", title: "Density", section: "styles", summary: "Comfortable, compact and touch." },

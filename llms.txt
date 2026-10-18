@@ -27,7 +27,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Typography](styles/typography/): Type scale, rhythm and numerals.
 - [Shape](styles/shape/): Radii, strokes and corners.
 - [Elevation](styles/elevation/): Surfaces, shadows and scrims.
-- [Materials](styles/materials/): Solid, glass and tinted glass with a readability guard.
+- [Materials](styles/materials/): Solid and frosted glass, with a readability guard.
 - [Motion](styles/motion/): Springs, presets and the MotionLab.
 - [Icons](styles/icons/): Orlo's own 24px icon set.
 - [Density](styles/density/): Comfortable, compact and touch.

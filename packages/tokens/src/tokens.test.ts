@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { contrast, semantic, tints, chart } from "./tokens.ts";
 
 const pairs: [string, string, number][] = [
-  ["fg", "canvas", 4.5], ["fg", "surface", 4.5], ["fg-muted", "canvas", 4.5], ["fg-muted", "surface", 4.5],
+  ["fg", "canvas", 4.5], ["fg", "surface", 4.5], ["fg", "surface-sunken", 4.5], ["fg", "surface-selected", 4.5], ["fg-muted", "surface-selected", 4.5], ["accent-text", "accent-subtle", 4.5], ["border-control", "surface", 3], ["fg-muted", "canvas", 4.5], ["fg-muted", "surface", 4.5],
   ["accent-fg", "accent", 4.5], ["accent-text", "canvas", 4.5], ["accent-text", "surface", 4.5],
   ["border-control", "canvas", 3], ["focus", "canvas", 3], ["focus", "surface", 3],
   ["success", "canvas", 4.5], ["warning", "canvas", 4.5], ["error", "canvas", 4.5], ["info", "canvas", 4.5],

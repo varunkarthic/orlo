@@ -1,6 +1,7 @@
 import { contrast, semantic } from "./tokens.ts";
 
-export type Material = "solid" | "glass" | "tinted";
+/** Surface material. Tinted glass was removed in v3: solid and frosted glass, each in light and dark. */
+export type Material = "solid" | "glass";
 export type GlassOptions = {
   /** Backdrop blur in px. Default 20. */
   blur?: number;
@@ -8,8 +9,6 @@ export type GlassOptions = {
   opacity?: number;
   /** Backdrop saturation multiplier. Default 1.6. */
   saturation?: number;
-  /** Tint strength 0–1 for tinted glass. Default 0.22. */
-  tintStrength?: number;
   /** Elevation level 0–5 for the material's shadow. Default 3. */
   depth?: number;
 };
@@ -32,14 +31,11 @@ export function safeGlassAlpha(surface: string, fg: string, requested: number) {
 }
 
 /** Resolved CSS variables for a material in one scheme. */
-export function materialVars(material: Material, scheme: "light" | "dark", opts: GlassOptions = {}, tint = "#A8370A") {
+export function materialVars(material: Material, scheme: "light" | "dark", opts: GlassOptions = {}) {
   const t = semantic[scheme];
-  const { blur = 20, opacity = 0.72, saturation = 1.6, tintStrength = 0.22, depth = 3 } = opts;
-  if (material === "solid") return { "--orlo-material-bg": t["surface-raised"], "--orlo-material-blur": "0px", "--orlo-material-saturation": "1", "--orlo-material-depth": String(depth) };
-  // Tint strength steps down until the tinted surface itself keeps body text at 4.5:1 (light tints on dark, dark tints on light).
-  let strength = material === "tinted" ? Math.min(0.4, Math.max(0, tintStrength)) : 0;
-  let base = mix(t["surface-raised"], tint, strength);
-  while (strength > 0 && contrast(t.fg, base) < 4.6) { strength = Math.max(0, strength - 0.02); base = mix(t["surface-raised"], tint, strength); }
+  const { blur = 20, opacity = 0.72, saturation = 1.6, depth = 3 } = opts;
+  if (material !== "glass") return { "--orlo-material-bg": t["surface-raised"], "--orlo-material-blur": "0px", "--orlo-material-saturation": "1", "--orlo-material-depth": String(depth) };
+  const base = t["surface-raised"];
   const alpha = safeGlassAlpha(base, t.fg, opacity);
   const [r, g, b] = hex(base);
   return {
@@ -48,7 +44,6 @@ export function materialVars(material: Material, scheme: "light" | "dark", opts:
     "--orlo-material-saturation": String(saturation),
     "--orlo-material-depth": String(depth),
     "--orlo-material-alpha": String(alpha),
-    "--orlo-material-tint-strength": String(+strength.toFixed(2)),
   };
 }
 

@@ -14,22 +14,26 @@ export const primitive = {
 
 const n = primitive.neutral;
 
-/** Semantic roles per scheme. Keys become `--orlo-color-<key>`. */
+/**
+ * Semantic roles per scheme. Keys become `--orlo-color-<key>`.
+ * Quiet precision: neutrals carry the interface; the accent is reserved for primary actions,
+ * selection indicators and links in prose.
+ */
 export const semantic = {
   light: {
-    canvas: n[50], surface: "#FCFBF8", "surface-raised": "#FFFFFF", "surface-selected": primitive.accent[100],
-    fg: n[900], "fg-muted": n[600], "fg-inverse": n[50],
-    border: n[200], "border-control": n[500],
-    accent: primitive.accent[600], "accent-fg": "#FFFFFF", "accent-text": primitive.accent[600],
-    focus: primitive.blue[600], scrim: "rgb(18 17 16 / 0.48)",
+    canvas: "#FAF9F6", surface: "#FFFFFF", "surface-raised": "#FFFFFF", "surface-sunken": "#F2F0EB", "surface-selected": "#EEECE6",
+    fg: n[900], "fg-muted": n[600], "fg-subtle": "#8A8478", "fg-inverse": n[50],
+    border: "#E6E3DC", "border-control": "#8C867A",
+    accent: primitive.accent[600], "accent-fg": "#FFFFFF", "accent-text": primitive.accent[600], "accent-subtle": "#FBEEE6",
+    focus: primitive.blue[600], scrim: "rgb(18 17 16 / 0.36)",
     success: primitive.green[600], warning: primitive.amber[700], error: primitive.red[600], info: primitive.blue[600],
   },
   dark: {
-    canvas: n[950], surface: n[900], "surface-raised": n[800], "surface-selected": "#3A2418",
-    fg: n[100], "fg-muted": n[400], "fg-inverse": n[900],
-    border: n[800], "border-control": n[500],
-    accent: primitive.accent[400], "accent-fg": n[950], "accent-text": primitive.accent[300],
-    focus: primitive.blue[300], scrim: "rgb(0 0 0 / 0.6)",
+    canvas: "#131211", surface: "#1A1917", "surface-raised": "#22211F", "surface-sunken": "#0E0D0C", "surface-selected": "#2B2926",
+    fg: "#EFEBE3", "fg-muted": "#A8A296", "fg-subtle": "#7C776D", "fg-inverse": n[900],
+    border: "#2C2A27", "border-control": "#76716A",
+    accent: primitive.accent[400], "accent-fg": n[950], "accent-text": primitive.accent[300], "accent-subtle": "#33221A",
+    focus: primitive.blue[300], scrim: "rgb(0 0 0 / 0.55)",
     success: primitive.green[300], warning: primitive.amber[300], error: primitive.red[300], info: primitive.blue[300],
   },
 } as const;
@@ -51,7 +55,8 @@ export const chart = {
 
 /** 4px base scale. */
 export const space = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40, 12: 48, 16: 64 } as const;
-export const radius = { xs: 4, sm: 6, md: 10, lg: 14, xl: 20, "2xl": 28, full: 9999 } as const;
+/** Radius roles: xs badges/keycaps · sm chips, menu items · md buttons, fields · lg cards, menus · xl dialogs, sheets · full icon buttons, avatars, switches. */
+export const radius = { xs: 4, sm: 8, md: 10, lg: 14, xl: 20, "2xl": 28, full: 9999 } as const;
 
 export const type = {
   family: {
@@ -70,7 +75,7 @@ export const type = {
     "4xl": "clamp(2.5rem, 1.7rem + 3.6vw, 4.25rem)", "5xl": "clamp(3rem, 1.8rem + 5.4vw, 6rem)",
   },
   leading: { none: 1, tight: 1.1, snug: 1.3, normal: 1.55, relaxed: 1.7 },
-  tracking: { tighter: "-0.035em", tight: "-0.02em", normal: "0", wide: "0.02em", caps: "0.06em" },
+  tracking: { tighter: "-0.025em", tight: "-0.015em", normal: "0", wide: "0.02em", caps: "0.06em" },
   weight: { regular: 400, medium: 500, semibold: 600, bold: 700 },
   measure: { narrow: "45ch", base: "68ch", wide: "85ch" },
 } as const;
@@ -82,19 +87,19 @@ export const type = {
 export const shadow = {
   light: [
     "none",
-    "0 1px 2px rgb(44 30 20 / 0.06), 0 1px 1px rgb(44 30 20 / 0.04)",
-    "0 2px 4px rgb(44 30 20 / 0.06), 0 4px 12px -2px rgb(44 30 20 / 0.08)",
-    "0 4px 8px -2px rgb(44 30 20 / 0.08), 0 12px 28px -6px rgb(44 30 20 / 0.14)",
-    "0 8px 16px -4px rgb(44 30 20 / 0.10), 0 24px 48px -12px rgb(44 30 20 / 0.22)",
-    "0 12px 24px -6px rgb(44 30 20 / 0.12), 0 40px 80px -20px rgb(44 30 20 / 0.32)",
+    "0 1px 2px rgb(28 27 24 / 0.05)",
+    "0 1px 2px rgb(28 27 24 / 0.04), 0 4px 12px -4px rgb(28 27 24 / 0.08)",
+    "0 2px 4px -2px rgb(28 27 24 / 0.06), 0 12px 24px -8px rgb(28 27 24 / 0.12)",
+    "0 4px 8px -4px rgb(28 27 24 / 0.08), 0 20px 40px -12px rgb(28 27 24 / 0.16)",
+    "0 8px 16px -8px rgb(28 27 24 / 0.10), 0 32px 64px -16px rgb(28 27 24 / 0.22)",
   ],
   dark: [
     "none",
-    "0 1px 2px rgb(0 0 0 / 0.4)",
-    "0 2px 6px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(255 255 255 / 0.03)",
-    "0 6px 16px -4px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.04)",
-    "0 12px 32px -8px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.05)",
-    "0 24px 64px -16px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(255 255 255 / 0.06)",
+    "0 1px 2px rgb(0 0 0 / 0.35)",
+    "0 2px 6px rgb(0 0 0 / 0.35)",
+    "0 6px 16px -4px rgb(0 0 0 / 0.45)",
+    "0 12px 32px -8px rgb(0 0 0 / 0.55)",
+    "0 24px 64px -16px rgb(0 0 0 / 0.65)",
   ],
 } as const;
 

@@ -98,7 +98,7 @@ export function TestingPage() {
       <PageHeader eyebrow="Develop" title="Testing" lead="What is verified automatically today, and how to run it." />
       <Code>{`npm test          # Vitest: tokens, motion, components (jsdom)\nnpm run e2e       # Playwright + axe against the built site under /en/latest/\nnpm run typecheck`}</Code>
       <table className="doc" tabIndex={0}><thead><tr><th>Suite</th><th>Covers</th></tr></thead><tbody>
-        <tr><td>Token tests</td><td>Every semantic and tint contrast pair, light and dark; theme generator on extreme colours.</td></tr>
+        <tr><td>Token tests</td><td>Every semantic contrast pair, glass readability, light and dark; theme generator on extreme colours.</td></tr>
         <tr><td>Motion tests</td><td>Every preset under 5% overshoot and 700 ms settle.</td></tr>
         <tr><td>Component tests</td><td>Focus return, inert background, keyboard models (tabs, menu, select, tree, calendar), image retry limits, parsing helpers.</td></tr>
         <tr><td>Catalogue integrity</td><td>Every manifest entry exports; every entry has docs (build fails otherwise); components server-render.</td></tr>
