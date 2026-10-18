@@ -17,7 +17,8 @@ function Curve({ sp, w = 180, h = 64, velocity = 0, ms = 900 }: { sp: { stiffnes
 }
 
 function TokenGrid({ scheme }: { scheme: Scheme }) {
-  const [run, setRun] = useState(0);
+  // Toggle between ends instead of remounting: a dot already at its target never replays.
+  const [atEnd, setAtEnd] = useState(false);
   return (
     <>
       <div className="token-grid">
@@ -27,13 +28,13 @@ function TokenGrid({ scheme }: { scheme: Scheme }) {
             <Card key={fam + speed} className="token">
               <div className="token__head"><code>{fam}.{speed}</code><span className="orlo-hint">k {sp.stiffness} · c {sp.damping}</span></div>
               <Curve sp={sp} />
-              <div className="token__track"><motion.span key={run} className="token__dot" initial={{ x: 0 }} animate={{ x: run ? 140 : 0 }} transition={sp} /></div>
+              <div className="token__track"><motion.span className="token__dot" initial={false} animate={{ x: atEnd ? 140 : 0 }} transition={sp} /></div>
               <div className="token__meta"><span>ζ {m.zeta.toFixed(2)}</span><span>{(m.overshoot * 100).toFixed(1)}% overshoot</span><span>{Math.round(m.settleMs)} ms</span></div>
             </Card>
           );
         }))}
       </div>
-      <Button variant="subtle" onClick={() => setRun((r) => r + 1)}>Race all six</Button>
+      <Button variant="subtle" onClick={() => setAtEnd((v) => !v)}>{atEnd ? "Race back" : "Race all six"}</Button>
     </>
   );
 }
