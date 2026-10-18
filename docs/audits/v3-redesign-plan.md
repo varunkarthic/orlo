@@ -106,5 +106,5 @@ _Written 2026-10-18 after reading `context/ORLO_MASTER_BUILD_PROMPT.md`, `contex
 | MotionLab reset/race replays unchanged | M1.4 | done |
 | Right-side home showcase | docs 17 | done |
 | Theme Studio too simple | docs 19 | done (workshop, 4 scenes) |
-| RTD “latest” flyout | docs 20 | done locally; hosted check pending |
+| RTD “latest” flyout | docs 20 | done; verified on the hosted site |
 | Default initials avatars | M2.9 | done (marble default) |

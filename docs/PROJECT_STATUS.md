@@ -14,7 +14,7 @@ _Last updated: 2026-10-18_
 ## Needs remote or manual verification
 
 - **Public CI:** GitHub Actions passed on commit "test: update header/theme assertions…" (run 39112614915). Later commits need their own run.
-- **Read the Docs:** the site is live at https://orlo-react.readthedocs.io/en/latest/. The floating RTD flyout is hidden with CSS; the docs opt in to the addons data event (`readthedocs-addons-api-version`) and show the version in the footer. This footer line has not yet been seen on the hosted build. The flyout position itself can only be changed in the RTD dashboard, not from the repository.
+- **Read the Docs:** the site is live at https://orlo-react.readthedocs.io/en/latest/. The floating RTD flyout is hidden with CSS; the docs opt in to the addons data event (`readthedocs-addons-api-version`) and show the version in the footer. The flyout position itself can only be changed in the RTD dashboard, not from the repository.
 - **Accessibility:** automated axe and browser checks do not replace manual VoiceOver, NVDA, or TalkBack validation. No component is marked `stable`.
 - **Not yet implemented:** the audit records catalog-scale v3 work still outside this focused release increment, including the requested visual-regression service, complete advanced-chart replacement, and extra catalog families.
 - **Publishing:** packages are not published to npm.
