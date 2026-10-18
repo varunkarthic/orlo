@@ -104,7 +104,7 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 .orlo-calendar__grid th { font-size: var(--orlo-text-xs); font-weight: 600; color: var(--orlo-color-fg-muted); padding: 4px 0 6px; text-align: center; }
 .orlo-calendar__grid td { padding: 1px 0; text-align: center; }
 .orlo-calendar__day {
-  inline-size: 2.5rem; block-size: 2.5rem; border: 0; border-radius: 50%; background: none; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; position: relative;
+  inline-size: 2.5rem; block-size: 2.5rem; border: 0; border-radius: 50%; background: none; color: inherit; font: inherit; font-weight: 500; font-variant-numeric: tabular-nums; cursor: pointer; position: relative;
 }
 .orlo-calendar__grid td[data-outside] .orlo-calendar__day { color: var(--orlo-color-fg-muted); font-weight: 400; }
 .orlo-calendar__day[aria-current="date"]::after { content: ""; position: absolute; inset-block-end: 5px; inset-inline-start: 50%; inline-size: 4px; block-size: 4px; margin-inline-start: -2px; border-radius: 50%; background: var(--orlo-color-accent); }
