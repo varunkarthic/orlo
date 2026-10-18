@@ -30,10 +30,14 @@ export function App({ route, page }: { route: string; page: PageRender }) {
   // Read the Docs injects a floating version flyout. Orlo hides it (docs.css) and shows the version in its footer instead.
   const [rtd, setRtd] = useState<{ version: string; versions: { slug: string; url: string }[] } | null>(null);
   useEffect(() => {
-    const on = (e: Event) => {
-      const d = (e as CustomEvent<{ data: () => { versions?: { current?: { slug: string }; active?: { slug: string; urls: { documentation: string } }[] } } }>).detail?.data?.();
+    type Source = { data?: () => { versions?: { current?: { slug: string }; active?: { slug: string; urls: { documentation: string } }[] } } } | undefined;
+    const take = (src: Source) => {
+      const d = src?.data?.();
       if (d?.versions?.current) setRtd({ version: d.versions.current.slug, versions: (d.versions.active ?? []).map((v) => ({ slug: v.slug, url: v.urls.documentation })) });
     };
+    const on = (e: Event) => take((e as CustomEvent).detail as Source);
+    // The event often fires before hydration finishes, so also read the data RTD leaves on window.
+    try { take((window as unknown as { ReadTheDocsEventData?: Source }).ReadTheDocsEventData); } catch { /* not ready yet */ }
     document.addEventListener("readthedocs-addons-data-ready", on);
     return () => document.removeEventListener("readthedocs-addons-data-ready", on);
   }, []);
