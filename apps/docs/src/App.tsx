@@ -27,6 +27,16 @@ export function App({ route, page }: { route: string; page: PageRender }) {
   const [locale, setLocale] = useState("en-US");
   useEffect(() => setLocale(navigator.language || "en-US"), []);
   useEffect(() => setPrefs({ ...DEFAULTS, ...read() }), []);
+  // Read the Docs injects a floating version flyout. Orlo hides it (docs.css) and shows the version in its footer instead.
+  const [rtd, setRtd] = useState<{ version: string; versions: { slug: string; url: string }[] } | null>(null);
+  useEffect(() => {
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ data: () => { versions?: { current?: { slug: string }; active?: { slug: string; urls: { documentation: string } }[] } } }>).detail?.data?.();
+      if (d?.versions?.current) setRtd({ version: d.versions.current.slug, versions: (d.versions.active ?? []).map((v) => ({ slug: v.slug, url: v.urls.documentation })) });
+    };
+    document.addEventListener("readthedocs-addons-data-ready", on);
+    return () => document.removeEventListener("readthedocs-addons-data-ready", on);
+  }, []);
   const set = <K extends keyof Prefs>(k: K) => (v: Prefs[K]) => setPrefs((p) => {
     const next = { ...p, [k]: v }; write(next);
     if (k === "theme") v === "system" ? delete document.documentElement.dataset.orloTheme : (document.documentElement.dataset.orloTheme = v as string);
@@ -125,6 +135,7 @@ export function App({ route, page }: { route: string; page: PageRender }) {
             )}
             <footer className="site-footer">
               <Wordmark height={18} />
+              {rtd && <p className="site-footer__version">Version: {rtd.versions.length > 1 ? rtd.versions.map((v, i) => <span key={v.slug}>{i ? " · " : ""}{v.slug === rtd.version ? <strong>{v.slug}</strong> : <a href={v.url}>{v.slug}</a>}</span>) : <strong>{rtd.version}</strong>} · Hosted on Read the Docs</p>}
               <p>An independent, pre-release design framework for React. Not affiliated with Apple, Google, Framer or any other vendor named in its research. Nothing is published to npm yet.</p>
             </footer>
           </div>

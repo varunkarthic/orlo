@@ -371,3 +371,7 @@ h2:not([class^="orlo-"]) { margin-block-start: clamp(var(--orlo-space-8), 7vw, v
 .scene__agenda { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; inline-size: 100%; }
 .scene__agenda li { display: grid; grid-template-columns: 3.5rem 1fr auto; align-items: center; gap: 8px; font-size: var(--orlo-text-sm); }
 .scene--feedback { max-inline-size: 36rem; margin-inline: auto; }
+
+/* Read the Docs flyout: version info lives in the footer instead (see App.tsx). */
+readthedocs-flyout { display: none !important; }
+.site-footer__version { font-size: var(--orlo-text-sm); color: var(--orlo-color-fg-muted); }
