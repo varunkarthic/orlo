@@ -110,6 +110,7 @@ export type KanbanColumn = { id: string; title: string; cards: KanbanCard[]; lim
  */
 export function Kanban({ columns, onChange, label = "Board" }: { columns: KanbanColumn[]; onChange: (c: KanbanColumn[]) => void; label?: string }) {
   const [grab, setGrab] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [msg, setMsg] = useState("");
   const [over, setOver] = useState<string | null>(null);
   const origin = useRef<KanbanColumn[] | null>(null);
@@ -118,6 +119,10 @@ export function Kanban({ columns, onChange, label = "Board" }: { columns: Kanban
   const find = (cid: string) => { for (let c = 0; c < columns.length; c++) { const i = columns[c].cards.findIndex((k) => k.id === cid); if (i >= 0) return [c, i] as const; } return [-1, -1] as const; };
   const moveTo = (cid: string, col: number, idx: number) => {
     const [c, i] = find(cid); if (c < 0) return;
+    if (c !== col && columns[col].limit !== undefined && columns[col].cards.length >= columns[col].limit) {
+      setMsg(`${columns[col].title} has reached its limit of ${columns[col].limit} cards.`);
+      return;
+    }
     const next = columns.map((x) => ({ ...x, cards: x.cards.slice() }));
     const [card] = next[c].cards.splice(i, 1);
     const at = Math.max(0, Math.min(next[col].cards.length, idx));
@@ -135,22 +140,46 @@ export function Kanban({ columns, onChange, label = "Board" }: { columns: Kanban
           <header className="orlo-kanban__head"><strong>{col.title}</strong><span className="orlo-hint" data-over-limit={col.limit !== undefined && col.cards.length > col.limit || undefined}>{col.cards.length}{col.limit !== undefined ? ` / ${col.limit}` : ""}</span></header>
           <ul className="orlo-kanban__list">
             <AnimatePresence initial={false}>
-              {col.cards.map((card, i) => (
-                <motion.li key={card.id} layout transition={transition("shift")} className="orlo-kanban__card" data-grabbed={grab === card.id || undefined} tabIndex={0} data-card={card.id} aria-describedby="orlo-kanban-help" aria-pressed={grab === card.id}
-                  onPointerDown={(e) => { if (e.button !== 0) return; setGrab(card.id); origin.current = columns; const up = () => { setGrab(null); setOver(null); window.removeEventListener("pointerup", up); }; window.addEventListener("pointerup", up); }}
-                  onKeyDown={(e) => {
-                    if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (grab === card.id) { setGrab(null); setMsg(`${card.title} dropped in ${col.title}`); } else { setGrab(card.id); origin.current = columns; setMsg(`${card.title} picked up from ${col.title}`); } }
-                    else if (grab === card.id) {
-                      const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
-                      if (e.key === "ArrowUp") { e.preventDefault(); moveTo(card.id, c, i - 1); }
-                      else if (e.key === "ArrowDown") { e.preventDefault(); moveTo(card.id, c, i + 1); }
-                      else if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); const nc = c + ((e.key === "ArrowRight") !== rtl ? 1 : -1); if (nc >= 0 && nc < columns.length) moveTo(card.id, nc, Math.min(i, columns[nc].cards.length)); }
-                      else if (e.key === "Escape") { e.preventDefault(); if (origin.current) onChange(origin.current); setGrab(null); setMsg("Move cancelled"); }
-                    }
-                  }}>
-                  <span className="orlo-kanban__title">{card.title}</span>{card.meta && <span className="orlo-kanban__meta">{card.meta}</span>}
-                </motion.li>
-              ))}
+              {col.cards.map((card, i) => {
+                const isGrabbed = grab === card.id;
+                return (
+                  <motion.li key={card.id} layout transition={transition("shift")} className="orlo-kanban__card" data-grabbed={isGrabbed || undefined}
+                    tabIndex={0} data-card={card.id} aria-describedby="orlo-kanban-help" aria-pressed={isGrabbed}
+                    style={isGrabbed ? { transform: `translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0)`, zIndex: 10, position: "relative" } : undefined}
+                    onPointerDown={(e) => {
+                      if (e.button !== 0) return;
+                      const startX = e.clientX;
+                      const startY = e.clientY;
+                      setGrab(card.id);
+                      setDragOffset({ x: 0, y: 0 });
+                      origin.current = columns;
+                      const moveHandler = (ev: PointerEvent) => {
+                        setDragOffset({ x: ev.clientX - startX, y: ev.clientY - startY });
+                      };
+                      const up = () => {
+                        setGrab(null);
+                        setOver(null);
+                        setDragOffset({ x: 0, y: 0 });
+                        window.removeEventListener("pointermove", moveHandler);
+                        window.removeEventListener("pointerup", up);
+                      };
+                      window.addEventListener("pointermove", moveHandler);
+                      window.addEventListener("pointerup", up);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (grab === card.id) { setGrab(null); setDragOffset({ x: 0, y: 0 }); setMsg(`${card.title} dropped in ${col.title}`); } else { setGrab(card.id); origin.current = columns; setMsg(`${card.title} picked up from ${col.title}`); } }
+                      else if (grab === card.id) {
+                        const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
+                        if (e.key === "ArrowUp") { e.preventDefault(); moveTo(card.id, c, i - 1); }
+                        else if (e.key === "ArrowDown") { e.preventDefault(); moveTo(card.id, c, i + 1); }
+                        else if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); const nc = c + ((e.key === "ArrowRight") !== rtl ? 1 : -1); if (nc >= 0 && nc < columns.length) moveTo(card.id, nc, Math.min(i, columns[nc].cards.length)); }
+                        else if (e.key === "Escape") { e.preventDefault(); if (origin.current) onChange(origin.current); setGrab(null); setDragOffset({ x: 0, y: 0 }); setMsg("Move cancelled"); }
+                      }
+                    }}>
+                    <span className="orlo-kanban__title">{card.title}</span>{card.meta && <span className="orlo-kanban__meta">{card.meta}</span>}
+                  </motion.li>
+                );
+              })}
             </AnimatePresence>
             {col.cards.length === 0 && <li className="orlo-kanban__empty" aria-hidden="true">Drop cards here</li>}
           </ul>

@@ -113,10 +113,11 @@ export type ReorderableListProps<T> = { items: T[]; onReorder: (items: T[]) => v
  */
 export function ReorderableList<T>({ items, onReorder, getKey, getLabel, render, label }: ReorderableListProps<T>) {
   const [grabbed, setGrabbed] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [msg, setMsg] = useState("");
   const origin = useRef<T[] | null>(null);
   const list = useRef<HTMLUListElement>(null);
-  const drag = useRef<{ key: string; y: number } | null>(null);
+  const drag = useRef<{ key: string; startX: number; startY: number } | null>(null);
   const { transition } = useOrloMotion();
   const move = (key: string, to: number) => {
     const from = items.findIndex((i) => getKey(i) === key); if (from < 0 || to < 0 || to >= items.length || to === from) return;
@@ -131,17 +132,37 @@ export function ReorderableList<T>({ items, onReorder, getKey, getLabel, render,
         <AnimatePresence initial={false}>
           {items.map((it, i) => {
             const k = getKey(it);
+            const isGrabbed = grabbed === k;
             return (
-              <motion.li key={k} data-key={k} layout transition={transition("shift")} className="orlo-reorder__item" data-grabbed={grabbed === k || undefined}
+              <motion.li key={k} data-key={k} layout transition={transition("shift")} className="orlo-reorder__item" data-grabbed={isGrabbed || undefined}
+                style={isGrabbed ? { transform: `translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0)`, zIndex: 10, position: "relative" } : undefined}
                 onPointerMove={(e) => { if (!drag.current || drag.current.key === k) return; const r = e.currentTarget.getBoundingClientRect(); if (e.clientY > r.top + r.height * 0.25 && e.clientY < r.bottom - r.height * 0.25) move(drag.current.key, i); }}>
-                <button type="button" className="orlo-reorder__handle" aria-label={`Reorder ${getLabel(it)}`} aria-describedby={`${label}-instr`} aria-pressed={grabbed === k}
-                  onPointerDown={(e) => { e.preventDefault(); drag.current = { key: k, y: e.clientY }; setGrabbed(k); const up = () => { drag.current = null; setGrabbed(null); window.removeEventListener("pointerup", up); }; window.addEventListener("pointerup", up); }}
-                  onKeyDown={(e) => {
-                    if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (grabbed === k) { setGrabbed(null); setMsg(`${getLabel(it)} dropped at position ${i + 1}`); origin.current = null; } else { setGrabbed(k); origin.current = items; setMsg(`${getLabel(it)} picked up, position ${i + 1} of ${items.length}`); } }
-                    else if (grabbed === k && (e.key === "ArrowUp" || e.key === "ArrowDown")) { e.preventDefault(); move(k, i + (e.key === "ArrowUp" ? -1 : 1)); }
-                    else if (grabbed === k && e.key === "Escape") { e.preventDefault(); if (origin.current) onReorder(origin.current); setGrabbed(null); setMsg("Reorder cancelled"); }
+                <button type="button" className="orlo-reorder__handle" aria-label={`Reorder ${getLabel(it)}`} aria-describedby={`${label}-instr`} aria-pressed={isGrabbed}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    drag.current = { key: k, startX: e.clientX, startY: e.clientY };
+                    setDragOffset({ x: 0, y: 0 });
+                    setGrabbed(k);
+                    const moveHandler = (ev: PointerEvent) => {
+                      if (!drag.current) return;
+                      setDragOffset({ x: ev.clientX - drag.current.startX, y: ev.clientY - drag.current.startY });
+                    };
+                    const up = () => {
+                      drag.current = null;
+                      setGrabbed(null);
+                      setDragOffset({ x: 0, y: 0 });
+                      window.removeEventListener("pointermove", moveHandler);
+                      window.removeEventListener("pointerup", up);
+                    };
+                    window.addEventListener("pointermove", moveHandler);
+                    window.addEventListener("pointerup", up);
                   }}
-                  onBlur={() => grabbed === k && setGrabbed(null)}><Icons.Grip size={18} /></button>
+                  onKeyDown={(e) => {
+                    if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (grabbed === k) { setGrabbed(null); setDragOffset({ x: 0, y: 0 }); setMsg(`${getLabel(it)} dropped at position ${i + 1}`); origin.current = null; } else { setGrabbed(k); origin.current = items; setMsg(`${getLabel(it)} picked up, position ${i + 1} of ${items.length}`); } }
+                    else if (grabbed === k && (e.key === "ArrowUp" || e.key === "ArrowDown")) { e.preventDefault(); move(k, i + (e.key === "ArrowUp" ? -1 : 1)); }
+                    else if (grabbed === k && e.key === "Escape") { e.preventDefault(); if (origin.current) onReorder(origin.current); setGrabbed(null); setDragOffset({ x: 0, y: 0 }); setMsg("Reorder cancelled"); }
+                  }}
+                  onBlur={() => grabbed === k && (setGrabbed(null), setDragOffset({ x: 0, y: 0 }))}><Icons.Grip size={18} /></button>
                 <div className="orlo-reorder__content">{render(it)}</div>
               </motion.li>
             );

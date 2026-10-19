@@ -325,5 +325,33 @@
 .orlo-bwo[data-layout="signature"][data-size="lg"] .orlo-bwo__word { block-size: 1.5rem; }
 a.orlo-bwo:focus-visible { outline: none; box-shadow: var(--orlo-ring); }
 a.orlo-bwo:active { transform: scale(0.98); }
-@media (hover: hover) and (pointer: fine) { a.orlo-bwo:hover { box-shadow: var(--orlo-shadow-2); } }
 @media (forced-colors: active) { .orlo-bwo { border-color: CanvasText; } }
+
+/* ---------- Drag and Drop ---------- */
+.orlo-drag-overlay {
+  box-sizing: border-box;
+  box-shadow: var(--orlo-shadow-4);
+  border-radius: var(--orlo-radius-md);
+  opacity: 0.95;
+  cursor: grabbing;
+}
+.orlo-drop-indicator {
+  background: var(--orlo-color-accent);
+  border-radius: var(--orlo-radius-full);
+  transition: opacity var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
+}
+.orlo-drop-indicator[data-orientation="horizontal"] {
+  inline-size: 100%;
+  block-size: 2px;
+  margin-block: 2px;
+}
+.orlo-drop-indicator[data-orientation="vertical"] {
+  inline-size: 2px;
+  block-size: 100%;
+  margin-inline: 2px;
+}
+.orlo-droppable[data-is-over="true"] {
+  outline: 2px dashed var(--orlo-color-accent);
+  outline-offset: -2px;
+  background-color: var(--orlo-color-surface-hover);
+}

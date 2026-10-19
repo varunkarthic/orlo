@@ -498,5 +498,62 @@ describe("Batch C components (PieChart, DocumentViewer, SignaturePad)", () => {
   });
 });
 
+describe("Generalized Dnd Primitives", () => {
+  function DraggableItem({ id, label }: { id: string; label: string }) {
+    const { attributes, listeners, setNodeRef, isDragging, transform } = Orlo.useDraggable({ id });
+    return (
+      <div
+        ref={setNodeRef}
+        {...attributes}
+        {...listeners}
+        data-testid={`draggable-${id}`}
+        style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
+      >
+        {label} {isDragging ? "(dragging)" : ""}
+      </div>
+    );
+  }
+
+  it("renders draggable item with accessible attributes", () => {
+    wrap(
+      <Orlo.DndContext>
+        <DraggableItem id="card-1" label="Card 1" />
+      </Orlo.DndContext>
+    );
+    const item = screen.getByTestId("draggable-card-1");
+    expect(item).toHaveAttribute("role", "button");
+    expect(item).toHaveAttribute("aria-roledescription", "draggable item");
+    expect(item).toHaveAttribute("aria-grabbed", "false");
+  });
+
+  it("handles keyboard pickup, arrow movement, and drop", async () => {
+    const onStart = vi.fn();
+    const onEnd = vi.fn();
+    wrap(
+      <Orlo.DndContext onDragStart={onStart} onDragEnd={onEnd}>
+        <DraggableItem id="card-1" label="Card 1" />
+      </Orlo.DndContext>
+    );
+    const item = screen.getByTestId("draggable-card-1");
+    item.focus();
+    await userEvent.keyboard(" ");
+    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({ active: expect.objectContaining({ id: "card-1" }) }));
+    expect(screen.getByText(/Card 1 \(dragging\)/i)).toBeInTheDocument();
+
+    await userEvent.keyboard("{ArrowDown}");
+    await userEvent.keyboard(" ");
+    expect(onEnd).toHaveBeenCalled();
+  });
+
+  it("respects modifiers such as snapToGrid and restrictToVerticalAxis", () => {
+    const snap = Orlo.snapToGrid(25);
+    const result = snap({ transform: { x: 37, y: 72 } });
+    expect(result).toEqual({ x: 25, y: 75 });
+
+    const vert = Orlo.restrictToVerticalAxis({ transform: { x: 40, y: 80 } });
+    expect(vert).toEqual({ x: 0, y: 80 });
+  });
+});
+
 
 
