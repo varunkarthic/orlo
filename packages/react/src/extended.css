@@ -381,7 +381,7 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 
 /* ---------- Highlight / time ---------- */
 .orlo-mark { background: color-mix(in oklab, var(--orlo-color-warning) 28%, transparent); color: inherit; border-radius: 2px; padding: 0 1px; box-shadow: inset 0 -2px 0 var(--orlo-color-warning); }
-.orlo-reltime { text-decoration: underline dotted; text-underline-offset: 0.2em; cursor: help; }
+.orlo-reltime { text-decoration: underline dotted; text-underline-offset: 0.25em; cursor: default; }
 .orlo-countdown { display: inline-flex; gap: 10px; }
 .orlo-countdown__unit { display: grid; justify-items: center; min-inline-size: 3.25rem; padding: 8px 6px; border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-md); background: var(--orlo-color-surface-raised); }
 .orlo-countdown__num { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }

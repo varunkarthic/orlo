@@ -463,10 +463,38 @@ describe("DatePicker allowInput and Sheet enhancements", () => {
   });
 
   it("renders Sheet with side top and data-centered", () => {
-    const { container } = wrap(<Orlo.Sheet title="Top Notice" side="top" centered defaultOpen><p>Hello</p></Orlo.Sheet>);
+    wrap(<Orlo.Sheet title="Top Notice" side="top" centered defaultOpen><p>Hello</p></Orlo.Sheet>);
     const modal = document.querySelector(".orlo-modal");
     expect(modal).toHaveAttribute("data-side", "top");
     expect(modal).toHaveAttribute("data-centered");
+  });
+});
+
+describe("Batch C components (PieChart, DocumentViewer, SignaturePad)", () => {
+  it("renders PieChart with role img and aria-label", () => {
+    const data = [
+      { label: "Engineering", value: 40 },
+      { label: "Design", value: 30 },
+      { label: "Product", value: 30 },
+    ];
+    const { container } = wrap(<Orlo.PieChart title="Distribution" data={data} />);
+    expect(screen.getByRole("figure", { name: "Distribution" })).toBeInTheDocument();
+    expect(container.querySelector('.orlo-donut[data-variant="pie"]')).toBeInTheDocument();
+  });
+
+  it("renders DocumentViewer with page, zoom, and rotate controls", () => {
+    wrap(<Orlo.DocumentViewer src="/sample.pdf" title="Report" pages={5} allowPrint />);
+    expect(screen.getByText("Report")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Rotate clockwise" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Print document" })).toBeInTheDocument();
+  });
+
+  it("renders SignaturePad without Type instead button", () => {
+    wrap(<Orlo.SignaturePad label="Sign contract" />);
+    expect(screen.queryByText("Type instead")).not.toBeInTheDocument();
+    expect(screen.getByText("Undo")).toBeInTheDocument();
+    expect(screen.getByText("Clear")).toBeInTheDocument();
   });
 });
 

@@ -75,7 +75,7 @@ export { Text, Heading, Prose, Truncate, type TextProps, type HeadingProps } fro
 export { useAsync, useDelayedFlag, AsyncContent, type AsyncResult, type AsyncStatus, type AsyncContentProps } from "./components/Async.tsx";
 export { VideoPlayer, AudioPlayer, Embed, MapView, DocumentViewer, type VideoPlayerProps, type AudioPlayerProps, type EmbedProps, type MapViewProps, type DocumentViewerProps } from "./components/Media3.tsx";
 export { DataGrid, windowRange, type GridColumn, type DataGridProps } from "./components/DataGrid.tsx";
-export { LineChart, BarChart, DonutChart, niceTicks, type Series, type LineChartProps, type BarChartProps, type DonutChartProps } from "./components/Charts.tsx";
+export { LineChart, BarChart, DonutChart, PieChart, niceTicks, type Series, type LineChartProps, type BarChartProps, type DonutChartProps, type PieChartProps } from "./components/Charts.tsx";
 export { Markdown, MarkdownEditor, parseInline, type MarkdownEditorProps } from "./components/Editor.tsx";
 export { ChatThread, Composer, ToolRun, ResponseFeedback, type ChatMessage, type ComposerProps, type ToolStep } from "./components/AI.tsx";
 export { AppShell, TabStrip, StatusBar, Kanban, StatCard, type AppShellProps, type DocTab, type TabStripProps, type KanbanCard, type KanbanColumn, type StatCardProps } from "./components/Workspace.tsx";

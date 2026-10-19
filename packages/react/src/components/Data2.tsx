@@ -71,22 +71,57 @@ export function Sparkline({ data, label, width = 120, height = 32, format = Stri
   const id = useId();
   if (!nums.length) return <span className="orlo-hint">{label}: no data</span>;
   const lo = Math.min(...nums), hi = Math.max(...nums), span = hi - lo || 1;
-  const x = (i: number) => (data.length === 1 ? width / 2 : (i / (data.length - 1)) * (width - 4) + 2);
-  const y = (v: number) => height - 3 - ((v - lo) / span) * (height - 6);
-  const segs: string[] = []; let cur = "";
-  data.forEach((d, i) => { if (d === null || !Number.isFinite(d)) { if (cur) segs.push(cur); cur = ""; } else cur += `${cur ? "L" : "M"}${x(i).toFixed(1)} ${y(d).toFixed(1)}`; });
+  const padX = 4, padY = 4;
+  const availableW = Math.max(10, width - padX * 2);
+  const availableH = Math.max(10, height - padY * 2);
+  const x = (i: number) => (data.length <= 1 ? width / 2 : padX + (i / (data.length - 1)) * availableW);
+  const y = (v: number) => height - padY - ((v - lo) / span) * availableH;
+  const segs: string[] = [];
+  let cur = "";
+  data.forEach((d, i) => {
+    if (d === null || !Number.isFinite(d)) {
+      if (cur) segs.push(cur);
+      cur = "";
+    } else {
+      cur += `${cur ? " L " : "M "}${x(i).toFixed(1)} ${y(d).toFixed(1)}`;
+    }
+  });
   if (cur) segs.push(cur);
-  const lastI = data.map((d, i) => (d === null ? -1 : i)).filter((i) => i >= 0).pop()!;
+  const validIndices = data.map((d, i) => (d === null || !Number.isFinite(d) ? -1 : i)).filter((i) => i >= 0);
+  const lastI = validIndices[validIndices.length - 1];
+  const firstI = validIndices[0];
   const last = data[lastI] as number;
+  const first = data[firstI] as number;
+  const trend = last > first ? "trending up" : last < first ? "trending down" : "stable";
+
   return (
-    <span className="orlo-sparkline">
+    <span className="orlo-sparkline" data-trend={trend}>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby={id}>
-        <title id={id}>{`${label}: from ${format(lo)} to ${format(hi)}, latest ${format(last)}`}</title>
-        {area && segs.map((s, i) => <path key={`a${i}`} d={`${s}V${height}H${s.match(/M([\d.]+)/)![1]}Z`} className="orlo-sparkline__area" />)}
-        {segs.map((s, i) => <path key={i} d={s} className="orlo-sparkline__line" />)}
+        <title id={id}>{`${label}: ${trend}, from ${format(lo)} to ${format(hi)}, latest ${format(last)}`}</title>
+        {area &&
+          segs.map((s, i) => {
+            const match = s.match(/M\s*([\d.-]+)/);
+            const startX = match ? match[1] : `${padX}`;
+            const lastMatch = s.match(/[\d.-]+\s+[\d.-]+$/);
+            const endX = lastMatch ? lastMatch[0].split(/\s+/)[0] : `${width - padX}`;
+            return <path key={`a${i}`} d={`${s} L ${endX} ${height} L ${startX} ${height} Z`} className="orlo-sparkline__area" />;
+          })}
+        {segs.map((s, i) => (
+          <path key={i} d={s} className="orlo-sparkline__line" />
+        ))}
         <circle cx={x(lastI)} cy={y(last)} r="2.5" className="orlo-sparkline__dot" />
       </svg>
-      <table className="orlo-visually-hidden"><caption>{label}</caption><tbody>{data.map((d, i) => <tr key={i}><td>{i + 1}</td><td>{d === null ? "no data" : format(d)}</td></tr>)}</tbody></table>
+      <table className="orlo-visually-hidden">
+        <caption>{label}</caption>
+        <tbody>
+          {data.map((d, i) => (
+            <tr key={i}>
+              <td>{i + 1}</td>
+              <td>{d === null ? "no data" : format(d)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </span>
   );
 }
@@ -187,9 +222,9 @@ export function RelativeTime({ date, locale: localeProp }: { date: Date; locale?
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), abs < 60 ? 1000 : abs < 3600 ? 30000 : 600000); return () => clearInterval(t); }, [abs]);
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const [n, u]: [number, Intl.RelativeTimeFormatUnit] = abs < 45 ? [Math.round(diff), "second"] : abs < 2700 ? [Math.round(diff / 60), "minute"] : abs < 79200 ? [Math.round(diff / 3600), "hour"] : abs < 2592000 ? [Math.round(diff / 86400), "day"] : abs < 31536000 ? [Math.round(diff / 2592000), "month"] : [Math.round(diff / 31536000), "year"];
-  const exact = new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "short", timeZone: "UTC" }).format(date);
+  const exact = new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "medium" }).format(date);
   // Before mount, show the absolute date: the server can't know "now", so relative text would mismatch on hydration.
-  return <time dateTime={date.toISOString()} title={exact} className="orlo-reltime">{mounted ? rtf.format(n, u) : new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(date)}</time>;
+  return <time dateTime={date.toISOString()} title={exact} className="orlo-reltime">{mounted ? rtf.format(n, u) : exact}</time>;
 }
 
 /** Live countdown. Ticks visually every second but announces only at meaningful moments, and never goes negative. */

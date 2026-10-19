@@ -206,10 +206,26 @@ export function BarChart({ title, description, labels, series, stacked, height =
   );
 }
 
-export type DonutChartProps = { title: string; description?: string; data: { label: string; value: number }[]; format?: (n: number) => string; centerLabel?: string };
+export type DonutChartProps = {
+  title: string;
+  description?: string;
+  data: { label: string; value: number }[];
+  format?: (n: number) => string;
+  centerLabel?: string;
+  variant?: "donut" | "pie";
+  innerRadius?: number;
+};
 
 /** Part-to-whole for a handful of categories. Segments are focusable (Tab, then ← →), percentages are spelled out, and a table is one click away. */
-export function DonutChart({ title, description, data, format: fmtProp, centerLabel = "Total" }: DonutChartProps) {
+export function DonutChart({
+  title,
+  description,
+  data,
+  format: fmtProp,
+  centerLabel = "Total",
+  variant = "donut",
+  innerRadius,
+}: DonutChartProps) {
   const locale = useLocale();
   const format = fmtProp ?? ((n: number) => n.toLocaleString(locale));
   const [active, setActive] = useState<number | null>(null);
@@ -220,11 +236,15 @@ export function DonutChart({ title, description, data, format: fmtProp, centerLa
     let a0 = -Math.PI / 2;
     return data.map((d) => { const a = total ? (Math.max(0, d.value) / total) * Math.PI * 2 : 0; const r = { a0, a1: a0 + a }; a0 += a; return r; });
   }, [data, total]);
-  const R = 80, r = 52;
+  const isPie = variant === "pie" || innerRadius === 0;
+  const R = 80, r = innerRadius !== undefined ? innerRadius : (isPie ? 0 : 52);
   const arc = (a0: number, a1: number, rad = R) => {
     if (a1 - a0 >= Math.PI * 2 - 1e-6) a1 = a0 + Math.PI * 2 - 1e-4;
     const p = (a: number, rr: number) => `${100 + rr * Math.cos(a)} ${100 + rr * Math.sin(a)}`;
     const large = a1 - a0 > Math.PI ? 1 : 0;
+    if (r === 0) {
+      return `M100 100L${p(a0, rad)}A${rad} ${rad} 0 ${large} 1 ${p(a1, rad)}Z`;
+    }
     return `M${p(a0, rad)}A${rad} ${rad} 0 ${large} 1 ${p(a1, rad)}L${p(a1, r)}A${r} ${r} 0 ${large} 0 ${p(a0, r)}Z`;
   };
   const series = [{ name: "Value", data: data.map((d) => d.value) }];
@@ -232,18 +252,28 @@ export function DonutChart({ title, description, data, format: fmtProp, centerLa
   const shown = active !== null ? data[active] : null;
   return (
     <ChartFrame title={title} description={description} labels={data.map((d) => d.label)} series={series} format={format} hidden={new Set()} toggle={() => {}} showTable={showTable} setShowTable={setShowTable} empty={!total}>
-      <div className="orlo-donut">
+      <div className="orlo-donut" data-variant={isPie ? "pie" : "donut"}>
         <svg viewBox="0 0 200 200" className="orlo-donut__svg" role="list" aria-label={title}>
           {arcs.map((a, i) => (
             <motion.path key={data[i].label} role="listitem" tabIndex={0} aria-label={`${data[i].label}: ${format(data[i].value)}, ${pct(data[i].value)}`} d={arc(a.a0 + 0.012, a.a1 - 0.012, active === i ? R + 5 : R)}
               fill={color(i)} className="orlo-donut__seg" onFocus={() => setActive(i)} onBlur={() => setActive(null)} onPointerEnter={() => setActive(i)} onPointerLeave={() => setActive(null)}
               initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: active === null || active === i ? 1 : 0.45, scale: 1 }} transition={{ ...transition("reveal"), delay: i * 0.04 }} style={svgOrigin(100, 100)} />
           ))}
-          <text x="100" y="94" className="orlo-donut__label">{shown ? shown.label : centerLabel}</text>
-          <text x="100" y="118" className="orlo-donut__value">{shown ? pct(shown.value) : format(total)}</text>
+          {!isPie && (
+            <>
+              <text x="100" y="94" className="orlo-donut__label">{shown ? shown.label : centerLabel}</text>
+              <text x="100" y="118" className="orlo-donut__value">{shown ? pct(shown.value) : format(total)}</text>
+            </>
+          )}
         </svg>
         <ul className="orlo-donut__legend">{data.map((d, i) => <li key={d.label} data-active={active === i || undefined}><i style={{ background: color(i) }} /><span>{d.label}</span><b>{pct(d.value)}</b></li>)}</ul>
       </div>
     </ChartFrame>
   );
+}
+
+export type PieChartProps = DonutChartProps;
+/** Part-to-whole representation as a classic solid pie chart. */
+export function PieChart(props: PieChartProps) {
+  return <DonutChart variant="pie" {...props} />;
 }

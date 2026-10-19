@@ -93,10 +93,12 @@
   linear-gradient(120deg, transparent 45%, var(--orlo-color-surface-selected) 46% 54%, transparent 55%), var(--orlo-color-canvas); border: 1px solid var(--orlo-color-border); }
 .orlo-map__pin { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; translate: -50% -85%; color: var(--orlo-color-accent-text); filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.25)); }
 .orlo-doc { margin: 0; border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-lg); overflow: hidden; background: var(--orlo-color-surface-raised); }
-.orlo-doc__bar { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 12px; border-block-end: 1px solid var(--orlo-color-border); font-size: var(--orlo-text-sm); }
-.orlo-doc__title { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
-.orlo-doc__body { position: relative; max-block-size: 70vh; background: var(--orlo-color-canvas); }
-.orlo-doc__body iframe { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border: 0; transition: opacity var(--orlo-duration-effects-default); }
+.orlo-doc__bar { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-block-end: 1px solid var(--orlo-color-border); font-size: var(--orlo-text-sm); flex-wrap: wrap; }
+.orlo-doc__title { flex: 1; min-inline-size: 6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.orlo-doc__page-controls, .orlo-doc__zoom-controls { display: inline-flex; align-items: center; gap: 2px; }
+.orlo-doc__body { position: relative; max-block-size: 70vh; background: var(--orlo-color-canvas); overflow: hidden; }
+.orlo-doc__viewport { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: auto; }
+.orlo-doc__viewport iframe { inline-size: 100%; block-size: 100%; border: 0; transition: opacity var(--orlo-duration-effects-default); }
 .orlo-doc__body .orlo-async-msg { position: absolute; inset: 0; place-content: center; }
 
 /* ---------- Data grid ---------- */

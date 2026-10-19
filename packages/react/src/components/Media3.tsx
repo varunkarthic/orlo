@@ -51,6 +51,12 @@ export function VideoPlayer({ src, poster, title, captions = [], ratio = "16 / 9
   const id = useId();
   useEffect(() => { const v = video.current; if (!v) return; Array.from(v.textTracks).forEach((t) => (t.mode = cc ? "showing" : "hidden")); }, [cc, requested]);
   useEffect(() => { if (!m.playing) return setIdle(false); const t = setTimeout(() => setIdle(true), 2500); return () => clearTimeout(t); }, [m.playing, m.time]);
+  const [speed, setSpeed] = useState(1);
+  const cycleSpeed = () => {
+    const next = speed >= 2 ? 0.75 : Math.round((speed + 0.25) * 100) / 100;
+    setSpeed(next);
+    if (video.current) video.current.playbackRate = next;
+  };
   const toggle = () => { const v = video.current; if (!v) { setRequested(true); return; } v.paused ? v.play().catch(() => {}) : v.pause(); };
   const seek = (s: number) => { const v = video.current; if (v) v.currentTime = Math.max(0, Math.min(v.duration || 0, s)); };
   const fullscreen = () => (document.fullscreenElement ? document.exitFullscreen() : box.current?.requestFullscreen?.())?.catch?.(() => {});
@@ -88,6 +94,7 @@ export function VideoPlayer({ src, poster, title, captions = [], ratio = "16 / 9
           <div className="orlo-player__scrub"><Slider label="Seek" hideLabel bubble={false} min={0} max={Math.max(1, m.duration || 1)} step={0.1} value={Math.min(m.time, m.duration || 0)} onValueChange={seek} format={fmtTime} /></div>
           <span className="orlo-player__time">{fmtTime(m.duration)}</span>
           <button type="button" className="orlo-icon-button" data-variant="ghost" aria-label={m.muted ? "Unmute" : "Mute"} aria-pressed={m.muted} onClick={() => video.current && (video.current.muted = !video.current.muted)}>{m.muted || m.volume === 0 ? <Icons.VolumeOff /> : <Icons.Volume2 />}</button>
+          <button type="button" className="orlo-button" data-variant="ghost" data-size="sm" aria-label={`Playback speed ${speed}×`} onClick={cycleSpeed}>{speed}×</button>
           {captions.length > 0 && <button type="button" className="orlo-icon-button" data-variant="ghost" aria-label="Captions" aria-pressed={cc} onClick={() => setCc((c) => !c)}><Icons.Captions /></button>}
           <button type="button" className="orlo-icon-button" data-variant="ghost" aria-label="Full screen" onClick={fullscreen}><Icons.Maximize /></button>
         </motion.div>
@@ -206,32 +213,185 @@ export function MapView({ lat, lon, zoom = 14, label, ratio = "16 / 10" }: MapVi
   );
 }
 
-export type DocumentViewerProps = { src: string; title: string; ratio?: string; pages?: number };
+export type DocumentViewerProps = {
+  src: string;
+  title: string;
+  ratio?: string;
+  pages?: number;
+  initialPage?: number;
+  allowDownload?: boolean;
+  allowPrint?: boolean;
+  onPageChange?: (page: number) => void;
+};
 
-/** Same-origin PDF/document preview with a toolbar, loading state and a download fallback when the browser can't render it inline. */
-export function DocumentViewer({ src, title, ratio = "8.5 / 11" }: DocumentViewerProps) {
+/** Same-origin PDF/document preview with Orlo-owned toolbar, zoom, rotate, paging, and download fallback. */
+export function DocumentViewer({
+  src,
+  title,
+  ratio = "8.5 / 11",
+  pages = 1,
+  initialPage = 1,
+  allowDownload = true,
+  allowPrint = true,
+  onPageChange,
+}: DocumentViewerProps) {
   const [phase, setPhase] = useState<"loading" | "loaded" | "failed">("loading");
+  const [page, setPage] = useState(initialPage);
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+
   useEffect(() => {
     setPhase("loading");
     const ctl = new AbortController();
-    fetch(src, { method: "HEAD", signal: ctl.signal }).then((r) => { if (!r.ok) setPhase("failed"); }).catch(() => !ctl.signal.aborted && setPhase("failed"));
+    fetch(src, { method: "HEAD", signal: ctl.signal })
+      .then((r) => {
+        if (!r.ok) setPhase("failed");
+      })
+      .catch(() => !ctl.signal.aborted && setPhase("failed"));
     return () => ctl.abort();
   }, [src]);
+
+  const changePage = (p: number) => {
+    const next = Math.max(1, Math.min(pages, p));
+    setPage(next);
+    onPageChange?.(next);
+  };
+
+  const isImage = /\.(png|jpe?g|svg|webp|gif)$/i.test(src);
+
   return (
-    <figure className="orlo-doc">
+    <figure className="orlo-doc" role="region" aria-label={`Document: ${title}`}>
       <figcaption className="orlo-doc__bar">
-        <Icons.FileText size={18} /><span className="orlo-doc__title">{title}</span>
-        <a className="orlo-icon-button" data-variant="ghost" data-size="sm" href={src} target="_blank" rel="noopener noreferrer" aria-label="Open in new tab"><Icons.External size={16} /></a>
-        <a className="orlo-icon-button" data-variant="ghost" data-size="sm" href={src} download aria-label="Download"><Icons.Download size={16} /></a>
+        <Icons.FileText size={18} />
+        <span className="orlo-doc__title">{title}</span>
+        {pages > 1 && (
+          <div className="orlo-doc__page-controls">
+            <button
+              type="button"
+              className="orlo-icon-button"
+              data-variant="ghost"
+              data-size="sm"
+              disabled={page <= 1}
+              onClick={() => changePage(page - 1)}
+              aria-label="Previous page"
+            >
+              <Icons.ChevronLeft size={16} />
+            </button>
+            <span className="orlo-hint" style={{ fontSize: "var(--orlo-text-xs)", minInlineSize: "3.5rem", textAlign: "center" }}>
+              {page} / {pages}
+            </span>
+            <button
+              type="button"
+              className="orlo-icon-button"
+              data-variant="ghost"
+              data-size="sm"
+              disabled={page >= pages}
+              onClick={() => changePage(page + 1)}
+              aria-label="Next page"
+            >
+              <Icons.ChevronRight size={16} />
+            </button>
+          </div>
+        )}
+        <div className="orlo-doc__zoom-controls">
+          <button
+            type="button"
+            className="orlo-icon-button"
+            data-variant="ghost"
+            data-size="sm"
+            onClick={() => setZoom((z) => Math.max(0.5, Math.round((z - 0.25) * 100) / 100))}
+            aria-label="Zoom out"
+          >
+            <Icons.Minus size={16} />
+          </button>
+          <span className="orlo-hint" style={{ fontSize: "var(--orlo-text-xs)", minInlineSize: "2.75rem", textAlign: "center" }}>
+            {Math.round(zoom * 100)}%
+          </span>
+          <button
+            type="button"
+            className="orlo-icon-button"
+            data-variant="ghost"
+            data-size="sm"
+            onClick={() => setZoom((z) => Math.min(2.5, Math.round((z + 0.25) * 100) / 100))}
+            aria-label="Zoom in"
+          >
+            <Icons.Plus size={16} />
+          </button>
+        </div>
+        <button
+          type="button"
+          className="orlo-icon-button"
+          data-variant="ghost"
+          data-size="sm"
+          onClick={() => setRotation((r) => (r + 90) % 360)}
+          aria-label="Rotate clockwise"
+        >
+          <Icons.Refresh size={16} />
+        </button>
+        {allowPrint && (
+          <button
+            type="button"
+            className="orlo-icon-button"
+            data-variant="ghost"
+            data-size="sm"
+            onClick={() => window.print()}
+            aria-label="Print document"
+          >
+            <Icons.Printer size={16} />
+          </button>
+        )}
+        <a className="orlo-icon-button" data-variant="ghost" data-size="sm" href={src} target="_blank" rel="noopener noreferrer" aria-label="Open in new tab">
+          <Icons.External size={16} />
+        </a>
+        {allowDownload && (
+          <a className="orlo-icon-button" data-variant="ghost" data-size="sm" href={src} download aria-label="Download">
+            <Icons.Download size={16} />
+          </a>
+        )}
       </figcaption>
       <div className="orlo-doc__body" style={{ aspectRatio: ratio }}>
         {phase === "failed" ? (
-          <div className="orlo-async-msg" role="alert"><Icons.FileText size={26} /><strong>Preview unavailable</strong><span className="orlo-hint">The document couldn’t be loaded here.</span><a className="orlo-button" data-variant="subtle" data-size="sm" href={src} download>Download</a></div>
+          <div className="orlo-async-msg" role="alert">
+            <Icons.FileText size={26} />
+            <strong>Preview unavailable</strong>
+            <span className="orlo-hint">The document couldn’t be loaded inline.</span>
+            {allowDownload && (
+              <a className="orlo-button" data-variant="subtle" data-size="sm" href={src} download>
+                Download
+              </a>
+            )}
+          </div>
         ) : (
-          <>
-            <iframe src={src} title={title} onLoad={() => setPhase((p) => (p === "failed" ? p : "loaded"))} style={{ opacity: phase === "loaded" ? 1 : 0 }} />
-            {phase === "loading" && <div className="orlo-embed__status"><Spinner label={`Loading ${title}`} /></div>}
-          </>
+          <div
+            className="orlo-doc__viewport"
+            style={{
+              transform: `scale(${zoom}) rotate(${rotation}deg)`,
+              transformOrigin: "center center",
+              transition: "transform 0.2s cubic-bezier(0.2, 0, 0, 1)",
+            }}
+          >
+            {isImage ? (
+              <img
+                src={src}
+                alt={title}
+                onLoad={() => setPhase("loaded")}
+                onError={() => setPhase("failed")}
+                style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", opacity: phase === "loaded" ? 1 : 0 }}
+              />
+            ) : (
+              <iframe
+                src={`${src}#page=${page}&toolbar=0&navpanes=0`}
+                title={title}
+                onLoad={() => setPhase((p) => (p === "failed" ? p : "loaded"))}
+                style={{ opacity: phase === "loaded" ? 1 : 0 }}
+              />
+            )}
+            {phase === "loading" && (
+              <div className="orlo-embed__status">
+                <Spinner label={`Loading ${title}`} />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </figure>

@@ -1,19 +1,16 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { TextField } from "./TextField.tsx";
 
 type Pt = { x: number; y: number; p: number };
-export type SignatureValue = { kind: "drawn"; dataUrl: string } | { kind: "typed"; text: string } | null;
+export type SignatureValue = { kind: "drawn"; dataUrl: string } | null;
 export type SignaturePadProps = { label: ReactNode; onValueChange?: (v: SignatureValue) => void; height?: number };
 
 /**
- * Pressure-aware drawing surface with undo and clear. Because drawing is not possible for everyone,
- * "Type instead" offers an equivalent typed signature. Strokes redraw crisply on resize and theme change.
+ * Pressure-aware drawing surface with undo and clear. High-DPI canvas redrawing crisply on resize and theme change.
  */
 export function SignaturePad({ label, onValueChange, height = 160 }: SignaturePadProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const strokes = useRef<Pt[][]>([]);
   const [count, setCount] = useState(0);
-  const [typed, setTyped] = useState<string | null>(null);
   const id = useId();
 
   const draw = () => {
@@ -21,7 +18,8 @@ export function SignaturePad({ label, onValueChange, height = 160 }: SignaturePa
     const dpr = window.devicePixelRatio || 1;
     const w = c.clientWidth, h = c.clientHeight;
     if (c.width !== Math.round(w * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); }
-    const ctx = c.getContext("2d")!;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
     ctx.strokeStyle = getComputedStyle(c).color; ctx.lineCap = "round"; ctx.lineJoin = "round";
@@ -39,24 +37,15 @@ export function SignaturePad({ label, onValueChange, height = 160 }: SignaturePa
     const mq = window.matchMedia("(prefers-color-scheme: dark)"); mq.addEventListener("change", draw);
     const mo = new MutationObserver(draw); mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-orlo-theme"] });
     return () => { ro.disconnect(); mq.removeEventListener("change", draw); mo.disconnect(); };
-  }, [typed]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const emit = () => onValueChange?.(strokes.current.length ? { kind: "drawn", dataUrl: canvas.current!.toDataURL("image/png") } : null);
   const point = (e: React.PointerEvent): Pt => { const r = canvas.current!.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, p: e.pressure && e.pointerType !== "mouse" ? e.pressure : 0.5 }; };
 
-  if (typed !== null) {
-    return (
-      <div className="orlo-signature">
-        <TextField label={label} value={typed} autoComplete="name" onChange={(e) => { setTyped(e.target.value); onValueChange?.(e.target.value ? { kind: "typed", text: e.target.value } : null); }} help="Typing your full name counts as your signature." />
-        <div className="orlo-signature__preview" aria-hidden="true">{typed || "Your name"}</div>
-        <button type="button" className="orlo-button" data-variant="ghost" data-size="sm" onClick={() => { setTyped(null); emit(); }}>Draw instead</button>
-      </div>
-    );
-  }
   return (
     <div className="orlo-signature" role="group" aria-labelledby={id}>
       <span id={id} className="orlo-field__label">{label}</span>
-      <canvas ref={canvas} className="orlo-signature__canvas" style={{ blockSize: height }} role="img" aria-label={count ? `Signature with ${count} stroke${count > 1 ? "s" : ""}` : "Empty signature area. Draw with a mouse, finger or pen, or choose Type instead."}
+      <canvas ref={canvas} className="orlo-signature__canvas" style={{ blockSize: height }} role="img" aria-label={count ? `Signature with ${count} stroke${count > 1 ? "s" : ""}` : "Empty signature area. Draw with a mouse, finger or pen."}
         onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); strokes.current.push([point(e)]); }}
         onPointerMove={(e) => { const s = strokes.current[strokes.current.length - 1]; if (!e.buttons || !s) return; for (const ev of (e.nativeEvent.getCoalescedEvents?.() ?? [e.nativeEvent])) s.push(point(ev as unknown as React.PointerEvent)); draw(); }}
         onPointerUp={() => { setCount(strokes.current.length); emit(); }} onPointerCancel={() => { strokes.current.pop(); draw(); }} />
@@ -64,7 +53,6 @@ export function SignaturePad({ label, onValueChange, height = 160 }: SignaturePa
         <span className="orlo-signature__line" aria-hidden="true">Sign above</span>
         <button type="button" className="orlo-button" data-variant="ghost" data-size="sm" disabled={!count} onClick={() => { strokes.current.pop(); setCount(strokes.current.length); draw(); emit(); }}>Undo</button>
         <button type="button" className="orlo-button" data-variant="ghost" data-size="sm" disabled={!count} onClick={() => { strokes.current = []; setCount(0); draw(); emit(); }}>Clear</button>
-        <button type="button" className="orlo-button" data-variant="subtle" data-size="sm" onClick={() => setTyped("")}>Type instead</button>
       </div>
     </div>
   );
