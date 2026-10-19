@@ -13,14 +13,30 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, "name"> & {
   absoluteStroke?: boolean;
   /** Accessible name. Omit for decorative icons (the default). */
   label?: string;
+  /** Smooth animation modifier. */
+  animation?: "spin" | "pulse" | "bounce" | "hover-rotate" | "none";
+  /** Rotation angle in degrees. */
+  rotate?: number;
+  /** Flip orientation. */
+  flip?: "horizontal" | "vertical";
 };
 
 /** Orlo icon. Decorative unless `label` is given, in which case it becomes role="img" with that name. */
-export function Icon({ name, size = 20, weight = "regular", absoluteStroke, label, ...rest }: IconProps) {
+export function Icon({ name, size = 20, weight = "regular", absoluteStroke, label, animation, rotate, flip, style, className, ...rest }: IconProps) {
   const sw = absoluteStroke ? (strokes[weight] * 24) / size : strokes[weight];
+  const animCls = animation && animation !== "none" ? `orlo-icon--${animation}` : "";
+  const transform = [
+    rotate ? `rotate(${rotate}deg)` : "",
+    flip === "horizontal" ? "scaleX(-1)" : flip === "vertical" ? "scaleY(-1)" : "",
+  ].filter(Boolean).join(" ");
+
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"
-      focusable={false} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} {...rest}>
+      focusable={false}
+      className={`orlo-icon ${animCls} ${className ?? ""}`.trim()}
+      style={{ ...(transform ? { transform } : {}), ...style }}
+      {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })}
+      {...rest}>
       <path d={iconDefs[name]} />
     </svg>
   );

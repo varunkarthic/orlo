@@ -101,33 +101,72 @@ export function App({ route, page }: { route: string; page: PageRender }) {
       <a className="skip" href="#main">Skip to content</a>
       <header className="header orlo-material">
         <div className="header__inner">
-          <a href={root} className="header__logo" aria-label="Orlo home"><Wordmark height={22} /><span>Docs</span></a>
+          <a href={root} className="header__logo" aria-label="Orlo home">
+            <Wordmark height={22} />
+            <span className="header__tag">HIG</span>
+          </a>
           <nav aria-label="Sections" className="header__nav">
-            {NAV.map((s) => <a key={s.id} href={href(s.path)} aria-current={section === s.id ? "true" : undefined}>{s.title}</a>)}
+            {NAV.map((s) => {
+              const IconComp = (Icons as Record<string, any>)[s.icon === "Sparkle" ? "Sparkles" : s.icon];
+              return (
+                <a key={s.id} href={href(s.path)} aria-current={section === s.id ? "true" : undefined} className="header__link">
+                  {IconComp && <IconComp size={15} className="header__link-icon" aria-hidden="true" />}
+                  <span>{s.title}</span>
+                </a>
+              );
+            })}
           </nav>
           <div className="header__end">
             <button type="button" className="search" onClick={() => setSearchOpen(true)} aria-label="Search components and guides" aria-keyshortcuts="Meta+K Control+K /">
               <Icons.Search size={16} /><span className="search__label">Search components and guides</span><span className="search__keys" aria-hidden="true"><Kbd>⌘</Kbd><Kbd>K</Kbd></span>
             </button>
-            <IconButton label={`Theme: ${THEME_NAME[prefs.theme]}. Switch to ${THEME_NAME[THEME_NEXT[prefs.theme]]}`} onClick={() => set("theme")(THEME_NEXT[prefs.theme])}>
+            <IconButton label={`Theme: ${THEME_NAME[prefs.theme]}. Switch to ${THEME_NAME[THEME_NEXT[prefs.theme]]}`} onClick={() => set("theme")(THEME_NEXT[prefs.theme])} className="header__icon-btn">
               {prefs.theme === "light" ? <Icons.Sun size={20} /> : prefs.theme === "dark" ? <Icons.Moon size={20} /> : <Icons.Monitor size={20} />}
             </IconButton>
-            <Popover label="Preferences" placement="bottom-end" trigger={<IconButton label="Preferences"><Icons.Sliders size={20} /></IconButton>}>
-              <div className="prefs">
-                <p className="prefs__title">Appearance</p>
-                <Pref label="Theme" value={prefs.theme} onChange={(v) => set("theme")(v as Theme)} options={["system", "light", "dark"]} />
-                <Pref label="Material" value={prefs.material} onChange={(v) => set("material")(v as Prefs["material"])} options={["solid", "glass"]} />
-                <p className="prefs__title">Motion and accessibility</p>
-                <Pref label="Motion" value={prefs.motion} onChange={(v) => set("motion")(v as MotionMode)} options={["system", "reduced", "off", "full"]} />
-                <Pref label="Images" value={prefs.images} onChange={(v) => set("images")(v as "on" | "off")} options={["on", "off"]} />
-                <Pref label="Transparency" value={prefs.transparency} onChange={(v) => set("transparency")(v as Prefs["transparency"])} options={["system", "reduced"]} />
-                <details className="prefs__more">
-                  <summary>More</summary>
-                  <Pref label="Density" value={prefs.density} onChange={(v) => set("density")(v as Prefs["density"])} options={["auto", "compact", "comfortable", "touch"]} />
-                  <Pref label="Direction" value={prefs.dir} onChange={(v) => set("dir")(v as "ltr" | "rtl")} options={["ltr", "rtl"]} />
-                  <Pref label="Spring" value={prefs.scheme} onChange={(v) => set("scheme")(v as Prefs["scheme"])} options={["standard", "expressive"]} />
-                </details>
-                <p className="orlo-hint prefs__note">Saved in this browser only.</p>
+            <Popover label="Preferences" placement="bottom-end" trigger={<IconButton label="Preferences" className="header__icon-btn header__prefs-btn"><Icons.Sliders size={20} /></IconButton>}>
+              <div className="prefs-panel">
+                <div className="prefs-panel__head">
+                  <div className="prefs-panel__head-title">
+                    <span className="prefs-panel__badge" aria-hidden="true"><Icons.Sliders size={18} /></span>
+                    <div>
+                      <strong>Preferences & Display</strong>
+                      <p>Customize system theme, materials, and physics</p>
+                    </div>
+                  </div>
+                  <button type="button" className="prefs-panel__reset" onClick={() => { setPrefs(DEFAULTS); write(DEFAULTS); delete document.documentElement.dataset.orloTheme; }} title="Reset all to defaults">
+                    <Icons.Refresh size={14} aria-hidden="true" />
+                    <span>Reset</span>
+                  </button>
+                </div>
+                <div className="prefs-panel__body">
+                  <div className="prefs-panel__section">
+                    <span className="prefs-panel__section-title">Appearance</span>
+                    <div className="prefs-panel__list">
+                      <PrefRow icon={<Icons.Sun size={16} />} label="Theme" description="Color scheme & contrast" value={prefs.theme} onChange={(v) => set("theme")(v as Theme)} options={["system", "light", "dark"]} />
+                      <PrefRow icon={<Icons.Layers size={16} />} label="Material" description="Translucent frosted glass" value={prefs.material} onChange={(v) => set("material")(v as Prefs["material"])} options={["glass", "solid"]} />
+                    </div>
+                  </div>
+                  <div className="prefs-panel__section">
+                    <span className="prefs-panel__section-title">Motion & Accessibility</span>
+                    <div className="prefs-panel__list">
+                      <PrefRow icon={<Icons.Sparkles size={16} />} label="Motion" description="Damped spring physics" value={prefs.motion} onChange={(v) => set("motion")(v as MotionMode)} options={["system", "reduced", "off", "full"]} />
+                      <PrefRow icon={<Icons.Eye size={16} />} label="Transparency" description="Backdrop blur vibrancy" value={prefs.transparency} onChange={(v) => set("transparency")(v as Prefs["transparency"])} options={["system", "reduced"]} />
+                      <PrefRow icon={<Icons.Image size={16} />} label="Images" description="Network request loading" value={prefs.images} onChange={(v) => set("images")(v as "on" | "off")} options={["on", "off"]} />
+                    </div>
+                  </div>
+                  <div className="prefs-panel__section">
+                    <span className="prefs-panel__section-title">Layout & Engine</span>
+                    <div className="prefs-panel__list">
+                      <PrefRow icon={<Icons.Maximize size={16} />} label="Density" description="Control height & padding" value={prefs.density} onChange={(v) => set("density")(v as Prefs["density"])} options={["auto", "compact", "comfortable", "touch"]} />
+                      <PrefRow icon={<Icons.ArrowRight size={16} />} label="Direction" description="Text flow & layout mirroring" value={prefs.dir} onChange={(v) => set("dir")(v as "ltr" | "rtl")} options={["ltr", "rtl"]} />
+                      <PrefRow icon={<Icons.Zap size={16} />} label="Spring" description="Oscillator response speed" value={prefs.scheme} onChange={(v) => set("scheme")(v as Prefs["scheme"])} options={["standard", "expressive"]} />
+                    </div>
+                  </div>
+                </div>
+                <div className="prefs-panel__foot">
+                  <Icons.CheckCircle size={14} aria-hidden="true" />
+                  <span>Preferences are saved automatically in your browser</span>
+                </div>
               </div>
             </Popover>
             <a className="header__gh" href="https://github.com/varunkarthic/orlo" aria-label="Source on GitHub">
@@ -135,7 +174,15 @@ export function App({ route, page }: { route: string; page: PageRender }) {
             </a>
             <Sheet side="end" title="Menu" trigger={<IconButton label="Open menu" className="header__menu"><Icons.Menu size={20} /></IconButton>}>
               <nav aria-label="Sections" className="mnav">
-                {NAV.map((s) => <a key={s.id} href={href(s.path)} aria-current={section === s.id ? "true" : undefined}>{s.title}</a>)}
+                {NAV.map((s) => {
+                  const IconComp = (Icons as Record<string, any>)[s.icon === "Sparkle" ? "Sparkles" : s.icon];
+                  return (
+                    <a key={s.id} href={href(s.path)} aria-current={section === s.id ? "true" : undefined} className="mnav__link">
+                      {IconComp && <IconComp size={18} className="mnav__link-icon" aria-hidden="true" />}
+                      <span>{s.title}</span>
+                    </a>
+                  );
+                })}
               </nav>
               {!home && sidebar}
             </Sheet>
@@ -182,11 +229,42 @@ export function App({ route, page }: { route: string; page: PageRender }) {
   );
 }
 
-function Pref({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (v: string) => void }) {
+function PrefRow({
+  icon,
+  label,
+  description,
+  value,
+  options,
+  onChange,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  description?: string;
+  value: string;
+  options: string[];
+  onChange: (v: string) => void;
+}) {
   return (
-    <div className="pref">
-      <span className="pref__label">{label}</span>
-      <SegmentedControl label={label} size="sm" value={value} onValueChange={onChange} options={options.map((o) => ({ value: o, label: o === "ltr" || o === "rtl" ? o.toUpperCase() : o === "system" ? "Auto" : o[0].toUpperCase() + o.slice(1) }))} />
+    <div className="pref-row">
+      <div className="pref-row__meta">
+        <span className="pref-row__icon" aria-hidden="true">{icon}</span>
+        <div className="pref-row__titles">
+          <span className="pref-row__label">{label}</span>
+          {description && <span className="pref-row__desc">{description}</span>}
+        </div>
+      </div>
+      <div className="pref-row__control">
+        <SegmentedControl
+          label={label}
+          size="sm"
+          value={value}
+          onValueChange={onChange}
+          options={options.map((o) => ({
+            value: o,
+            label: o === "ltr" || o === "rtl" ? o.toUpperCase() : o === "system" ? "Auto" : o[0].toUpperCase() + o.slice(1),
+          }))}
+        />
+      </div>
     </div>
   );
 }

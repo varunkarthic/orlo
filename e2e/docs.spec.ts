@@ -218,17 +218,15 @@ test("theme studio generates an accessible theme", async ({ page, isMobile }) =>
   await expect(page.getByText(/Adjusted to #/)).toBeVisible();
 });
 
-test("home settings preview resets changes and confirms a local save", async ({ page }) => {
+test("home page renders hero, quickstart terminal with copy button, and pillars", async ({ page }) => {
   await page.goto("");
-  const preview = page.locator(".showcase");
-  const digest = preview.getByRole("switch", { name: "Weekly digest" });
-  await digest.click();
-  await expect(digest).toHaveAttribute("aria-checked", "true");
-  await preview.getByRole("button", { name: "Reset" }).click();
-  await expect(digest).toHaveAttribute("aria-checked", "false");
-  await expect(preview.locator(".showcase__message")).toContainText("Preview changes reset");
-  await preview.getByRole("button", { name: "Save changes" }).click();
-  await expect(preview.locator(".showcase__message")).toContainText("Preview settings saved in this page");
+  await expect(page.locator(".hero2 h1")).toBeVisible();
+  const terminal = page.locator(".hero2__terminal");
+  await expect(terminal).toBeVisible();
+  await expect(terminal.locator("button.orlo-copy")).toBeVisible();
+  await expect(page.locator(".home__proof")).toBeVisible();
+  await expect(page.locator(".home__pillars")).toBeVisible();
+  await expect(page.locator(".home__families")).toBeVisible();
 });
 
 test("home hero uses the page width and its own display typography", async ({ page, isMobile }) => {

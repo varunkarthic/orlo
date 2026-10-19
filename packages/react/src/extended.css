@@ -556,6 +556,48 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.08), 0 0 0 1px var(--orlo-color-border);
 }
 
+/* ---------- Animated Icons (Orlo Expressive Motion) ---------- */
+.orlo-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: transform var(--orlo-duration-spatial-fast) cubic-bezier(0.2, 0, 0, 1),
+              color var(--orlo-duration-effects-fast) ease;
+}
+.orlo-icon--spin {
+  animation: orlo-icon-spin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.orlo-icon--pulse {
+  animation: orlo-icon-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.orlo-icon--bounce {
+  animation: orlo-icon-bounce 1.5s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+}
+@media (hover: hover) and (pointer: fine) {
+  .orlo-icon--hover-rotate:hover {
+    transform: rotate(45deg);
+  }
+}
+@keyframes orlo-icon-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes orlo-icon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.65; transform: scale(0.92); }
+}
+@keyframes orlo-icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orlo-icon--spin,
+  .orlo-icon--pulse,
+  .orlo-icon--bounce {
+    animation: none !important;
+  }
+}
+
 @media (forced-colors: active) {
   .orlo-chip, .orlo-pin__box, .orlo-radio-card, .orlo-toggle, .orlo-range__thumb, .orlo-calendar__day { border: 1px solid ButtonText; }
   .orlo-chip[aria-pressed="true"], .orlo-toggle[aria-pressed="true"], .orlo-calendar__grid td[aria-selected="true"] .orlo-calendar__day { background: Highlight; color: HighlightText; }
