@@ -471,7 +471,7 @@
 
   .orlo-popover, .orlo-menu, .orlo-tooltip { position: fixed; z-index: var(--orlo-layer-popover); }
   .orlo-popover {
-    inline-size: max-content; max-inline-size: min(22rem, calc(100vw - 1rem)); padding: var(--orlo-inset-sm); overflow: auto; outline: none;
+    inline-size: max-content; max-inline-size: min(var(--orlo-popover-max-inline-size, 34rem), calc(100vw - 1rem)); padding: var(--orlo-inset-sm); overflow: auto; outline: none;
     border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-lg);
     box-shadow: var(--orlo-shadow-4);
   }

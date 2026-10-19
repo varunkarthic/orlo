@@ -29,7 +29,7 @@ export const pickers: Record<string, Doc> = {
     variants: [
       { title: "Range", body: "Hovering previews the range before the second click.", demo: () => <RangeCal /> },
       { title: "Limits", body: "Dates outside min/max are announced as unavailable and struck through.", demo: () => <Calendar min={new Date()} max={in2w()} isDateDisabled={(d) => d.getDay() === 0} /> },
-      { title: "Week start by locale", body: "en-US starts on Sunday, en-GB on Monday, ar-EG on Saturday — from Intl, not hard-coded.", demo: () => <Stack direction="row" gap={6} wrap><Calendar locale="en-US" /><Calendar locale="en-GB" /></Stack> },
+      { title: "Week start by locale", body: "en-US starts on Sunday, en-GB on Monday, ar-EG on Saturday: from Intl, not hard-coded.", demo: () => <Stack direction="row" gap={6} wrap><Calendar locale="en-US" /><Calendar locale="en-GB" /></Stack> },
     ],
     code: `<Calendar value={date} onValueChange={setDate} min={today} />\n<Calendar mode="range" value={range} onValueChange={setRange} />`,
     props: [["mode", '"single" | "range"', ""], ["value / defaultValue / onValueChange", "Date | null  ·  { start, end }", ""], ["locale", "string", "Names, digits and week start."], ["min / max / isDateDisabled", "", ""], ["autoFocus", "boolean", "Focus the active day on mount."]],

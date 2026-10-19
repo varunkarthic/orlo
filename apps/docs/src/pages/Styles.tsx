@@ -16,10 +16,10 @@ export function StylesOverview({ root }: { root: string }) {
         <LinkCard href={`${root}styles/typography/`} title="Typography" body="Generous hierarchy, clear numerals, fluid display sizes." art={<span style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-0.03em" }}>Aa 123</span>} />
         <LinkCard href={`${root}styles/spacing/`} title="Spacing & layout" body="8pt grid, component rhythm, tab bars and touch targets from Apple HIG and Material 3." art={<Stack direction="row" gap={2} align="center"><span style={{ inlineSize: 8, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /><span style={{ inlineSize: 16, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /><span style={{ inlineSize: 24, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /></Stack>} />
         <LinkCard href={`${root}styles/shape/`} title="Shape" body="A small, related set of radii that follow hierarchy." art={<Stack direction="row" gap={2}>{["xs", "sm", "md", "lg"].map((r) => <span key={r} style={{ inlineSize: 36, blockSize: 36, borderRadius: `var(--orlo-radius-${r})`, background: "var(--orlo-color-surface-selected)", border: "1px solid var(--orlo-color-border-control)" }} />)}</Stack>} />
-        <LinkCard href={`${root}styles/elevation/`} title="Elevation" body="Depth from surface tone and occlusion before shadow." />
-        <LinkCard href={`${root}styles/motion/`} title="Motion" body="Springs, presets, policies and the MotionLab." />
+        <LinkCard href={`${root}styles/elevation/`} title="Elevation" body="Depth from surface tone and occlusion before shadow." icon={<Icons.Layers size={22} />} />
+        <LinkCard href={`${root}styles/motion/`} title="Motion" body="Springs, presets, policies and the MotionLab." icon={<Icons.Activity size={22} />} />
         <LinkCard href={`${root}styles/icons/`} title="Icons" body={`${Object.keys(Icons).length} original 24 px icons with one stroke and one corner.`} art={<Stack direction="row" gap={2}><Icons.Search /><Icons.Calendar /><Icons.Settings /><Icons.Heart /></Stack>} />
-        <LinkCard href={`${root}styles/density/`} title="Density" body="Comfortable, compact and touch from one token set." />
+        <LinkCard href={`${root}styles/density/`} title="Density" body="Comfortable, compact and touch from one token set." icon={<Icons.Columns size={22} />} />
       </CardGrid>
     </>
   );

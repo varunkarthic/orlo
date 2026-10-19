@@ -83,7 +83,7 @@ export function SpecTable({ rows }: { rows: [string, string][] }) {
       <tbody>{rows.map(([p, t]) => {
         const v = vals[t] ?? "";
         const isColor = /^#|^rgb|^oklch|^hsl/.test(v);
-        return <tr key={p + t}><td>{p}</td><td>{t.startsWith("--") ? <code>{t}</code> : "—"}</td><td>{isColor && <span className="swatch-dot" style={{ background: v }} />}<code>{v || (t.startsWith("--") ? "…" : t)}</code></td></tr>;
+        return <tr key={p + t}><td>{p}</td><td>{t.startsWith("--") ? <code>{t}</code> : "-"}</td><td>{isColor && <span className="swatch-dot" style={{ background: v }} />}<code>{v || (t.startsWith("--") ? "…" : t)}</code></td></tr>;
       })}</tbody>
     </table>
   );
@@ -124,9 +124,10 @@ export function PageToc({ dep }: { dep: string }) {
 }
 
 export function CardGrid({ children }: { children: ReactNode }) { return <div className="card-grid">{Children.toArray(children)}</div>; }
-export function LinkCard({ href, title, body, art, cta = "Explore" }: { href: string; title: string; body: string; art?: ReactNode; cta?: string }) {
+export function LinkCard({ href, title, body, art, icon, cta = "Explore" }: { href: string; title: string; body: string; art?: ReactNode; icon?: ReactNode; cta?: string }) {
   return (
     <a className="link-card" href={href}>
+      {icon && <span className="link-card__icon" aria-hidden="true">{icon}</span>}
       {art && <span className="link-card__art" aria-hidden="true" inert>{art}</span>}
       <span className="link-card__body"><strong>{title}</strong><span>{body}</span><span className="link-card__cta">{cta} <Icons.ChevronRight size={14} /></span></span>
     </a>

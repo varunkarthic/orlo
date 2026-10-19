@@ -18,11 +18,11 @@ export const actions: Record<string, Doc> = {
     demo: () => <Stack direction="row" gap={3} wrap align="center">
       <AsyncButton action={(_, s) => wait(1400, s)}>Save changes</AsyncButton>
       <AsyncButton variant="tonal" action={async (report, s) => { for (let i = 1; i <= 20; i++) { await wait(90, s); report(i / 20); } }} successLabel="Uploaded" next={{ label: "View file", onClick: () => {} }}>Upload</AsyncButton>
-      <AsyncButton variant="subtle" action={async (_, s) => { await wait(1100, s); if (flaky++ % 2 === 0) throw new Error("network"); }} errorLabel="Couldn’t send — retry" successLabel="Sent">Send invite</AsyncButton>
+      <AsyncButton variant="subtle" action={async (_, s) => { await wait(1100, s); if (flaky++ % 2 === 0) throw new Error("network"); }} errorLabel="Couldn’t send: retry" successLabel="Sent">Send invite</AsyncButton>
       <AsyncButton variant="subtle" cancellable action={(_, s) => wait(4000, s)} pendingLabel="Exporting">Export (cancellable)</AsyncButton>
     </Stack>,
     code: `<AsyncButton action={async (report, signal) => { await save(signal); }}
-  successLabel="Saved" errorLabel="Couldn’t save — retry"
+  successLabel="Saved" errorLabel="Couldn’t save: retry"
   next={{ label: "View", onClick: open }}>Save changes</AsyncButton>`,
     props: [["action", "(report, signal) => Promise", "Resolve = success, reject = error. report(0–1) makes the ring determinate."], ["successLabel / errorLabel / pendingLabel", "ReactNode", ""], ["next", "{ label, onClick }", "Offer a next step after success."], ["cancellable", "boolean", "Press again while pending to abort."], ["morph", "boolean", "Shrink into a ring while pending. Default true."], ["resetAfter", "number", "ms before success returns to idle."]],
     notes: ["Width and shape spring between states (`morph` spring); labels crossfade as a block with a slight blur so no glyph is ever half-clipped.", "Pending shrinks the button into a ring: indeterminate until the action reports progress, then determinate.", "Success never appears before the promise resolves. Failure says what failed and offers retry in place.", "Every state is announced politely; the ring has an accessible name with the percentage."],

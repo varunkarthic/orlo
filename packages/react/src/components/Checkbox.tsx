@@ -1,19 +1,19 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, type InputHTMLAttributes, type ReactNode } from "react";
 
-export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & { label: ReactNode; indeterminate?: boolean; description?: ReactNode };
+export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & { label: ReactNode; indeterminate?: boolean; description?: ReactNode; hideLabel?: boolean };
 
 /** A native checkbox, styled. Native semantics, forms and autofill keep working. */
-export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox({ label, indeterminate, description, className, id, ...rest }, ref) {
+export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox({ label, indeterminate, description, className, id, hideLabel, ...rest }, ref) {
   const inner = useRef<HTMLInputElement>(null);
   useImperativeHandle(ref, () => inner.current!);
   useEffect(() => { if (inner.current) inner.current.indeterminate = !!indeterminate; }, [indeterminate]);
   return (
     <label className={["orlo-check", className].filter(Boolean).join(" ")}>
-      <input ref={inner} type="checkbox" className="orlo-check__input" aria-checked={indeterminate ? "mixed" : undefined} id={id} {...rest} />
+      <input ref={inner} type="checkbox" className="orlo-check__input" aria-label={hideLabel && typeof label === "string" ? label : undefined} aria-checked={indeterminate ? "mixed" : undefined} id={id} {...rest} />
       <span className="orlo-check__box" aria-hidden="true">
         <svg viewBox="0 0 16 16"><path className="tick" d="M3.5 8.5l3 3 6-7" /><path className="dash" d="M4 8h8" /></svg>
       </span>
-      <span className="orlo-check__text">{label}{description && <span className="orlo-hint">{description}</span>}</span>
+      <span className={hideLabel ? "orlo-visually-hidden" : "orlo-check__text"}>{label}{description && <span className="orlo-hint">{description}</span>}</span>
     </label>
   );
 });

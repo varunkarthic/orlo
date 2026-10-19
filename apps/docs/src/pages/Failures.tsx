@@ -46,7 +46,7 @@ export function Failures() {
       <div className="grid">
         <figure className="lab-fig"><Card><TextField label="Email" defaultValue="ada@" error="Enter an address like name@example.com." /></Card><figcaption>Field error: words, glyph, border</figcaption></figure>
         <figure className="lab-fig"><Card><FileDropzone label="Attachments" accept="image/*" maxSize={1000} help="Drop a PDF or a large image to see rejections." /></Card><figcaption>Rejected files explain why</figcaption></figure>
-        <figure className="lab-fig"><Card><AsyncButton action={() => new Promise((_, rej) => setTimeout(() => rej(new Error()), 900))} errorLabel="Couldn’t save — retry">Save</AsyncButton></Card><figcaption>Action fails, retry in place</figcaption></figure>
+        <figure className="lab-fig"><Card><AsyncButton action={() => new Promise((_, rej) => setTimeout(() => rej(new Error()), 900))} errorLabel="Couldn’t save: retry">Save</AsyncButton></Card><figcaption>Action fails, retry in place</figcaption></figure>
         <figure className="lab-fig"><Card><Combobox label="Remote search" options={[]} emptyText="No matches. Check the spelling." /></Card><figcaption>No results</figcaption></figure>
       </div>
       <H2>Page-level</H2>

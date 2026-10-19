@@ -17,10 +17,10 @@ export function StartOverview({ root }: { root: string }) {
       ]} />
       <H2>Next steps</H2>
       <CardGrid>
-        <LinkCard href={`${root}start/installation/`} title="Installation" body="Add the packages, import the styles, wrap your app." />
-        <LinkCard href={`${root}start/theme-studio/`} title="Theme Studio" body="Make Orlo yours with one colour, keeping contrast." />
-        <LinkCard href={`${root}start/examples/`} title="Examples" body="Settings, dashboard and empty states built with Orlo." />
-        <LinkCard href={`${root}foundations/principles/`} title="Principles" body="Why Orlo behaves the way it does." />
+        <LinkCard href={`${root}start/installation/`} title="Installation" body="Add the packages, import the styles, wrap your app." icon={<Icons.Terminal size={22} />} />
+        <LinkCard href={`${root}start/theme-studio/`} title="Theme Studio" body="Make Orlo yours with one colour, keeping contrast." icon={<Icons.Palette size={22} />} />
+        <LinkCard href={`${root}start/examples/`} title="Examples" body="Settings, dashboard and empty states built with Orlo." icon={<Icons.Layout size={22} />} />
+        <LinkCard href={`${root}foundations/principles/`} title="Principles" body="Why Orlo behaves the way it does." icon={<Icons.Compass size={22} />} />
       </CardGrid>
     </>
   );
@@ -55,24 +55,99 @@ function SettingsScene() {
   const [remember, setRemember] = useState(true);
   const [volume, setVolume] = useState(60);
   const [message, setMessage] = useState("");
-  const reset = () => { setName("Theo"); setSync(true); setRemember(true); setVolume(60); setMessage("Preview changes reset."); };
+  const reset = () => { setName("Theo"); setSync(true); setRemember(true); setVolume(60); setMessage("Preview settings reset to defaults."); };
   const profile = (
     <div className="scene__profile">
       <TextField label="Display name" value={name} onChange={(event) => { setName(event.target.value); setMessage(""); }} />
-      <Stack direction="row" gap={4} wrap align="center"><Switch label="Sync" checked={sync} onCheckedChange={(value) => { setSync(value); setMessage(""); }} /><Checkbox label="Remember me" checked={remember} onChange={(event) => { setRemember(event.target.checked); setMessage(""); }} /></Stack>
-      <Slider label="Volume" value={volume} onValueChange={(value) => { setVolume(value); setMessage(""); }} />
-      <p className="orlo-hint">Accent text stays legible in both appearances.</p>
-      <Stack direction="row" gap={2} justify="end"><Button variant="ghost" onClick={reset}>Reset</Button><Button variant="accent" onClick={() => setMessage(`Preview profile saved for ${name || "Theo"}.`)}>Save</Button></Stack>
-      <span className="scene__status" role="status">{message}</span>
+      <div className="scene__card-group">
+        <div className="scene__row">
+          <div className="scene__row-meta">
+            <span className="scene__row-icon" aria-hidden="true"><Icons.Cloud size={16} /></span>
+            <div className="scene__row-text">
+              <strong>Cloud sync</strong>
+              <span>Keep preferences synchronized across devices</span>
+            </div>
+          </div>
+          <Switch label="Cloud sync" hideLabel checked={sync} onCheckedChange={(value) => { setSync(value); setMessage(""); }} />
+        </div>
+        <div className="scene__row">
+          <div className="scene__row-meta">
+            <span className="scene__row-icon" aria-hidden="true"><Icons.ShieldCheck size={16} /></span>
+            <div className="scene__row-text">
+              <strong>Remember session</strong>
+              <span>Stay signed in on this trusted browser</span>
+            </div>
+          </div>
+          <Checkbox label="Remember session" hideLabel checked={remember} onChange={(event) => { setRemember(event.target.checked); setMessage(""); }} />
+        </div>
+      </div>
+
+      <div className="scene__card-group">
+        <div className="scene__slider-box">
+          <div className="scene__slider-head">
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontWeight: 550 }}>
+              <Icons.Volume2 size={16} aria-hidden="true" />
+              <span>Feedback volume</span>
+            </span>
+            <span className="scene__slider-val">{volume}%</span>
+          </div>
+          <Slider label="Feedback volume" hideLabel value={volume} onValueChange={(value) => { setVolume(value); setMessage(""); }} />
+        </div>
+      </div>
+
+      <div className="scene__actions">
+        <span className="scene__status" role="status">
+          {message && <Icons.CheckCircle size={14} style={{ color: "var(--orlo-color-success)" }} aria-hidden="true" />}
+          <span>{message}</span>
+        </span>
+        <Stack direction="row" gap={2}>
+          <Button variant="ghost" onClick={reset}>Reset</Button>
+          <Button variant="accent" onClick={() => setMessage(`Preview profile saved for ${name || "Theo"}.`)}>Save</Button>
+        </Stack>
+      </div>
     </div>
   );
   return (
     <div className="scene scene--settings orlo-material">
-      <div className="scene__head"><Avatar name="Theo Lindqvist" size="lg" /><div><strong>Theo Lindqvist</strong><div className="orlo-hint">theo@example.com</div></div><Badge tone="accent">Pro</Badge></div>
-      <Tabs label="Settings" items={[
+      <div className="scene__head">
+        <Avatar name="Theo Lindqvist" size="lg" />
+        <div>
+          <strong>Theo Lindqvist</strong>
+          <div className="orlo-hint">theo@example.com</div>
+        </div>
+        <Badge tone="accent">Pro</Badge>
+      </div>
+      <Tabs label="Settings" variant="pill" items={[
         { value: "profile", label: "Profile", content: profile },
-        { value: "billing", label: "Billing", content: <div className="scene__detail"><strong>Pro plan</strong><p>€12 per month · next invoice on 18 November</p><Badge tone="success" dot>Active</Badge></div> },
-        { value: "team", label: "Team", content: <div className="scene__detail"><strong>Workspace members</strong><p>Theo, Ana and Mira can collaborate in this preview workspace.</p><Badge tone="neutral">3 members</Badge></div> },
+        { value: "billing", label: "Billing", content: (
+          <div className="scene__detail">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", inlineSize: "100%" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--orlo-space-3)" }}>
+                <span className="scene__row-icon" aria-hidden="true"><Icons.Award size={16} /></span>
+                <div>
+                  <strong>Pro plan</strong>
+                  <div className="orlo-hint" style={{ margin: 0 }}>Renews automatically</div>
+                </div>
+              </div>
+              <Badge tone="success" dot>Active</Badge>
+            </div>
+            <p>€12 per month · Next invoice on 18 November</p>
+            <div style={{ fontSize: "var(--orlo-text-xs)", color: "var(--orlo-color-fg-muted)" }}>Includes unlimited components, custom theme export, and priority updates.</div>
+          </div>
+        )},
+        { value: "team", label: "Team", content: (
+          <div className="scene__detail">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", inlineSize: "100%" }}>
+              <div>
+                <strong>Workspace members</strong>
+                <div className="orlo-hint" style={{ margin: 0 }}>Collaborative access</div>
+              </div>
+              <Badge tone="neutral">3 members</Badge>
+            </div>
+            <p>Theo, Ana and Mira can collaborate in this preview workspace.</p>
+            <div style={{ fontSize: "var(--orlo-text-xs)", color: "var(--orlo-color-fg-muted)" }}>Admin privileges active.</div>
+          </div>
+        )},
       ]} />
     </div>
   );

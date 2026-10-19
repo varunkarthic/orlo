@@ -14,7 +14,7 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, "name"> & {
   /** Accessible name. Omit for decorative icons (the default). */
   label?: string;
   /** Smooth animation modifier. */
-  animation?: "spin" | "pulse" | "bounce" | "hover-rotate" | "none";
+  animation?: "spin" | "pulse" | "bounce" | "hover-rotate" | "hover-scale" | "hover-bounce" | "none";
   /** Rotation angle in degrees. */
   rotate?: number;
   /** Flip orientation. */

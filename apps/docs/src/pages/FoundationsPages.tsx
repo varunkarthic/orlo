@@ -1,4 +1,4 @@
-import { Button, Stack, Card, Popover, Dialog, Tooltip, Menu, Badge, TextField, Alert } from "@orlo/react";
+import { Button, Stack, Card, Popover, Dialog, Tooltip, Menu, Badge, TextField, Alert, Icons } from "@orlo/react";
 import { layer, primitive, semantic, density, space, radius, type as typeTokens } from "@orlo/tokens";
 import { Bullets, CardGrid, Code, DoDont, H2, H3, LinkCard, PageHeader, Stage } from "../kit.tsx";
 
@@ -7,16 +7,16 @@ export function FoundationsOverview({ root }: { root: string }) {
     <>
       <PageHeader eyebrow="Foundations" title="Foundations" lead="The decisions underneath every component: what Orlo values, how it adapts, and who owns the space when things overlap." />
       <CardGrid>
-        <LinkCard href={`${root}foundations/principles/`} title="Principles" body="The rubric every component is judged against." />
-        <LinkCard href={`${root}foundations/accessibility/`} title="Accessibility" body="WCAG 2.2 AA as the target, and how it's tested." />
-        <LinkCard href={`${root}foundations/adaptive/`} title="Adaptive design" body="Space, input, zoom, direction and preferences." />
-        <LinkCard href={`${root}foundations/interaction-states/`} title="Interaction states" body="One consistent language for hover, focus, press and more." />
-        <LinkCard href={`${root}foundations/lifecycle/`} title="Lifecycle & composition" body="How a component starts, responds, interrupts, resolves and hands off." />
-        <LinkCard href={`${root}foundations/layering/`} title="Layering" body="Stacking, portals, focus ownership and dismissal order." />
-        <LinkCard href={`${root}foundations/async-states/`} title="Async states" body="Loading, failure, empty, offline, retry." />
-        <LinkCard href={`${root}foundations/edge-cases/`} title="Edge cases" body="The Details Lab: flawed beside fixed." />
-        <LinkCard href={`${root}foundations/writing/`} title="Writing" body="Words for errors, empty states and actions." />
-        <LinkCard href={`${root}foundations/tokens/`} title="Design tokens" body="How values flow from primitive to component." />
+        <LinkCard href={`${root}foundations/principles/`} title="Principles" body="The rubric every component is judged against." icon={<Icons.Compass size={22} />} />
+        <LinkCard href={`${root}foundations/accessibility/`} title="Accessibility" body="WCAG 2.2 AA as the target, and how it's tested." icon={<Icons.Eye size={22} />} />
+        <LinkCard href={`${root}foundations/adaptive/`} title="Adaptive design" body="Space, input, zoom, direction and preferences." icon={<Icons.Columns size={22} />} />
+        <LinkCard href={`${root}foundations/interaction-states/`} title="Interaction states" body="One consistent language for hover, focus, press and more." icon={<Icons.Activity size={22} />} />
+        <LinkCard href={`${root}foundations/lifecycle/`} title="Lifecycle & composition" body="How a component starts, responds, interrupts, resolves and hands off." icon={<Icons.Refresh size={22} />} />
+        <LinkCard href={`${root}foundations/layering/`} title="Layering" body="Stacking, portals, focus ownership and dismissal order." icon={<Icons.Layers size={22} />} />
+        <LinkCard href={`${root}foundations/async-states/`} title="Async states" body="Loading, failure, empty, offline, retry." icon={<Icons.Zap size={22} />} />
+        <LinkCard href={`${root}foundations/edge-cases/`} title="Edge cases" body="The Details Lab: flawed beside fixed." icon={<Icons.ShieldCheck size={22} />} />
+        <LinkCard href={`${root}foundations/writing/`} title="Writing" body="Words for errors, empty states and actions." icon={<Icons.Type size={22} />} />
+        <LinkCard href={`${root}foundations/tokens/`} title="Design tokens" body="How values flow from primitive to component." icon={<Icons.Shapes size={22} />} />
       </CardGrid>
     </>
   );

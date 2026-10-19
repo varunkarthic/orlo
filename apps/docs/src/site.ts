@@ -3,14 +3,14 @@ import { manifest, families } from "@orlo/react";
 export type SectionId = "home" | "start" | "foundations" | "styles" | "components" | "develop" | "brand";
 export type Page = { path: string; title: string; section: SectionId; group?: string; summary?: string };
 
-export const sections: { id: SectionId; title: string; path: string; icon: "Home" | "Compass" | "Layers" | "Palette" | "Grid" | "Code" | "Sparkle" }[] = [
+export const sections: { id: SectionId; title: string; path: string; icon: "Home" | "Rocket" | "Component" | "BookOpen" | "Palette" | "Terminal" | "Award" }[] = [
   { id: "home", title: "Home", path: "", icon: "Home" },
-  { id: "start", title: "Get started", path: "start", icon: "Compass" },
-  { id: "foundations", title: "Foundations", path: "foundations", icon: "Layers" },
+  { id: "start", title: "Get started", path: "start", icon: "Rocket" },
+  { id: "components", title: "Components", path: "components", icon: "Component" },
+  { id: "foundations", title: "Foundations", path: "foundations", icon: "BookOpen" },
   { id: "styles", title: "Styles", path: "styles", icon: "Palette" },
-  { id: "components", title: "Components", path: "components", icon: "Grid" },
-  { id: "develop", title: "Develop", path: "develop", icon: "Code" },
-  { id: "brand", title: "Brand", path: "brand", icon: "Sparkle" },
+  { id: "develop", title: "Develop", path: "develop", icon: "Terminal" },
+  { id: "brand", title: "Brand", path: "brand", icon: "Award" },
 ];
 
 export const TABS = ["overview", "specs", "guidelines", "accessibility", "code"] as const;

@@ -12,10 +12,11 @@ export type SwitchProps = {
   /** Submitted as "on" when checked, like a native checkbox. */
   name?: string;
   description?: ReactNode;
+  hideLabel?: boolean;
 };
 
 /** Immediate on/off setting. role="switch" with a real checked state; the thumb springs, rapid toggles redirect it. */
-export function Switch({ label, checked: c, defaultChecked = false, onCheckedChange, disabled, name, description }: SwitchProps) {
+export function Switch({ label, checked: c, defaultChecked = false, onCheckedChange, disabled, name, description, hideLabel }: SwitchProps) {
   const [checked, setChecked] = useControllable(c, defaultChecked, onCheckedChange);
   const { transition } = useOrloMotion();
   const id = useId();
@@ -25,6 +26,7 @@ export function Switch({ label, checked: c, defaultChecked = false, onCheckedCha
         type="button"
         role="switch"
         id={id}
+        aria-label={hideLabel && typeof label === "string" ? label : undefined}
         aria-checked={checked}
         aria-describedby={description ? `${id}-d` : undefined}
         disabled={disabled}
@@ -34,7 +36,7 @@ export function Switch({ label, checked: c, defaultChecked = false, onCheckedCha
       >
         <motion.span className="orlo-switch__thumb" layout transition={transition("press")} />
       </button>
-      <span className="orlo-switch__text">
+      <span className={hideLabel ? "orlo-visually-hidden" : "orlo-switch__text"}>
         <label htmlFor={id}>{label}</label>
         {description && <span id={`${id}-d`} className="orlo-hint">{description}</span>}
       </span>

@@ -577,6 +577,12 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
   .orlo-icon--hover-rotate:hover {
     transform: rotate(45deg);
   }
+  .orlo-icon--hover-scale:hover {
+    transform: scale(1.18);
+  }
+  .orlo-icon--hover-bounce:hover {
+    transform: translateY(-2px);
+  }
 }
 @keyframes orlo-icon-spin {
   from { transform: rotate(0deg); }
@@ -596,6 +602,68 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
   .orlo-icon--bounce {
     animation: none !important;
   }
+}
+
+/* ---------- Grouped settings surfaces (Apple HIG style) ---------- */
+.orlo-popover--wide {
+  --orlo-popover-max-inline-size: 34rem;
+  inline-size: min(34rem, calc(100vw - 1rem));
+}
+.orlo-settings-card {
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--orlo-color-surface-sunken) 70%, var(--orlo-color-surface));
+  border: 1px solid var(--orlo-color-border);
+  border-radius: var(--orlo-radius-lg);
+  overflow: hidden;
+}
+.orlo-settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--orlo-space-4);
+  padding: var(--orlo-space-3) var(--orlo-space-4);
+  min-inline-size: 0;
+}
+.orlo-settings-row + .orlo-settings-row {
+  border-block-start: 1px solid var(--orlo-color-border);
+}
+.orlo-settings-row__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--orlo-space-3);
+  flex: 1;
+  min-inline-size: 0;
+}
+.orlo-settings-row__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--orlo-radius-md);
+  background: color-mix(in srgb, var(--orlo-color-accent) 12%, var(--orlo-color-surface));
+  color: var(--orlo-color-accent-text);
+  flex-shrink: 0;
+}
+.orlo-settings-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+.orlo-settings-row__text strong {
+  font-size: var(--orlo-text-sm);
+  font-weight: 550;
+  color: var(--orlo-color-fg);
+  line-height: 1.25;
+}
+.orlo-settings-row__text span {
+  font-size: var(--orlo-text-xs);
+  color: var(--orlo-color-fg-muted);
+  line-height: 1.35;
+}
+.orlo-settings-row__control {
+  flex-shrink: 0;
 }
 
 @media (forced-colors: active) {

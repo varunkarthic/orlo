@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Steps, Alert, Checkbox, Switch as OSwitch, Card, TextField, TextArea, Select, Switch, RadioGroup, Button, Tabs, Avatar, Badge, Table, Progress, AnimatedNumber, Stack, Divider, AlertDialog, useToast, Breadcrumbs, EmptyState } from "@orlo/react";
+import { Steps, Alert, Checkbox, Switch as OSwitch, Card, TextField, TextArea, Select, Switch, RadioGroup, Button, Tabs, Avatar, Badge, Table, Progress, AnimatedNumber, Stack, Divider, AlertDialog, useToast, Breadcrumbs, EmptyState, Icons } from "@orlo/react";
+import { PageHeader } from "../kit.tsx";
 
 function Settings() {
   const { toast } = useToast();
@@ -17,24 +18,50 @@ function Settings() {
     setTimeout(() => { setSaving(false); toast({ title: "Profile saved", tone: "success" }); }, 1200);
   };
   return (
-    <form onSubmit={submit} noValidate>
-      <Stack gap={5}>
-        <Stack direction="row" gap={4} align="center"><Avatar name={name || "?"} size="lg" /><div><strong>{name || "Unnamed"}</strong><span className="orlo-hint">{email}</span></div></Stack>
-        <div className="grid">
+    <form onSubmit={submit} noValidate className="settings-form">
+      <div className="settings-section">
+        <Stack direction="row" gap={4} align="center">
+          <Avatar name={name || "?"} size="lg" />
+          <div style={{ minInlineSize: 0, flex: 1 }}>
+            <strong style={{ fontSize: "var(--orlo-text-md)", display: "block" }}>{name || "Unnamed"}</strong>
+            <span className="orlo-hint">{email}</span>
+          </div>
+          <Badge tone="accent">Admin</Badge>
+        </Stack>
+      </div>
+
+      <div className="settings-section">
+        <p className="settings-section__title">Personal Information</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 14rem), 1fr))", gap: "var(--orlo-space-4)" }}>
           <TextField label="Full name" value={name} onChange={(e) => setName(e.target.value)} error={tried ? errors.name : undefined} autoComplete="name" />
           <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} error={tried ? errors.email : undefined} autoComplete="email" />
         </div>
         <TextArea label="Bio" value={bio} onChange={(e) => setBio(e.target.value)} maxLength={160} showCount help="Shown on your public profile." />
         <Select label="Language" defaultValue="en" options={[{ value: "en", label: "English" }, { value: "it", label: "Italiano" }, { value: "ar", label: "العربية" }, { value: "ja", label: "日本語" }]} />
-        <Divider />
+      </div>
+
+      <div className="settings-section">
+        <p className="settings-section__title">Preferences</p>
         <RadioGroup legend="Email frequency" name="freq" defaultValue="weekly" orientation="horizontal" options={[{ value: "daily", label: "Daily" }, { value: "weekly", label: "Weekly" }, { value: "never", label: "Never" }]} />
-        <Switch label="Show my profile in search" defaultChecked />
-        <Stack direction="row" gap={2} justify="space-between" wrap>
+        <Divider />
+        <Switch label="Show my profile in search" description="Allow other members to discover your public profile" defaultChecked />
+      </div>
+
+      <div className="settings-section" style={{ borderColor: "color-mix(in srgb, var(--orlo-color-error) 25%, var(--orlo-color-border))" }}>
+        <p className="settings-section__title" style={{ color: "var(--orlo-color-error)" }}>Danger Zone</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "var(--orlo-space-3)" }}>
+          <div>
+            <strong>Delete account</strong>
+            <p className="orlo-hint" style={{ margin: "2px 0 0" }}>Permanently remove your workspace, projects, and billing data.</p>
+          </div>
           <AlertDialog title="Delete account?" description="Your projects and files will be removed. This cannot be undone." trigger={<Button variant="danger">Delete account…</Button>}
             footer={(close) => <><Button variant="subtle" onClick={close}>Keep account</Button><Button variant="danger" onClick={close}>Delete</Button></>} />
-          <Button type="submit" loading={saving} loadingLabel="Saving">Save profile</Button>
-        </Stack>
-      </Stack>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBlockStart: "var(--orlo-space-2)" }}>
+        <Button type="submit" loading={saving} loadingLabel="Saving">Save profile</Button>
+      </div>
     </form>
   );
 }
@@ -102,7 +129,7 @@ function Wizard() {
     </div>
   );
 }
-const DataListLite = ({ rows }: { rows: [string, string][] }) => <dl className="orlo-datalist">{rows.map(([k, v]) => <div key={k} className="orlo-datalist__row"><dt>{k}</dt><dd>{v || "—"}</dd></div>)}</dl>;
+const DataListLite = ({ rows }: { rows: [string, string][] }) => <dl className="orlo-datalist">{rows.map(([k, v]) => <div key={k} className="orlo-datalist__row"><dt>{k}</dt><dd>{v || "-"}</dd></div>)}</dl>;
 
 function EmptyInbox() {
   const [composing, setComposing] = useState(false);
@@ -116,9 +143,7 @@ function EmptyInbox() {
 export function Examples() {
   return (
     <div className="wide">
-      <p className="eyebrow">Get started</p>
-      <h1>Examples</h1>
-      <p className="lead">Real screens assembled only from Orlo components. Submit the form with an empty name to see error focus; delete the account to see a confirmation that will not dismiss itself.</p>
+      <PageHeader eyebrow="Get started" title="Examples" lead="Real screens assembled only from Orlo components. Submit the form with an empty name to see error focus; delete the account to see a confirmation that will not dismiss itself." />
       <h2>Profile settings</h2>
       <Card style={{ maxInlineSize: "44rem" }}><Settings /></Card>
       <h2>Sign-up flow</h2>

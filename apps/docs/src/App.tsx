@@ -103,11 +103,10 @@ export function App({ route, page }: { route: string; page: PageRender }) {
         <div className="header__inner">
           <a href={root} className="header__logo" aria-label="Orlo home">
             <Wordmark height={22} />
-            <span className="header__tag">HIG</span>
           </a>
           <nav aria-label="Sections" className="header__nav">
             {NAV.map((s) => {
-              const IconComp = (Icons as Record<string, any>)[s.icon === "Sparkle" ? "Sparkles" : s.icon];
+              const IconComp = (Icons as Record<string, any>)[s.icon];
               return (
                 <a key={s.id} href={href(s.path)} aria-current={section === s.id ? "true" : undefined} className="header__link">
                   {IconComp && <IconComp size={15} className="header__link-icon" aria-hidden="true" />}
@@ -143,13 +142,13 @@ export function App({ route, page }: { route: string; page: PageRender }) {
                     <span className="prefs-panel__section-title">Appearance</span>
                     <div className="prefs-panel__list">
                       <PrefRow icon={<Icons.Sun size={16} />} label="Theme" description="Color scheme & contrast" value={prefs.theme} onChange={(v) => set("theme")(v as Theme)} options={["system", "light", "dark"]} />
-                      <PrefRow icon={<Icons.Layers size={16} />} label="Material" description="Translucent frosted glass" value={prefs.material} onChange={(v) => set("material")(v as Prefs["material"])} options={["glass", "solid"]} />
+                      <PrefRow icon={<Icons.Shapes size={16} />} label="Material" description="Translucent frosted glass" value={prefs.material} onChange={(v) => set("material")(v as Prefs["material"])} options={["glass", "solid"]} />
                     </div>
                   </div>
                   <div className="prefs-panel__section">
                     <span className="prefs-panel__section-title">Motion & Accessibility</span>
                     <div className="prefs-panel__list">
-                      <PrefRow icon={<Icons.Sparkles size={16} />} label="Motion" description="Damped spring physics" value={prefs.motion} onChange={(v) => set("motion")(v as MotionMode)} options={["system", "reduced", "off", "full"]} />
+                      <PrefRow icon={<Icons.Activity size={16} />} label="Motion" description="Damped spring physics" value={prefs.motion} onChange={(v) => set("motion")(v as MotionMode)} options={["system", "reduced", "off", "full"]} />
                       <PrefRow icon={<Icons.Eye size={16} />} label="Transparency" description="Backdrop blur vibrancy" value={prefs.transparency} onChange={(v) => set("transparency")(v as Prefs["transparency"])} options={["system", "reduced"]} />
                       <PrefRow icon={<Icons.Image size={16} />} label="Images" description="Network request loading" value={prefs.images} onChange={(v) => set("images")(v as "on" | "off")} options={["on", "off"]} />
                     </div>
@@ -157,8 +156,8 @@ export function App({ route, page }: { route: string; page: PageRender }) {
                   <div className="prefs-panel__section">
                     <span className="prefs-panel__section-title">Layout & Engine</span>
                     <div className="prefs-panel__list">
-                      <PrefRow icon={<Icons.Maximize size={16} />} label="Density" description="Control height & padding" value={prefs.density} onChange={(v) => set("density")(v as Prefs["density"])} options={["auto", "compact", "comfortable", "touch"]} />
-                      <PrefRow icon={<Icons.ArrowRight size={16} />} label="Direction" description="Text flow & layout mirroring" value={prefs.dir} onChange={(v) => set("dir")(v as "ltr" | "rtl")} options={["ltr", "rtl"]} />
+                      <PrefRow icon={<Icons.Columns size={16} />} label="Density" description="Control height & padding" value={prefs.density} onChange={(v) => set("density")(v as Prefs["density"])} options={["auto", "compact", "comfortable", "touch"]} />
+                      <PrefRow icon={<Icons.Move size={16} />} label="Direction" description="Text flow & layout mirroring" value={prefs.dir} onChange={(v) => set("dir")(v as "ltr" | "rtl")} options={["ltr", "rtl"]} />
                       <PrefRow icon={<Icons.Zap size={16} />} label="Spring" description="Oscillator response speed" value={prefs.scheme} onChange={(v) => set("scheme")(v as Prefs["scheme"])} options={["standard", "expressive"]} />
                     </div>
                   </div>
@@ -175,7 +174,7 @@ export function App({ route, page }: { route: string; page: PageRender }) {
             <Sheet side="end" title="Menu" trigger={<IconButton label="Open menu" className="header__menu"><Icons.Menu size={20} /></IconButton>}>
               <nav aria-label="Sections" className="mnav">
                 {NAV.map((s) => {
-                  const IconComp = (Icons as Record<string, any>)[s.icon === "Sparkle" ? "Sparkles" : s.icon];
+                  const IconComp = (Icons as Record<string, any>)[s.icon];
                   return (
                     <a key={s.id} href={href(s.path)} aria-current={section === s.id ? "true" : undefined} className="mnav__link">
                       {IconComp && <IconComp size={18} className="mnav__link-icon" aria-hidden="true" />}
@@ -235,6 +234,7 @@ function PrefRow({
   description,
   value,
   options,
+  stacked,
   onChange,
 }: {
   icon: React.ReactNode;
@@ -242,10 +242,12 @@ function PrefRow({
   description?: string;
   value: string;
   options: string[];
+  stacked?: boolean;
   onChange: (v: string) => void;
 }) {
+  const isStacked = stacked || options.length >= 3;
   return (
-    <div className="pref-row">
+    <div className={`pref-row ${isStacked ? "pref-row--stacked" : ""}`}>
       <div className="pref-row__meta">
         <span className="pref-row__icon" aria-hidden="true">{icon}</span>
         <div className="pref-row__titles">

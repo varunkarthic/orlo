@@ -1,4 +1,4 @@
-import { Alert, Badge } from "@orlo/react";
+import { Alert, Badge, Icons } from "@orlo/react";
 import { presets } from "@orlo/motion";
 import { Bullets, CardGrid, Code, H2, LinkCard, PageHeader } from "../kit.tsx";
 
@@ -7,14 +7,14 @@ export function DevelopOverview({ root }: { root: string }) {
     <>
       <PageHeader eyebrow="Develop" title="Develop with Orlo" lead="The APIs underneath the components: provider, motion, positioning, theming and rendering." />
       <CardGrid>
-        <LinkCard href={`${root}develop/provider/`} title="Provider" body="One place for theme, motion, images, density and direction." />
-        <LinkCard href={`${root}develop/motion/`} title="Motion API" body="useOrloMotion, presets and spring metrics." />
-        <LinkCard href={`${root}develop/positioning/`} title="Positioning & layers" body="computePosition and the layer stack." />
-        <LinkCard href={`${root}develop/theming/`} title="Theming API" body="Tokens, createTheme, themeToCss." />
-        <LinkCard href={`${root}develop/ssr/`} title="Server rendering" body="What renders where, and why there's no flash." />
-        <LinkCard href={`${root}develop/testing/`} title="Testing" body="How Orlo is verified and how to test with it." />
-        <LinkCard href={`${root}develop/read-the-docs/`} title="Read the Docs" body="How this static site is built and hosted." />
-        <LinkCard href={`${root}develop/agents/`} title="For AI agents" body="Rules that keep generated UI on-system." />
+        <LinkCard href={`${root}develop/provider/`} title="Provider" body="One place for theme, motion, images, density and direction." icon={<Icons.Sliders size={22} />} />
+        <LinkCard href={`${root}develop/motion/`} title="Motion API" body="useOrloMotion, presets and spring metrics." icon={<Icons.Activity size={22} />} />
+        <LinkCard href={`${root}develop/positioning/`} title="Positioning & layers" body="computePosition and the layer stack." icon={<Icons.Move size={22} />} />
+        <LinkCard href={`${root}develop/theming/`} title="Theming API" body="Tokens, createTheme, themeToCss." icon={<Icons.Palette size={22} />} />
+        <LinkCard href={`${root}develop/ssr/`} title="Server rendering" body="What renders where, and why there's no flash." icon={<Icons.Cpu size={22} />} />
+        <LinkCard href={`${root}develop/testing/`} title="Testing" body="How Orlo is verified and how to test with it." icon={<Icons.ShieldCheck size={22} />} />
+        <LinkCard href={`${root}develop/read-the-docs/`} title="Read the Docs" body="How this static site is built and hosted." icon={<Icons.BookOpen size={22} />} />
+        <LinkCard href={`${root}develop/agents/`} title="For AI agents" body="Rules that keep generated UI on-system." icon={<Icons.Terminal size={22} />} />
       </CardGrid>
     </>
   );

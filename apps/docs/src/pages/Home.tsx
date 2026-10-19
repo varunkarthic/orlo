@@ -3,19 +3,19 @@ import { Badge, BuiltWithOrlo, CopyButton, Icons, manifest, families } from "@or
 const paths = [
   { number: "01", label: "Start", title: "Set the foundation", body: "Explore the provider, theme tokens, and your first screen. Zero configuration required.", href: "start/", icon: Icons.Compass },
   { number: "02", label: "Explore", title: "Find a component", body: `Browse all ${manifest.length} components across ${families.length} families with live interactive specs, keyboard behaviors, and code.`, href: "components/", icon: Icons.Grid },
-  { number: "03", label: "Understand", title: "Design beyond rest", body: "Read the lifecycle, accessibility, and failure guidance that makes complex multi-component flows seamless.", href: "foundations/lifecycle/", icon: Icons.Layers },
-  { number: "04", label: "Tune", title: "Make it your own", body: "Shape a theme and harmonic motion language with named semantic tokens instead of scattered hardcoded values.", href: "styles/", icon: Icons.Palette },
+  { number: "03", label: "Understand", title: "Design beyond rest", body: "Read the lifecycle, accessibility, and failure guidance that makes complex multi-component flows seamless.", href: "foundations/lifecycle/", icon: Icons.Lightbulb },
+  { number: "04", label: "Tune", title: "Make it your own", body: "Shape a theme and harmonic motion language with named semantic tokens instead of scattered hardcoded values.", href: "styles/", icon: Icons.Brush },
 ] as const;
 
 const familyDescriptions: Record<string, { title: string; count: number; desc: string; icon: any; link: string }> = {
   Actions: { title: "Actions", count: 7, desc: "Buttons, async loaders, segmented pill controls, and copy triggers.", icon: Icons.Sparkles, link: "components/button/" },
   Forms: { title: "Forms & Inputs", count: 22, desc: "Text fields, comboboxes, sliders, date pickers, pin inputs, and switches.", icon: Icons.Sliders, link: "components/text-field/" },
-  Navigation: { title: "Navigation", count: 11, desc: "Pill tabs, breadcrumbs, pagination, spotlight command palette, and steppers.", icon: Icons.Compass, link: "components/tabs/" },
+  Navigation: { title: "Navigation", count: 11, desc: "Pill tabs, breadcrumbs, pagination, spotlight command palette, and steppers.", icon: Icons.Route, link: "components/tabs/" },
   Overlays: { title: "Overlays & Modals", count: 8, desc: "Dialogs, sliding sheets, popovers, tooltips, and non-blocking toast stacks.", icon: Icons.Layers, link: "components/dialog/" },
-  Feedback: { title: "Feedback & Status", count: 12, desc: "Callouts, alerts, progress bars, spinners, skeletons, and status dots.", icon: Icons.CheckCircle, link: "components/alert/" },
-  Data: { title: "Data Display", count: 18, desc: "Data tables, avatar rings, timelines, tree views, and metric stat cards.", icon: Icons.Grid, link: "components/table/" },
-  Layout: { title: "Layout & Hierarchy", count: 14, desc: "Surface dividers, aspect ratio guards, splitters, and responsive stacks.", icon: Icons.Maximize, link: "components/card/" },
-  Typography: { title: "Typography & Primitives", count: 35, desc: "Keyboard badges, code blocks, animated numbers, and text highlighters.", icon: Icons.Code, link: "components/kbd/" },
+  Feedback: { title: "Feedback & Status", count: 12, desc: "Callouts, alerts, progress bars, spinners, skeletons, and status dots.", icon: Icons.AlertCircle, link: "components/alert/" },
+  Data: { title: "Data Display", count: 18, desc: "Data tables, avatar rings, timelines, tree views, and metric stat cards.", icon: Icons.Table, link: "components/table/" },
+  Layout: { title: "Layout & Hierarchy", count: 14, desc: "Surface dividers, aspect ratio guards, splitters, and responsive stacks.", icon: Icons.Layout, link: "components/card/" },
+  Typography: { title: "Typography & Primitives", count: 35, desc: "Keyboard badges, code blocks, animated numbers, and text highlighters.", icon: Icons.Type, link: "components/kbd/" },
 };
 
 export function Home({ root }: { root: string }) {
@@ -27,12 +27,12 @@ export function Home({ root }: { root: string }) {
           <p className="hero2__eyebrow">
             <span className="hero2__eyebrow-badge">
               <Icons.Sparkles size={14} animation="pulse" aria-hidden="true" />
-              <span>ORLO HUMAN INTERFACE GUIDELINES</span>
+              <span>NOTHING IS AN AFTERTHOUGHT</span>
             </span>
           </p>
           <h1 id="home-title">Design the parts between the moments.</h1>
           <p className="hero2__lead">
-            Orlo gives React interfaces an uncompromising visual and behavioral grammar—from tactile physical springs and translucent materials to interrupted transitions and deterministic accessibility.
+            <strong>Nothing is an afterthought.</strong> Orlo gives React interfaces an uncompromising visual and behavioral grammar: from tactile physical springs and translucent materials to interrupted transitions and deterministic accessibility.
           </p>
           <div className="hero2__actions">
             <a className="orlo-button" data-variant="accent" href={`${root}start/`}>
@@ -62,7 +62,7 @@ export function Home({ root }: { root: string }) {
               <span className="terminal__dot terminal__dot--min" />
               <span className="terminal__dot terminal__dot--max" />
             </div>
-            <div className="terminal__title">bash — quickstart</div>
+            <div className="terminal__title">bash: quickstart</div>
             <Badge tone="success" dot>Ready</Badge>
           </div>
           <div className="terminal__body">
@@ -77,10 +77,10 @@ export function Home({ root }: { root: string }) {
               <div className="terminal__code-line"><span className="t-kw">import</span> <span className="t-str">&quot;@orlo/react/styles.css&quot;</span>;</div>
             </div>
             <div className="terminal__meta">
-              <div className="terminal__pill"><Icons.CheckCircle size={14} className="terminal__pill-icon" aria-hidden="true" /><span>127 In-House Components</span></div>
+              <div className="terminal__pill"><Icons.Package size={14} className="terminal__pill-icon" aria-hidden="true" /><span>127 In-House Components</span></div>
               <div className="terminal__pill"><Icons.Zap size={14} className="terminal__pill-icon" aria-hidden="true" /><span>7 Tuned Spring Presets</span></div>
-              <div className="terminal__pill"><Icons.Eye size={14} className="terminal__pill-icon" aria-hidden="true" /><span>WCAG AAA Contrast</span></div>
-              <div className="terminal__pill"><Icons.ShieldCheck size={14} className="terminal__pill-icon" aria-hidden="true" /><span>Zero Headless Bloat</span></div>
+              <div className="terminal__pill"><Icons.ShieldCheck size={14} className="terminal__pill-icon" aria-hidden="true" /><span>WCAG AAA Contrast</span></div>
+              <div className="terminal__pill"><Icons.Cpu size={14} className="terminal__pill-icon" aria-hidden="true" /><span>Zero Headless Bloat</span></div>
             </div>
           </div>
         </div>
@@ -105,19 +105,19 @@ export function Home({ root }: { root: string }) {
         </div>
         <div className="home__pillars-grid">
           <div className="home__pillar">
-            <div className="home__pillar-icon" aria-hidden="true"><Icons.ShieldCheck size={28} /></div>
+            <div className="home__pillar-icon" aria-hidden="true"><Icons.Ruler size={28} /></div>
             <h3>Clarity &amp; Spatial Deference</h3>
             <p>Every token, margin, and tap target derives from strict 8pt rhythm and WCAG AAA contrast ratios. Visual chrome defers to user content, ensuring effortless legibility in any lighting.</p>
             <a href={`${root}foundations/principles/`} className="home__pillar-link">Read principles <Icons.ArrowRight size={14} aria-hidden="true" /></a>
           </div>
           <div className="home__pillar">
-            <div className="home__pillar-icon" aria-hidden="true"><Icons.Zap size={28} animation="pulse" /></div>
+            <div className="home__pillar-icon" aria-hidden="true"><Icons.Activity size={28} animation="pulse" /></div>
             <h3>Harmonic Physical Motion</h3>
             <p>Motion carries meaning, never decoration. Underpinned by damped harmonic oscillators that preserve physical momentum across user gestures, sheet drags, and sudden interrupts.</p>
             <a href={`${root}styles/motion/`} className="home__pillar-link">Explore motion <Icons.ArrowRight size={14} aria-hidden="true" /></a>
           </div>
           <div className="home__pillar">
-            <div className="home__pillar-icon" aria-hidden="true"><Icons.Layers size={28} /></div>
+            <div className="home__pillar-icon" aria-hidden="true"><Icons.Droplet size={28} /></div>
             <h3>Translucent Materials &amp; Depth</h3>
             <p>Adaptive acrylic blur and vibrancy ground layered surfaces without muddy shadows. Gracefully falls back to high-contrast opaque materials when reduced transparency is requested.</p>
             <a href={`${root}styles/materials/`} className="home__pillar-link">View materials <Icons.ArrowRight size={14} aria-hidden="true" /></a>
@@ -188,7 +188,7 @@ export function Home({ root }: { root: string }) {
           <p className="home__kicker">THE FRAMEWORK</p>
           <h2 id="home-principle-title">A component is more than its resting state.</h2>
           <p>
-            Orlo documents the whole interaction: how an element enters, responds, hands off focus, handles interruption, fails and recovers—alone and alongside other components.
+            Orlo documents the whole interaction: how an element enters, responds, hands off focus, handles interruption, fails and recovers, alone and alongside other components.
           </p>
           <a href={`${root}foundations/lifecycle/`}>Explore lifecycle &amp; composition <Icons.ArrowRight size={17} aria-hidden="true" /></a>
         </div>
@@ -204,7 +204,7 @@ export function Home({ root }: { root: string }) {
       <section className="home__section home__closing" aria-labelledby="home-closing-title">
         <div>
           <p className="home__kicker">MAKE SOMETHING THOUGHTFUL</p>
-          <h2 id="home-closing-title">The details are the design.</h2>
+          <h2 id="home-closing-title">Nothing is an afterthought.</h2>
           <p>Build with Orlo, inspect the edge cases, and make the system feel like your own.</p>
           <div className="home__closing-actions">
             <a className="orlo-button" data-variant="accent" href={`${root}start/`}>Read the getting-started guide</a>
