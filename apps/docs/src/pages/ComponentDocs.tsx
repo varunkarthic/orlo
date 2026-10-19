@@ -64,10 +64,7 @@ export function ComponentPage({ slug, doc: d, root, tab }: { slug: string; doc?:
     <>
       <PageHeader eyebrow={entry.family} title={entry.name} lead={entry.summary}>
         <span className="import"><code>{`import { ${importName} } from "@orlo/react"`}</code><CopyButton text={`import { ${importName} } from "@orlo/react";`} label="Copy import" /></span>
-        <a className="page-header__link" href={`https://github.com/varunkarthic/orlo/tree/main/packages/react/src/components`}><Icons.Code size={16} aria-hidden="true" />Source</a>
-        <span className="page-header__status">{entry.maturity === "beta" ? "Beta" : entry.maturity}</span>
-        <span className="page-header__platform"><Icons.Check size={14} aria-hidden="true" />Multi-platform</span>
-        <span className="page-header__motion"><Icons.Sliders size={14} aria-hidden="true" />M3 Expressive</span>
+        <a className="page-header__link" href={`https://github.com/varunkarthic/orlo/tree/main/packages/react/src/components`}><Icons.Code size={14} aria-hidden="true" />Source</a>
       </PageHeader>
       <nav className="ctabs" aria-label={`${entry.name} documentation`}>
         {TABS.map((t) => <a key={t} href={`${root}components/${slug}/${t === "overview" ? "" : t + "/"}`} aria-current={t === tab ? "page" : undefined}>{tabTitle[t]}</a>)}

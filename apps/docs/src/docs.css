@@ -27,14 +27,14 @@ body { margin: 0; background: var(--orlo-color-canvas); overflow-x: hidden; }
 .header__inner {
   display: flex;
   align-items: center;
-  gap: clamp(var(--orlo-space-2), 1.5vw, var(--orlo-space-4));
+  gap: clamp(var(--orlo-space-3), 2vw, var(--orlo-space-5));
   block-size: var(--header);
   max-inline-size: var(--page-max);
   margin-inline: auto;
   padding-inline: clamp(var(--orlo-space-4), 2.5vw, var(--orlo-space-6));
   box-sizing: border-box;
 }
-.header__logo { display: inline-flex; flex: none; padding: var(--orlo-space-1); margin-inline-start: calc(var(--orlo-space-1) * -1); border-radius: var(--orlo-radius-sm); color: var(--orlo-color-fg); }
+.header__logo { display: inline-flex; flex: none; padding: var(--orlo-space-1); margin-inline-start: calc(var(--orlo-space-1) * -1); margin-inline-end: var(--orlo-space-3); border-radius: var(--orlo-radius-sm); color: var(--orlo-color-fg); }
 .header__nav {
   display: flex;
   align-items: center;
@@ -288,6 +288,12 @@ body { margin: 0; background: var(--orlo-color-canvas); overflow-x: hidden; }
   display: flex;
   flex-direction: column;
   gap: var(--orlo-space-4);
+  max-block-size: min(65vh, 480px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-inline-end: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--orlo-color-border) transparent;
 }
 .prefs-panel__section {
   display: flex;
@@ -484,13 +490,19 @@ code, kbd, pre { font-family: var(--orlo-font-mono); }
 .page-header { margin-block-end: var(--orlo-space-10); }
 .page-header__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--orlo-space-3) var(--orlo-space-4); margin-block-start: var(--orlo-space-6); }
 .import {
-  display: inline-flex; align-items: center; gap: var(--orlo-space-1); max-inline-size: 100%;
-  padding: var(--orlo-space-1) var(--orlo-space-1) var(--orlo-space-1) var(--orlo-space-3);
+  display: inline-flex; align-items: center; gap: var(--orlo-space-2); max-inline-size: 100%;
+  padding: 3px var(--orlo-space-1) 3px var(--orlo-space-3);
   border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-full);
   background: var(--orlo-color-surface);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 .article .import code { padding: 0; background: none; font-size: var(--orlo-text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.import .orlo-copy-btn, .import .orlo-icon-btn {
+  inline-size: 1.625rem;
+  block-size: 1.625rem;
+  min-inline-size: 1.625rem;
+  min-block-size: 1.625rem;
+}
 .page-header__link {
   display: inline-flex; align-items: center; gap: var(--orlo-gap-icon-sm);
   padding: var(--orlo-space-1) var(--orlo-space-3);

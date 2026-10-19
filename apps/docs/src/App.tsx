@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { OrloProvider, Wordmark, IconButton, SegmentedControl, Popover, Sheet, CommandPalette, Kbd, Icons, BuiltWithOrlo, manifest, families } from "@orlo/react";
 import type { MotionMode } from "@orlo/motion";
 import { pages, sections, sectionOf, TABS, tabTitle, type Tab } from "./site.ts";
@@ -25,6 +25,7 @@ export function App({ route, page }: { route: string; page: PageRender }) {
   const [prefs, setPrefs] = useState<Prefs>(DEFAULTS);
   const [searchOpen, setSearchOpen] = useState(false);
   const [filter, setFilter] = useState("");
+  const sideRef = useRef<HTMLElement | null>(null);
   // Render in a fixed locale first (matches the prerendered HTML), then switch to the visitor's locale.
   const [locale, setLocale] = useState("en-US");
   useEffect(() => setLocale(navigator.language || "en-US"), []);
@@ -59,6 +60,25 @@ export function App({ route, page }: { route: string; page: PageRender }) {
   });
   const section = sectionOf(route);
   const home = section === "home";
+
+  useEffect(() => {
+    const el = sideRef.current;
+    if (!el) return;
+    const saved = sessionStorage.getItem(`orlo-side-scroll-${section}`);
+    if (saved) {
+      el.scrollTop = parseInt(saved, 10);
+    }
+    const activeLink = el.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
+    if (activeLink) {
+      activeLink.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+    const handleScroll = () => {
+      sessionStorage.setItem(`orlo-side-scroll-${section}`, String(el.scrollTop));
+    };
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [section, route]);
+
   const commands = useMemo(() => [
     ...pages.map((p) => ({ id: p.path || "home", label: p.title === "Overview" ? `${sections.find((s) => s.id === p.section)?.title} overview` : p.title, group: p.group ?? sections.find((s) => s.id === p.section)?.title, keywords: p.summary, onSelect: () => { location.href = href(p.path); } })),
     ...manifest.flatMap((c) => TABS.slice(1).map((t) => ({ id: `${c.slug}-${t}`, label: `${c.name} ${tabTitle[t].toLowerCase()}`, group: "Component tabs", hint: tabTitle[t], onSelect: () => { location.href = href(`components/${c.slug}/${t}`); } }))),
@@ -190,7 +210,7 @@ export function App({ route, page }: { route: string; page: PageRender }) {
       </header>
 
       <div className="layout" data-home={home || undefined}>
-        {!home && <aside className="layout__side">{sidebar}</aside>}
+        {!home && <aside ref={sideRef} className="layout__side">{sidebar}</aside>}
         <main id="main" tabIndex={-1} className="layout__main">
           <div className="article" data-section={section}>
             {page({ root, tab })}

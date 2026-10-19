@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { EXPRESSIVE_CEILING, OVERSHOOT_CEILING, purposes, simulate, spring, springMetrics, springs } from "./presets.ts";
-import { createVelocityTracker, projectSnap, rubberband } from "./gesture.ts";
+import { createVelocityTracker, elasticResistance, projectSnap, rubberband } from "./gesture.ts";
 
 describe("spring tokens", () => {
   for (const scheme of ["standard", "expressive"] as const) {
@@ -36,5 +36,16 @@ describe("spring tokens", () => {
 describe("gesture helpers", () => {
   it("tracks velocity in px/s", () => { const v = createVelocityTracker(); v.add(0, 0); v.add(50, 50); v.add(100, 100); expect(v.velocity()).toBeCloseTo(1000); });
   it("rubberband resists more as you pull", () => { expect(rubberband(100, 300)).toBeLessThan(100); expect(rubberband(200, 300) - rubberband(100, 300)).toBeLessThan(rubberband(100, 300)); });
+  it("elasticResistance is bounded, monotonic and logarithmic", () => {
+    expect(elasticResistance(0)).toBe(0);
+    expect(elasticResistance(-10)).toBe(0);
+    const d100 = elasticResistance(100, 60);
+    const d200 = elasticResistance(200, 60);
+    const d1000 = elasticResistance(1000, 60);
+    expect(d100).toBeGreaterThan(0);
+    expect(d200).toBeGreaterThan(d100);
+    expect(d200 - d100).toBeLessThan(d100); // Concave / diminishing returns
+    expect(d1000).toBeLessThan(60); // Strictly bounded by maxDisplacement
+  });
   it("projects momentum to the right snap point", () => { expect(projectSnap(120, 0, [0, 200, 400])).toBe(200); expect(projectSnap(100, 2000, [0, 200, 400, 1200])).toBeGreaterThan(200); expect(projectSnap(100, -2000, [0, 200, 400])).toBe(0); });
 });

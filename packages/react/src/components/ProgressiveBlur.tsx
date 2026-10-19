@@ -26,11 +26,12 @@ export function ProgressiveBlur({ side = "top", size = "28px", strength = 12, la
   return (
     <div className={["orlo-pblur", className].filter(Boolean).join(" ")} data-side={side} aria-hidden="true" style={{ ...style, "--pblur-size": size } as CSSProperties}>
       {Array.from({ length: layers }, (_, i) => {
-        const r = strength / 2 ** (layers - 1 - i);
-        const a = Math.max(0, i * step - step), b = i * step, c = (i + 1) * step, d = Math.min(100, (i + 2) * step);
-        const mask = `linear-gradient(${dir}, rgb(0 0 0 / 0) ${a}%, #000 ${b}%, #000 ${c}%, rgb(0 0 0 / 0) ${d}%)`;
+        const r = strength * ((layers - i) / layers);
+        const stopStart = (i / layers) * 100;
+        const stopEnd = Math.min(100, ((i + 1.5) / layers) * 100);
+        const mask = `linear-gradient(${dir}, #000 0%, #000 ${stopStart.toFixed(1)}%, rgb(0 0 0 / 0) ${stopEnd.toFixed(1)}%)`;
         return <span key={i} className="orlo-pblur__layer" style={{ backdropFilter: `blur(${r.toFixed(2)}px)`, WebkitBackdropFilter: `blur(${r.toFixed(2)}px)`, maskImage: mask, WebkitMaskImage: mask }} />;
-      }).reverse()}
+      })}
       {fade && <span className="orlo-pblur__fade" style={{ background: `linear-gradient(${dir}, var(--orlo-pblur-color, var(--orlo-color-canvas)), transparent)` }} />}
     </div>
   );

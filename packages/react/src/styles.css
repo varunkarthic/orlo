@@ -258,6 +258,7 @@
   /* ---------- Slider ---------- */
   .orlo-slider { display: grid; gap: var(--orlo-gap-label); min-inline-size: 12rem; }
   .orlo-slider__head { display: flex; justify-content: space-between; align-items: baseline; }
+  .orlo-slider__head[hidden] { display: none !important; }
   .orlo-slider__value { font-variant-numeric: tabular-nums; color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); }
   .orlo-slider__track { position: relative; block-size: 2rem; margin-inline: 0.75rem; cursor: pointer; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
   .orlo-slider__rail, .orlo-slider__fill { position: absolute; inset-block-start: 50%; block-size: 0.25rem; transform: translateY(-50%); border-radius: 999px; pointer-events: none; }

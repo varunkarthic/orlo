@@ -22,13 +22,22 @@ export function ContextMenu({ children, items, label = "Context menu" }: Context
   const close = () => { setAt(null); area.current?.focus(); };
   useDismiss({ open: !!at, id, onDismiss: close, refs: [menu] });
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const openAt = (x: number, y: number) => {
+    const vw = typeof window !== "undefined" ? window.innerWidth : 1024;
+    const vh = typeof window !== "undefined" ? window.innerHeight : 768;
+    const estW = menu.current?.offsetWidth || 200;
+    const estH = menu.current?.offsetHeight || 180;
+    const posX = Math.max(8, Math.min(x, vw - estW - 8));
+    const posY = y + estH > vh - 8 ? Math.max(8, y - estH) : y;
+    setPos({ x: posX, y: posY });
+    setAt({ x, y });
+  };
   useEffect(() => {
     if (!at || !menu.current) return;
     const m = menu.current, vw = window.innerWidth, vh = window.innerHeight;
-    setPos({ x: Math.min(at.x, vw - m.offsetWidth - 8), y: at.y + m.offsetHeight > vh - 8 ? Math.max(8, at.y - m.offsetHeight) : at.y });
+    setPos({ x: Math.max(8, Math.min(at.x, vw - m.offsetWidth - 8)), y: at.y + m.offsetHeight > vh - 8 ? Math.max(8, at.y - m.offsetHeight) : at.y });
     requestAnimationFrame(() => m.querySelector<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])')?.focus());
   }, [at]);
-  const openAt = (x: number, y: number) => setAt({ x, y });
   return (
     <>
       <div ref={area} className="orlo-context-area" tabIndex={0} aria-haspopup="menu" aria-describedby={`${id}-hint`}

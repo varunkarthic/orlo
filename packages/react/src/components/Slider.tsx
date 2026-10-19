@@ -84,10 +84,12 @@ export function Slider({ label, value: v, defaultValue = 50, onValueChange, onVa
   const markList = (marks ?? []).map((m) => (typeof m === "number" ? { value: m } : m));
   return (
     <div className="orlo-slider" data-orientation={orientation} data-disabled={disabled || undefined}>
-      <div className="orlo-slider__head" hidden={hideLabel}>
-        <span id={`${id}-l`} className="orlo-field__label">{label}</span>
-        <output htmlFor={id} className="orlo-slider__value" aria-hidden="true">{format(value)}</output>
-      </div>
+      {!hideLabel && (
+        <div className="orlo-slider__head">
+          <span id={`${id}-l`} className="orlo-field__label">{label}</span>
+          <output htmlFor={id} className="orlo-slider__value" aria-hidden="true">{format(value)}</output>
+        </div>
+      )}
       <div ref={track} className="orlo-slider__track" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
         <span className="orlo-slider__rail" aria-hidden="true" />
         <motion.span className="orlo-slider__fill" aria-hidden="true" style={vertical ? { blockSize: fillCss } : { inlineSize: fillCss }} />

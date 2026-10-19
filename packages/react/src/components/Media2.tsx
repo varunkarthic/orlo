@@ -20,8 +20,13 @@ export function Carousel({ label, slides, slideWidth = "85%", autoplay, allowTex
   const { effective } = useOrloMotion();
   const id = useId();
   const go = useCallback((i: number) => {
-    const el = track.current?.children[Math.max(0, Math.min(slides.length - 1, i))] as HTMLElement | undefined;
-    el?.scrollIntoView({ behavior: effective === "full" ? "smooth" : "auto", block: "nearest", inline: "start" });
+    const tr = track.current;
+    if (!tr) return;
+    const targetIdx = Math.max(0, Math.min(slides.length - 1, i));
+    const el = tr.children[targetIdx] as HTMLElement | undefined;
+    if (el) {
+      tr.scrollTo({ left: el.offsetLeft, behavior: effective === "full" ? "smooth" : "auto" });
+    }
   }, [slides.length, effective]);
   useEffect(() => {
     const el = track.current; if (!el) return;

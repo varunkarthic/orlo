@@ -88,7 +88,7 @@ export function ToolRun({ title, steps, defaultOpen = true }: { title: string; s
       </button>
       <AnimatePresence initial={false}>
         {open && (
-          <motion.ol id={id} className="orlo-toolrun__steps" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1, transition: transition("expand") }} exit={{ height: 0, opacity: 0, transition: transition("collapse") }}>
+          <motion.ol id={id} className="orlo-toolrun__steps" initial={{ height: 0, opacity: 0, paddingBottom: 0 }} animate={{ height: "auto", opacity: 1, paddingBottom: 12, transition: transition("expand") }} exit={{ height: 0, opacity: 0, paddingBottom: 0, transition: transition("collapse") }}>
             {steps.map((s, i) => (
               <li key={i} data-status={s.status}>
                 <span className="orlo-toolrun__dot" aria-hidden="true">{s.status === "done" ? <Icons.Check size={12} /> : s.status === "failed" ? <Icons.X size={12} /> : s.status === "running" ? <span className="orlo-toolrun__pulse" /> : null}</span>

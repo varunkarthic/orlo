@@ -7,21 +7,29 @@ const paths = [
   { number: "04", label: "Tune", title: "Make it your own", body: "Shape a theme and harmonic motion language with named semantic tokens instead of scattered hardcoded values.", href: "styles/", icon: Icons.Brush },
 ] as const;
 
-const familyDescriptions: Record<string, { title: string; count: number; desc: string; icon: any; link: string }> = {
-  Actions: { title: "Actions", count: 7, desc: "Buttons, async loaders, segmented pill controls, and copy triggers.", icon: Icons.Sparkles, link: "components/button/" },
-  Forms: { title: "Forms & Inputs", count: 22, desc: "Text fields, comboboxes, sliders, date pickers, pin inputs, and switches.", icon: Icons.Sliders, link: "components/text-field/" },
-  Navigation: { title: "Navigation", count: 11, desc: "Pill tabs, breadcrumbs, pagination, spotlight command palette, and steppers.", icon: Icons.Route, link: "components/tabs/" },
-  Overlays: { title: "Overlays & Modals", count: 8, desc: "Dialogs, sliding sheets, popovers, tooltips, and non-blocking toast stacks.", icon: Icons.Layers, link: "components/dialog/" },
-  Feedback: { title: "Feedback & Status", count: 12, desc: "Callouts, alerts, progress bars, spinners, skeletons, and status dots.", icon: Icons.AlertCircle, link: "components/alert/" },
-  Data: { title: "Data Display", count: 18, desc: "Data tables, avatar rings, timelines, tree views, and metric stat cards.", icon: Icons.Table, link: "components/table/" },
-  Layout: { title: "Layout & Hierarchy", count: 14, desc: "Surface dividers, aspect ratio guards, splitters, and responsive stacks.", icon: Icons.Layout, link: "components/card/" },
-  Typography: { title: "Typography & Primitives", count: 35, desc: "Keyboard badges, code blocks, animated numbers, and text highlighters.", icon: Icons.Type, link: "components/kbd/" },
+const familyDescriptions: Record<string, { title: string; desc: string; icon: any; link: string }> = {
+  Actions: { title: "Actions", desc: "Buttons, async loaders, segmented pill controls, and copy triggers.", icon: Icons.Sparkles, link: "components/button/" },
+  Forms: { title: "Forms & Inputs", desc: "Text fields, text areas, switches, checkboxes, and sliders.", icon: Icons.Sliders, link: "components/text-field/" },
+  Pickers: { title: "Pickers & Selectors", desc: "Date pickers, range pickers, time fields, and calendar surfaces.", icon: Icons.Calendar, link: "components/date-range-picker/" },
+  Navigation: { title: "Navigation", desc: "Pill tabs, breadcrumbs, pagination, spotlight command palette, and steppers.", icon: Icons.Route, link: "components/tabs/" },
+  Overlays: { title: "Overlays & Modals", desc: "Dialogs, sliding sheets, popovers, tooltips, and non-blocking toast stacks.", icon: Icons.Layers, link: "components/dialog/" },
+  Disclosure: { title: "Disclosure", desc: "Accordions, collapsibles, and measured height reveals.", icon: Icons.ChevronDown, link: "components/accordion/" },
+  Layout: { title: "Layout & Hierarchy", desc: "Surface dividers, aspect ratio guards, splitters, and responsive stacks.", icon: Icons.Layout, link: "components/card/" },
+  Typography: { title: "Typography & Text", desc: "Keyboard badges, code blocks, prose, and text highlighters.", icon: Icons.Type, link: "components/kbd/" },
+  "Data display": { title: "Data Display", desc: "Data tables, virtualised grids, avatar rings, timelines, and metric stat cards.", icon: Icons.Table, link: "components/table/" },
+  Charts: { title: "Charts & Visualisation", desc: "Synchronized line charts, bar charts, and donut charts.", icon: Icons.BarChart, link: "components/line-chart/" },
+  Feedback: { title: "Feedback & Status", desc: "Callouts, alerts, progress bars, spinners, skeletons, and status dots.", icon: Icons.AlertCircle, link: "components/alert/" },
+  Media: { title: "Media & Assets", desc: "Image lifecycles, video players, audio players, and document viewers.", icon: Icons.Image, link: "components/image/" },
+  Editors: { title: "Editors & Markdown", desc: "Safe Markdown rendering, rich editor toolbars, and preview panes.", icon: Icons.Edit, link: "components/markdown/" },
+  AI: { title: "AI & Conversational", desc: "Chat threads, composers, tool run status, and response feedback.", icon: Icons.Zap, link: "components/chat-thread/" },
+  Workspace: { title: "Workspace & Productivity", desc: "App shell, tab strips, status bars, and interactive Kanban boards.", icon: Icons.Columns, link: "components/app-shell/" },
+  Specialty: { title: "Specialty & Tools", desc: "Hold to confirm, signature pads, and shortcut recorders.", icon: Icons.ShieldCheck, link: "components/hold-to-confirm/" },
 };
 
 export function Home({ root }: { root: string }) {
   return (
     <div className="home">
-      {/* ---------- Apple HIG Display Hero ---------- */}
+      {/* ---------- Display Hero ---------- */}
       <section className="hero2" aria-labelledby="home-title">
         <div className="hero2__text">
           <p className="hero2__eyebrow">
@@ -50,7 +58,7 @@ export function Home({ root }: { root: string }) {
             </a>
           </div>
           <p className="hero2__note">
-            Designed by Varun Karthic <span aria-hidden="true">·</span> 100% in-house zero-dependency architecture <span aria-hidden="true">·</span> Open source
+            Designed by Varun Karthic <span aria-hidden="true">·</span> Open source pre-release <span aria-hidden="true">·</span> MIT Licensed
           </p>
         </div>
 
@@ -63,13 +71,13 @@ export function Home({ root }: { root: string }) {
               <span className="terminal__dot terminal__dot--max" />
             </div>
             <div className="terminal__title">bash: quickstart</div>
-            <Badge tone="success" dot>Ready</Badge>
+            <Badge tone="success" dot>Pre-release</Badge>
           </div>
           <div className="terminal__body">
             <div className="terminal__prompt">
               <span className="terminal__ps1">$</span>
-              <code className="terminal__cmd">npm install @orlo/react @orlo/motion @orlo/tokens</code>
-              <CopyButton text="npm install @orlo/react @orlo/motion @orlo/tokens" label="Copy" />
+              <code className="terminal__cmd">git clone https://github.com/varunkarthic/orlo.git</code>
+              <CopyButton text="git clone https://github.com/varunkarthic/orlo.git" label="Copy" />
             </div>
             <div className="terminal__code">
               <div className="terminal__code-line"><span className="t-kw">import</span> {"{ OrloProvider, Button, Sheet, useOrloMotion }"} <span className="t-kw">from</span> <span className="t-str">&quot;@orlo/react&quot;</span>;</div>
@@ -77,10 +85,10 @@ export function Home({ root }: { root: string }) {
               <div className="terminal__code-line"><span className="t-kw">import</span> <span className="t-str">&quot;@orlo/react/styles.css&quot;</span>;</div>
             </div>
             <div className="terminal__meta">
-              <div className="terminal__pill"><Icons.Package size={14} className="terminal__pill-icon" aria-hidden="true" /><span>127 In-House Components</span></div>
-              <div className="terminal__pill"><Icons.Zap size={14} className="terminal__pill-icon" aria-hidden="true" /><span>7 Tuned Spring Presets</span></div>
-              <div className="terminal__pill"><Icons.ShieldCheck size={14} className="terminal__pill-icon" aria-hidden="true" /><span>WCAG AAA Contrast</span></div>
-              <div className="terminal__pill"><Icons.Cpu size={14} className="terminal__pill-icon" aria-hidden="true" /><span>Zero Headless Bloat</span></div>
+              <div className="terminal__pill"><Icons.Package size={14} className="terminal__pill-icon" aria-hidden="true" /><span>{manifest.length} React Components</span></div>
+              <div className="terminal__pill"><Icons.Zap size={14} className="terminal__pill-icon" aria-hidden="true" /><span>7 Harmonic Spring Presets</span></div>
+              <div className="terminal__pill"><Icons.ShieldCheck size={14} className="terminal__pill-icon" aria-hidden="true" /><span>WCAG 2.2 AA Contrast</span></div>
+              <div className="terminal__pill"><Icons.Cpu size={14} className="terminal__pill-icon" aria-hidden="true" /><span>Independent Architecture</span></div>
             </div>
           </div>
         </div>
@@ -91,23 +99,23 @@ export function Home({ root }: { root: string }) {
         <div><strong>{manifest.length}</strong><span>documented components</span></div>
         <div><strong>{families.length}</strong><span>component families</span></div>
         <div><strong>7</strong><span>harmonic spring presets</span></div>
-        <div><strong>100%</strong><span>in-house zero-dependency</span></div>
+        <div><strong>AA</strong><span>WCAG 2.2 verified contrast</span></div>
       </div>
 
-      {/* ---------- Apple HIG Core Philosophy Pillars ---------- */}
+      {/* ---------- Core Philosophy Pillars ---------- */}
       <section className="home__section home__pillars" aria-labelledby="home-pillars-title">
         <div className="home__section-head">
           <div>
             <p className="home__kicker">DESIGN FOUNDATIONS</p>
             <h2 id="home-pillars-title">The three principles of Orlo.</h2>
           </div>
-          <p>Rooted in Apple Human Interface Guidelines and Google Material 3 expressive physics.</p>
+          <p>Clear spatial hierarchy, natural physical dynamics, and layered translucent surfaces.</p>
         </div>
         <div className="home__pillars-grid">
           <div className="home__pillar">
             <div className="home__pillar-icon" aria-hidden="true"><Icons.Ruler size={28} /></div>
             <h3>Clarity &amp; Spatial Deference</h3>
-            <p>Every token, margin, and tap target derives from strict 8pt rhythm and WCAG AAA contrast ratios. Visual chrome defers to user content, ensuring effortless legibility in any lighting.</p>
+            <p>Every token, margin, and tap target derives from strict 8pt rhythm and WCAG 2.2 AA contrast ratios. Visual chrome defers to user content, ensuring effortless legibility in any lighting.</p>
             <a href={`${root}foundations/principles/`} className="home__pillar-link">Read principles <Icons.ArrowRight size={14} aria-hidden="true" /></a>
           </div>
           <div className="home__pillar">
@@ -125,12 +133,12 @@ export function Home({ root }: { root: string }) {
         </div>
       </section>
 
-      {/* ---------- 8 Component Families Grid ---------- */}
+      {/* ---------- Component Families Grid ---------- */}
       <section className="home__section home__families" aria-labelledby="home-families-title">
         <div className="home__section-head">
           <div>
             <p className="home__kicker">CATALOGUE</p>
-            <h2 id="home-families-title">Eight cohesive families.</h2>
+            <h2 id="home-families-title">{families.length} cohesive families.</h2>
           </div>
           <p>Everything your interface needs, sharing one calm grammar and matching touch-target ergonomics.</p>
         </div>

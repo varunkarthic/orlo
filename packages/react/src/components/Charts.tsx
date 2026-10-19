@@ -76,6 +76,7 @@ export function LineChart({ title, description, labels, series, area, height = 2
   const [showTable, setShowTable] = useState(false);
   const svg = useRef<SVGSVGElement>(null);
   const { transition } = useOrloMotion();
+  const id = useId();
   const W = 640, H = height, pad = { l: 52, r: 16, t: 14, b: 30 };
   const visible = series.filter((_, i) => !hidden.has(i));
   const vals = visible.flatMap((s) => s.data.filter((v): v is number => v !== null && Number.isFinite(v)));
@@ -117,15 +118,22 @@ export function LineChart({ title, description, labels, series, area, height = 2
     <ChartFrame title={title} description={description} labels={labels} series={series} format={format} hidden={hidden} toggle={(i) => setHidden((h) => { const n = new Set(h); n.has(i) ? n.delete(i) : n.add(i); return n; })} showTable={showTable} setShowTable={setShowTable} empty={!labels.length || !vals.length && !loading} loading={loading}>
       <div className="orlo-chart__plot">
         <svg ref={svg} viewBox={`0 0 ${W} ${H}`} className="orlo-chart__svg" role="img" aria-label={`${title}. Use arrow keys to read values.`} tabIndex={0} onKeyDown={onKey} onPointerMove={onMove} onPointerLeave={() => setHover(null)} onBlur={() => setHover(null)}>
+          <defs>
+            <clipPath id={`${id}-clip`}>
+              <motion.rect x={pad.l} y={0} height={H} initial={{ width: 0 }} animate={{ width: W - pad.l }} transition={transition("page")} />
+            </clipPath>
+          </defs>
           {ticks.map((t) => <g key={t}><line x1={pad.l} x2={W - pad.r} y1={y(t)} y2={y(t)} className={t === 0 ? "orlo-chart__zero" : "orlo-chart__grid"} /><text x={pad.l - 8} y={y(t)} className="orlo-chart__ytick" dy="0.32em">{format(t)}</text></g>)}
           {labels.map((l, i) => (labels.length <= 12 || i % Math.ceil(labels.length / 8) === 0) && <text key={l + i} x={x(i)} y={H - 8} className="orlo-chart__xtick">{l}</text>)}
-          {series.map((s, i) => hidden.has(i) ? null : (
-            <g key={s.name}>
-              {area && <path d={areaPath(s.data)} fill={color(i)} opacity={0.12} className="orlo-chart__morph" style={{ d: `path("${areaPath(s.data)}")` } as React.CSSProperties} />}
-              <motion.path d={path(s.data)} fill="none" stroke={color(i)} strokeWidth={2.4} strokeDasharray={DASHES[i]} strokeLinecap="round" className="orlo-chart__morph" style={{ d: `path("${path(s.data)}")` } as React.CSSProperties} initial={DASHES[i] ? false : { pathLength: 0 }} animate={DASHES[i] ? undefined : { pathLength: 1 }} transition={transition("page")} />
-              {s.data.map((v, j) => v === null || !Number.isFinite(v) ? null : (labels.length <= 16 || j === hover) && <Marker key={j} kind={MARKERS[i]} x={x(j)} y={y(v)} i={i} r={j === hover ? 5 : 3.2} />)}
-            </g>
-          ))}
+          <g clipPath={`url(#${id}-clip)`}>
+            {series.map((s, i) => hidden.has(i) ? null : (
+              <g key={s.name}>
+                {area && <path d={areaPath(s.data)} fill={color(i)} opacity={0.12} className="orlo-chart__morph" style={{ d: `path("${areaPath(s.data)}")` } as React.CSSProperties} />}
+                <motion.path d={path(s.data)} fill="none" stroke={color(i)} strokeWidth={2.4} strokeDasharray={DASHES[i]} strokeLinecap="round" className="orlo-chart__morph" style={{ d: `path("${path(s.data)}")` } as React.CSSProperties} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={transition("page")} />
+                {s.data.map((v, j) => v === null || !Number.isFinite(v) ? null : (labels.length <= 16 || j === hover) && <Marker key={j} kind={MARKERS[i]} x={x(j)} y={y(v)} i={i} r={j === hover ? 5 : 3.2} />)}
+              </g>
+            ))}
+          </g>
           {hover !== null && <line x1={x(hover)} x2={x(hover)} y1={pad.t} y2={H - pad.b} className="orlo-chart__crosshair" />}
         </svg>
         {hover !== null && (
