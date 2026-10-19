@@ -35,7 +35,7 @@ export function DeviceLab({ root }: { root: string }) {
     <div className="wide">
       <PageHeader eyebrow="Develop" title="Device lab" lead="Real Orlo pages in device frames: the pages inside are the actual documentation running at that width, not screenshots." />
       <div className="devicelab__controls">
-        <SegmentedControl label="Device" value={d} onValueChange={(v) => setD(v as keyof typeof devices)} options={Object.entries(devices).map(([k, v]) => ({ value: k, label: v.label.split(" ")[0] + (k === "small" ? " (small)" : "") }))} />
+        <SegmentedControl label="Device" value={d} onValueChange={(v) => setD(v as keyof typeof devices)} options={Object.entries(devices).map(([k, v]) => ({ value: k, label: v.label.split(" ")[0] }))} />
         <div className="devicelab__page"><Select label="Page" value={page} onValueChange={setPage} options={pagesToTry.map(([v, l]) => ({ value: v, label: l }))} /></div>
         <div className="devicelab__options"><Switch label="Landscape" checked={landscape} onCheckedChange={setLandscape} /><Switch label="Show safe areas" checked={safe} onCheckedChange={setSafe} /></div>
       </div>

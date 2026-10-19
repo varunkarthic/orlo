@@ -168,6 +168,29 @@ test("no horizontal overflow on any page", async ({ page }) => {
   }
 });
 
+test("docs controls and section starts align at tablet and phone widths", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("");
+  await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
+  await expect(page.locator(".header__nav")).toBeHidden();
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("brand/badges/");
+  const code = page.locator(".code").first();
+  const copy = await code.locator(".orlo-copy").boundingBox();
+  const snippet = await code.locator("pre").boundingBox();
+  expect(copy).not.toBeNull();
+  expect(snippet).not.toBeNull();
+  expect(copy!.y + copy!.height).toBeLessThanOrEqual(snippet!.y);
+  expect(await code.locator("pre").evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
+
+  await page.goto("styles/motion/");
+  await expect(page.locator(".page-header + h2").first()).toHaveCSS("border-top-width", "0px");
+
+  await page.goto("develop/devices/");
+  await expect(page.getByRole("radio", { name: "Small", exact: true })).toBeVisible();
+});
+
 for (const p of ["", "components/", "components/select/", "components/dialog/accessibility/", "components/calendar/", "start/examples/", "styles/motion/", "styles/color/", "start/theme-studio/", "foundations/accessibility/", "brand/", "brand/badges/"]) {
   test(`axe: no serious violations on /${p}`, async ({ page }) => {
     await page.goto(p);

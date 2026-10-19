@@ -23,7 +23,7 @@ export function PageHeader({ eyebrow, title, lead, children }: { eyebrow?: strin
 }
 
 export const Code = ({ children, label = "Code example" }: { children: string; label?: string }) => (
-  <div className="code"><pre tabIndex={0} aria-label={label}><code>{children}</code></pre><CopyButton text={children} /></div>
+  <div className="code"><div className="code__bar"><span>{label}</span><CopyButton text={children} /></div><pre tabIndex={0} aria-label={label}><code>{children}</code></pre></div>
 );
 
 /**
