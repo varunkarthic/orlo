@@ -46,7 +46,16 @@ test("overlays blur and fade in rather than popping", async ({ page }) => {
   await page.evaluate(() => {
     const w = window as unknown as { __minOpacity: number };
     w.__minOpacity = 1;
-    const tick = () => { const m = document.querySelector('[role="menu"]'); if (m) w.__minOpacity = Math.min(w.__minOpacity, Number(getComputedStyle(m).opacity)); requestAnimationFrame(tick); };
+    const sample = () => {
+      const m = document.querySelector('[role="menu"]');
+      if (m) {
+        const op = parseFloat(getComputedStyle(m).opacity);
+        if (!isNaN(op)) w.__minOpacity = Math.min(w.__minOpacity, op);
+      }
+    };
+    const observer = new MutationObserver(sample);
+    observer.observe(document.body, { childList: true, subtree: true });
+    const tick = () => { sample(); requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
   });
   await page.locator(".stage").first().getByRole("button", { name: /Actions/ }).click();
