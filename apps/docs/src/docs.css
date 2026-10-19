@@ -169,7 +169,7 @@ body { margin: 0; background: var(--orlo-color-canvas); }
   display: flex;
   flex-direction: column;
   gap: var(--orlo-space-4);
-  inline-size: min(25rem, calc(100vw - 2rem));
+  inline-size: min(25rem, calc(100% - 2rem));
   padding: var(--orlo-space-2) 0;
 }
 .prefs-panel__head {
@@ -1001,15 +1001,16 @@ readthedocs-flyout { display: none !important; }
 .footer { background: var(--orlo-color-surface-sunken); }
 
 /* ---------- Reimagined Apple HIG Editorial Home ---------- */
-.home { overflow-x: clip; }
+.home { overflow-x: hidden; }
 .hero2 {
   max-inline-size: none;
   grid-template-columns: minmax(0, 1.15fr) minmax(22rem, 0.95fr);
   gap: clamp(var(--orlo-space-8), 5vw, var(--orlo-space-16));
   align-items: center;
-  padding: clamp(var(--orlo-space-12), 7vw, 7rem) max(var(--orlo-space-5), calc((100vw - var(--page-max)) / 2 + var(--orlo-space-12)));
+  padding: clamp(var(--orlo-space-12), 7vw, 7rem) max(var(--orlo-space-5), calc((100% - var(--page-max)) / 2 + var(--orlo-space-12)));
   background: var(--orlo-color-surface-sunken);
   border-block-end: 1px solid var(--orlo-color-border);
+  box-sizing: border-box;
 }
 .hero2__text { max-inline-size: 48rem; }
 .article .hero2__eyebrow {
