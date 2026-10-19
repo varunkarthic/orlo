@@ -135,8 +135,8 @@ export function RangeSlider({
             style={vertical ? { insetBlockEnd: i === 0 ? posA : posB } : { insetInlineStart: i === 0 ? posA : posB }}
             animate={{ scale: active === i ? scale(1.18) : 1 }}
             transition={transition("press")}
-            aria-labelledby={id}
-            aria-label={i === 0 ? "Minimum" : "Maximum"}
+            aria-labelledby={hideLabel ? undefined : id}
+            aria-label={hideLabel ? (typeof label === "string" ? `${label} (${i === 0 ? "Minimum" : "Maximum"})` : (i === 0 ? "Minimum" : "Maximum")) : (i === 0 ? "Minimum" : "Maximum")}
             aria-orientation={orientation}
             aria-valuemin={!allowCrossing && i === 1 ? value[0] + minGap : min}
             aria-valuemax={!allowCrossing && i === 0 ? value[1] - minGap : max}

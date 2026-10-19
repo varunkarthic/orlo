@@ -99,7 +99,8 @@ export function Slider({ label, value: v, defaultValue = 50, onValueChange, onVa
           </span>
         ))}
         <motion.div ref={thumbEl} id={id} role="slider" tabIndex={disabled ? -1 : 0} className="orlo-slider__thumb"
-          aria-labelledby={`${id}-l`} aria-valuemin={min} aria-valuemax={max} aria-valuenow={value} aria-valuetext={format(value)}
+          aria-labelledby={hideLabel ? undefined : `${id}-l`} aria-label={hideLabel ? (typeof label === "string" ? label : undefined) : undefined}
+          aria-valuemin={min} aria-valuemax={max} aria-valuenow={value} aria-valuetext={format(value)}
           aria-orientation={orientation} aria-disabled={disabled || undefined}
           style={vertical ? { insetBlockEnd: posCss } : { insetInlineStart: posCss }}
           animate={{ scale: active ? scale(1.18) : 1 }} transition={transition("press")}
