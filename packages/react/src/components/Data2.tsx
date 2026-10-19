@@ -3,24 +3,24 @@ import { Fragment, useEffect, useId, useMemo, useState, type ReactNode, type CSS
 import { Icons } from "../internal/icons.tsx";
 import { useControllable } from "../internal/hooks.ts";
 
-export type ChipProps = { children: ReactNode; icon?: ReactNode; selected?: boolean; defaultSelected?: boolean; onSelectedChange?: (s: boolean) => void; onRemove?: () => void; disabled?: boolean; kind?: "filter" | "assist" | "input" };
+export type ChipProps = { children: ReactNode; icon?: ReactNode; selected?: boolean; defaultSelected?: boolean; onSelectedChange?: (s: boolean) => void; onAction?: () => void; onRemove?: () => void; disabled?: boolean; kind?: "filter" | "assist" | "input" };
 
 /**
  * Compact choices. `filter` toggles (aria-pressed) and shows a check; `assist` is a plain action;
  * `input` represents a value and can be removed with its own labelled button or Backspace/Delete.
  */
-export function Chip({ children, icon, selected: s, defaultSelected = false, onSelectedChange, onRemove, disabled, kind = "filter" }: ChipProps) {
+export function Chip({ children, icon, selected: s, defaultSelected = false, onSelectedChange, onAction, onRemove, disabled, kind = "filter" }: ChipProps) {
   const [selected, setSelected] = useControllable(s, defaultSelected, onSelectedChange);
   if (kind === "input") {
     return (
-      <span className="orlo-chip" data-kind="input" tabIndex={0} onKeyDown={(e) => { if ((e.key === "Backspace" || e.key === "Delete") && onRemove) { e.preventDefault(); onRemove(); } }}>
+      <span className="orlo-chip" data-kind="input" data-disabled={disabled || undefined} aria-disabled={disabled || undefined} tabIndex={disabled || !onRemove ? -1 : 0} onKeyDown={(e) => { if (!disabled && (e.key === "Backspace" || e.key === "Delete") && onRemove) { e.preventDefault(); onRemove(); } }}>
         {icon && <span aria-hidden="true" className="orlo-chip__icon">{icon}</span>}<span>{children}</span>
-        {onRemove && <button type="button" className="orlo-chip__remove" aria-label={`Remove ${typeof children === "string" ? children : ""}`.trim()} onClick={onRemove} tabIndex={-1}><Icons.X size={14} /></button>}
+        {onRemove && <button type="button" className="orlo-chip__remove" aria-label={`Remove ${typeof children === "string" ? children : ""}`.trim()} onClick={onRemove} tabIndex={-1} disabled={disabled}><Icons.X size={14} /></button>}
       </span>
     );
   }
   return (
-    <button type="button" className="orlo-chip" data-kind={kind} aria-pressed={kind === "filter" ? selected : undefined} disabled={disabled} onClick={() => kind === "filter" && setSelected(!selected)}>
+    <button type="button" className="orlo-chip" data-kind={kind} aria-pressed={kind === "filter" ? selected : undefined} disabled={disabled || (kind === "assist" && !onAction)} onClick={() => { if (kind === "filter") setSelected(!selected); else onAction?.(); }}>
       {kind === "filter" && selected ? <span className="orlo-chip__icon" aria-hidden="true"><Icons.Check size={14} /></span> : icon ? <span aria-hidden="true" className="orlo-chip__icon">{icon}</span> : null}
       <span>{children}</span>
     </button>

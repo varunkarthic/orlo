@@ -95,12 +95,21 @@ export function Elevation() {
 
 export function IconsPage() {
   const [size, setSize] = useState("24");
+  const [copyMessage, setCopyMessage] = useState("");
+  const copyIcon = async (name: string) => {
+    try {
+      await navigator.clipboard.writeText(`<Icons.${name} />`);
+      setCopyMessage(`Copied Icons.${name} JSX.`);
+    } catch {
+      setCopyMessage("Clipboard access is unavailable. Select the icon name to copy it manually.");
+    }
+  };
   return (
     <>
       <PageHeader eyebrow="Styles" title="Icons" lead="An original set: 24 px grid, 1.75 stroke, round joins, optically centred. Decorative by default; give icon-only controls a label." />
       <SegmentedControl label="Size" size="sm" value={size} onValueChange={setSize} options={["16", "20", "24", "32"].map((s) => ({ value: s, label: `${s}px` }))} />
-      <div className="icongrid">{Object.entries(Icons).map(([n, I]) => <Tooltip key={n} content={`Icons.${n}`}><button type="button" className="icongrid__item" aria-label={n} onClick={() => navigator.clipboard?.writeText(`<Icons.${n} />`)}><I size={+size} /><span>{n}</span></button></Tooltip>)}</div>
-      <p className="orlo-hint">Click an icon to copy its JSX.</p>
+      <div className="icongrid">{Object.entries(Icons).map(([n, I]) => <Tooltip key={n} content={`Icons.${n}`}><button type="button" className="icongrid__item" aria-label={`Copy Icons.${n} JSX`} onClick={() => void copyIcon(n)}><I size={+size} /><span>{n}</span></button></Tooltip>)}</div>
+      <p className="orlo-hint">Click an icon to copy its JSX. <span role="status">{copyMessage}</span></p>
     </>
   );
 }

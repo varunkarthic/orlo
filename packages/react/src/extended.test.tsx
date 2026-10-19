@@ -5,12 +5,39 @@ import { renderToString } from "react-dom/server";
 import { useState } from "react";
 import {
   OrloProvider, passwordStrength, parseLocaleNumber, NumberField, Combobox, TagInput, PinInput, Calendar, monthGrid, matchesAccept, dragVerdict,
-  TreeView, visibleNodes, Highlight, comboFrom, diffLines, PasswordField, manifest,
+  TreeView, visibleNodes, Highlight, comboFrom, diffLines, PasswordField, manifest, Chip,
 } from "./index.ts";
 import * as Orlo from "./index.ts";
 
 afterEach(cleanup);
 const wrap = (ui: React.ReactNode) => render(<OrloProvider>{ui}</OrloProvider>);
+
+describe("Chip", () => {
+  it("runs assist actions from keyboard and does not activate when disabled", async () => {
+    const action = vi.fn();
+    wrap(<><Chip kind="assist" onAction={action}>Share</Chip><Chip kind="assist" onAction={action} disabled>Unavailable</Chip><Chip kind="assist">No callback</Chip></>);
+    screen.getByRole("button", { name: "Share" }).focus();
+    await userEvent.keyboard("{Enter}");
+    expect(action).toHaveBeenCalledOnce();
+    await userEvent.click(screen.getByRole("button", { name: "Unavailable" }), { pointerEventsCheck: 0 });
+    expect(action).toHaveBeenCalledOnce();
+    expect(screen.getByRole("button", { name: "No callback" })).toBeDisabled();
+  });
+  it("removes input chips with Delete, but not when disabled", async () => {
+    const remove = vi.fn();
+    wrap(<><Chip kind="input" onRemove={remove}>Design</Chip><Chip kind="input" onRemove={remove} disabled>Locked</Chip></>);
+    const design = screen.getByText("Design").closest('[data-kind="input"]') as HTMLElement;
+    design.focus();
+    await userEvent.keyboard("{Delete}");
+    expect(remove).toHaveBeenCalledOnce();
+    const locked = screen.getByText("Locked").closest('[data-kind="input"]') as HTMLElement;
+    expect(locked).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByRole("button", { name: "Remove Locked" })).toBeDisabled();
+    locked.focus();
+    await userEvent.keyboard("{Backspace}");
+    expect(remove).toHaveBeenCalledOnce();
+  });
+});
 
 describe("pure helpers", () => {
   it("passwordStrength rejects repeats and common passwords", () => {

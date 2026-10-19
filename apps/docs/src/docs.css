@@ -447,10 +447,12 @@ readthedocs-flyout { display: none !important; }
 .playground { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; grid-template-areas: "stage controls" "code code"; margin-block: var(--orlo-space-4) var(--orlo-space-6); overflow: hidden; border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-lg); background: var(--orlo-color-surface); }
 @media (max-width: 799px) { .playground { grid-template-columns: 1fr; grid-template-areas: "stage" "controls" "code"; } }
 .playground__stage { grid-area: stage; display: grid; place-items: center; min-block-size: 15rem; padding: var(--orlo-space-10) var(--orlo-space-6); background: var(--orlo-color-surface); }
+.playground__message { display: block; margin-block-start: var(--orlo-space-2); color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); }
+.playground__message:empty { display: none; }
 .playground__controls { grid-area: controls; display: grid; align-content: start; gap: var(--orlo-space-4); max-block-size: 30rem; padding: var(--orlo-inset-sm); overflow: auto; border-inline-start: 1px solid var(--orlo-color-border); background: var(--orlo-color-canvas); }
 @media (max-width: 799px) { .playground__controls { border-inline-start: 0; border-block-start: 1px solid var(--orlo-color-border); } }
 .playground__control { display: grid; gap: var(--orlo-gap-label); }
-.playground__code { grid-area: code; display: flex; align-items: flex-start; gap: var(--orlo-space-2); padding: var(--orlo-space-3) var(--orlo-space-2) var(--orlo-space-3) var(--orlo-inset-sm); border-block-start: 1px solid var(--orlo-color-border); background: var(--orlo-color-surface-sunken); }
+.playground__code { grid-area: code; display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--orlo-space-2); padding: var(--orlo-space-3) var(--orlo-space-2) var(--orlo-space-3) var(--orlo-inset-sm); border-block-start: 1px solid var(--orlo-color-border); background: var(--orlo-color-surface-sunken); }
 .playground__code pre { flex: 1; margin: 0; font-size: 0.8125rem; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
 .article .playground__code code { padding: 0; background: none; }
 

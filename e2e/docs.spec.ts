@@ -14,6 +14,43 @@ test("unknown paths get the 404 page", async ({ page }) => {
   const res = await page.goto("does/not/exist/");
   expect(res?.status()).toBe(404);
   await expect(page.getByRole("heading", { name: /open edge/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Go to the documentation home" })).toHaveAttribute("href", "/en/latest/");
+});
+
+test("playground URLs recover from invalid values and generated JSX escapes text", async ({ page }) => {
+  await page.goto("components/slider/?p.max=wat&p.step=0&p.min=100000");
+  const preview = page.locator(".playground__stage");
+  await expect(preview.getByRole("slider", { name: "Value" })).toHaveAttribute("aria-valuemin", "0");
+  await expect(preview.getByRole("slider", { name: "Value" })).toHaveAttribute("aria-valuemax", "100");
+  await expect.poll(() => new URL(page.url()).search).toBe("");
+  await page.goto("components/slider/?p.min=-100");
+  await expect(page.locator(".playground__stage").getByRole("slider", { name: "Value" })).toHaveAttribute("aria-valuenow", "0");
+  await expect(page.locator(".playground__code code")).toContainText("defaultValue={0}");
+  await page.goto("components/button/?p.children=Save%20%3Cnow%3E%20%7Bok%7D&p.variant=invalid");
+  await expect(page.locator(".playground__code code")).toContainText('{"Save <now> {ok}"}');
+  await expect(page.locator(".playground__stage").getByRole("button", { name: "Save <now> {ok}" })).toBeVisible();
+  await expect.poll(() => new URL(page.url()).searchParams.has("p.variant")).toBe(false);
+});
+
+test("playground actions give a visible outcome", async ({ page }) => {
+  await page.goto("components/chip/?p.kind=input");
+  const stage = page.locator(".playground__stage");
+  await stage.getByRole("button", { name: "Remove In stock" }).click();
+  await expect(stage.getByRole("status")).toContainText("Chip removed");
+  await stage.getByRole("button", { name: "Restore chip" }).click();
+  await expect(stage.getByRole("button", { name: "Remove In stock" })).toBeVisible();
+  await page.goto("components/chip/?p.kind=assist");
+  await page.locator(".playground__stage").getByRole("button", { name: "In stock" }).click();
+  await expect(page.locator(".playground__stage").getByRole("status")).toContainText("Action completed");
+});
+
+test("icon copy and failure recovery report what happened", async ({ page }) => {
+  await page.goto("styles/icons/");
+  await page.getByRole("button", { name: "Copy Icons.Search JSX" }).click();
+  await expect(page.getByRole("status")).toContainText(/Copied Icons.Search|Clipboard access is unavailable/);
+  await page.goto("foundations/failures/");
+  await page.getByRole("button", { name: "Show recovery" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "secure payment method" })).toBeVisible();
 });
 
 test("content is present without JavaScript", async ({ browser }) => {

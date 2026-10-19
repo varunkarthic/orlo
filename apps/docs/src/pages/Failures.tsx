@@ -11,6 +11,7 @@ function Failing({ kind }: { kind: "error" | "offline" | "slow" | "empty" }) {
 
 export function Failures() {
   const [off, setOff] = useState(false);
+  const [paymentHelp, setPaymentHelp] = useState(false);
   return (
     <div className="wide">
       <PageHeader eyebrow="Foundations" title="Failure gallery" lead="Every way things go wrong, side by side. Each one says what happened, what is safe, what you can do, and whether it will recover. All failures here are simulated locally." />
@@ -46,11 +47,12 @@ export function Failures() {
         <figure className="lab-fig"><Card><TextField label="Email" defaultValue="ada@" error="Enter an address like name@example.com." /></Card><figcaption>Field error: words, glyph, border</figcaption></figure>
         <figure className="lab-fig"><Card><FileDropzone label="Attachments" accept="image/*" maxSize={1000} help="Drop a PDF or a large image to see rejections." /></Card><figcaption>Rejected files explain why</figcaption></figure>
         <figure className="lab-fig"><Card><AsyncButton action={() => new Promise((_, rej) => setTimeout(() => rej(new Error()), 900))} errorLabel="Couldn’t save — retry">Save</AsyncButton></Card><figcaption>Action fails, retry in place</figcaption></figure>
-        <figure className="lab-fig"><Card><Combobox label="Remote search" options={[]} onInputChange={() => {}} emptyText="No matches. Check the spelling." /></Card><figcaption>No results</figcaption></figure>
+        <figure className="lab-fig"><Card><Combobox label="Remote search" options={[]} emptyText="No matches. Check the spelling." /></Card><figcaption>No results</figcaption></figure>
       </div>
       <H2>Page-level</H2>
       <Stack gap={3}>
-        <Alert tone="error" title="Payment declined" action={<Button variant="ghost">Update card</Button>}>Your card was not charged. Your plan stays active until 30 November.</Alert>
+        <Alert tone="error" title="Payment declined" action={<Button variant="ghost" onClick={() => setPaymentHelp(true)}>Show recovery</Button>}>Your card was not charged. Your plan stays active until 30 November.</Alert>
+        {paymentHelp && <Card role="status">In a real product, take the customer to a secure payment method form. This gallery makes no payment changes.</Card>}
         <div style={{ border: "1px solid var(--orlo-color-border)", borderRadius: 12, overflow: "hidden" }}><Banner tone="warning">Scheduled maintenance Saturday 02:00–03:00 UTC. Reading still works.</Banner><div style={{ padding: 12 }}>Content stays usable underneath.</div></div>
         <Switch label="Simulate going offline" checked={off} onCheckedChange={setOff} />
         <div style={{ border: "1px solid var(--orlo-color-border)", borderRadius: 12, overflow: "hidden" }}><OfflineIndicator simulate={off} /><div style={{ padding: 12 }}>Your document</div></div>

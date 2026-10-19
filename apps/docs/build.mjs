@@ -3,6 +3,7 @@ import { build } from "vite";
 import { mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { semantic } from "@orlo/tokens";
 
 const root = dirname(fileURLToPath(import.meta.url));
 await build({ root, logLevel: "warn" });
@@ -30,11 +31,11 @@ for (const { path, title } of routes) {
 // Read the Docs serves /404.html for unknown paths. Asset URLs there must be absolute to the version root,
 // so it uses a small self-contained page instead of the app bundle.
 writeFileSync(join(root, "dist", "404.html"), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not found · Orlo</title>
-<style>body{margin:0;min-height:100dvh;display:grid;place-items:center;font:16px/1.55 system-ui,sans-serif;background:#F7F5F0;color:#1C1B18;padding:24px}
-@media (prefers-color-scheme:dark){body{background:#121110;color:#EFEBE3}a{color:#F08A57!important}}main{max-width:32rem}h1{font-size:2rem;letter-spacing:-.02em;margin:16px 0 8px}a{color:#A8370A}</style></head>
+<style>body{margin:0;min-height:100dvh;box-sizing:border-box;display:grid;place-items:center;font:16px/1.55 system-ui,sans-serif;background:${semantic.light.canvas};color:${semantic.light.fg};padding:24px}
+main{max-width:32rem}h1{font-size:2rem;letter-spacing:-.02em;margin:16px 0 8px}a{color:${semantic.light["accent-text"]}}a:focus-visible{outline:3px solid ${semantic.light.focus};outline-offset:4px}@media (prefers-color-scheme:dark){body{background:${semantic.dark.canvas};color:${semantic.dark.fg}}a{color:${semantic.dark["accent-text"]}}a:focus-visible{outline-color:${semantic.dark.focus}}}</style></head>
 <body><main><svg viewBox="0 0 100 100" width="48" height="48" aria-hidden="true"><path d="M79.5 29.4A36 36 0 1 1 66.9 18.2" fill="none" stroke="currentColor" stroke-width="14"/></svg>
 <h1>This page has an open edge.</h1><p>The address doesn’t match any page in the Orlo documentation. It may have moved.</p>
-<p><a href="/">Go to the documentation home</a></p></main></body></html>`);
+<p><a id="docs-home" href="/en/latest/">Go to the documentation home</a></p></main><script>const parts=location.pathname.split("/");if(parts[1]==="en"&&parts[2])document.getElementById("docs-home").href="/en/"+encodeURIComponent(parts[2])+"/";</script></body></html>`);
 // Machine-readable files for AI agents and tooling, generated from the same manifest the site uses.
 const components = { name: "orlo", generated: new Date().toISOString().slice(0, 10), components: manifest.map(({ name, slug, family, maturity, summary, tested }) => ({ name, slug, family, maturity, summary, tested, docs: `components/${slug}/` })) };
 writeFileSync(join(root, "dist", "components.json"), JSON.stringify(components, null, 2));

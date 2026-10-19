@@ -8,7 +8,27 @@ export type Control =
   | { name: string; type: "number"; min: number; max: number; step?: number; default: number };
 export type PlaygroundDef = { controls: Control[]; render: (p: Record<string, unknown>) => ReactNode; code: (p: Record<string, unknown>) => string };
 
-const parse = (c: Control, raw: string | null) => raw === null ? c.default : c.type === "boolean" ? raw === "1" : c.type === "number" ? Number(raw) : raw;
+const parse = (c: Control, raw: string | null) => {
+  if (raw === null) return c.default;
+  if (c.type === "boolean") return raw === "1" ? true : raw === "0" ? false : c.default;
+  if (c.type === "select") return c.options.includes(raw) ? raw : c.default;
+  if (c.type === "text") return raw.slice(0, 120);
+  const value = Number(raw);
+  if (!raw.trim() || !Number.isFinite(value)) return c.default;
+  const clamped = Math.min(c.max, Math.max(c.min, value));
+  const step = c.step ?? 1;
+  return Number(Math.min(c.max, c.min + Math.round((clamped - c.min) / step) * step).toFixed(6));
+};
+
+const queryFor = (controls: Control[], props: Record<string, unknown>) => {
+  const q = new URLSearchParams(location.search);
+  for (const c of controls) {
+    const value = props[c.name];
+    if (value === c.default) q.delete(`p.${c.name}`);
+    else q.set(`p.${c.name}`, c.type === "boolean" ? (value ? "1" : "0") : String(value));
+  }
+  return q;
+};
 
 /** Live props, generated code that matches what you see, and shareable URL state (?p.name=value). */
 export function Playground({ def }: { def: PlaygroundDef }) {
@@ -17,15 +37,19 @@ export function Playground({ def }: { def: PlaygroundDef }) {
   // Restore from the URL after hydration so the prerendered HTML matches.
   useEffect(() => {
     const q = new URLSearchParams(location.search);
-    setProps(Object.fromEntries(def.controls.map((c) => [c.name, parse(c, q.get(`p.${c.name}`))])));
+    const restored = Object.fromEntries(def.controls.map((c) => [c.name, parse(c, q.get(`p.${c.name}`))]));
+    setProps(restored);
+    const canonical = queryFor(def.controls, restored);
+    if (canonical.toString() !== q.toString()) history.replaceState(null, "", `${location.pathname}${canonical.toString() ? `?${canonical}` : ""}${location.hash}`);
   }, [def]);
-  const set = (k: string, v: unknown) => setProps((p) => {
-    const next = { ...p, [k]: v };
-    const q = new URLSearchParams(location.search);
-    for (const c of def.controls) { const val = next[c.name]; if (val === c.default) q.delete(`p.${c.name}`); else q.set(`p.${c.name}`, c.type === "boolean" ? (val ? "1" : "0") : String(val)); }
+  const set = (k: string, v: unknown) => {
+    const control = def.controls.find((c) => c.name === k)!;
+    const value = control.type === "number" ? parse(control, String(v)) : control.type === "text" ? String(v).slice(0, 120) : v;
+    const next = { ...props, [k]: value };
+    setProps(next);
+    const q = queryFor(def.controls, next);
     history.replaceState(null, "", `${location.pathname}${q.toString() ? `?${q}` : ""}${location.hash}`);
-    return next;
-  });
+  };
   const code = def.code(props);
   return (
     <div className="playground">
@@ -48,8 +72,9 @@ export function Playground({ def }: { def: PlaygroundDef }) {
 }
 
 /** Builds a JSX string with only non-default props, in a stable order. */
-export function jsx(tag: string, props: Record<string, unknown>, defaults: Record<string, unknown>, children?: string) {
-  const attrs = Object.entries(props).filter(([k, v]) => k !== "children" && v !== defaults[k] && v !== "" && v !== undefined).map(([k, v]) => (v === true ? k : typeof v === "string" ? `${k}="${v}"` : `${k}={${JSON.stringify(v)}}`));
+export function jsx(tag: string, props: Record<string, unknown>, defaults: Record<string, unknown>, children?: string, rawChildren = false) {
+  const attrs = Object.entries(props).filter(([k, v]) => k !== "children" && v !== defaults[k] && v !== "" && v !== undefined).map(([k, v]) => v === true ? k : typeof v === "string" && !/["&<>{}\\\r\n]/.test(v) ? `${k}="${v}"` : `${k}={${JSON.stringify(v)}}`);
   const open = `<${tag}${attrs.length ? " " + attrs.join(" ") : ""}`;
-  return children ? `${open}>${children}</${tag}>` : `${open} />`;
+  const body = children && !rawChildren && /[<&>{}\r\n]/.test(children) ? `{${JSON.stringify(children)}}` : children;
+  return children ? `${open}>${body}</${tag}>` : `${open} />`;
 }

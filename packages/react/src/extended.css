@@ -31,18 +31,19 @@
 .orlo-tags__list { display: contents; list-style: none; margin: 0; padding: 0; }
 .orlo-tags input { flex: 1; min-inline-size: 6rem; border: 0; outline: none; background: none; color: inherit; font: inherit; min-block-size: 1.75rem; }
 .orlo-chip {
-  display: inline-flex; align-items: center; gap: 6px; min-block-size: 2rem; padding: 0 12px; border-radius: var(--orlo-radius-full);
+  display: inline-flex; align-items: center; gap: var(--orlo-gap-icon-sm); min-block-size: 2rem; padding-block: 0; padding-inline: var(--orlo-space-3); border-radius: var(--orlo-radius-sm);
   border: 1px solid var(--orlo-color-border); background: var(--orlo-color-surface-raised); color: var(--orlo-color-fg);
   font: inherit; font-size: var(--orlo-text-sm); font-weight: 500; line-height: 1; cursor: pointer; white-space: nowrap;
   transition: background-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast), border-color var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
 }
-li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-end: 4px; min-block-size: 1.75rem; }
+li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-end: var(--orlo-space-1); min-block-size: 1.75rem; }
 .orlo-chip[aria-pressed="true"] { background: var(--orlo-color-fg); border-color: var(--orlo-color-fg); color: var(--orlo-color-fg-inverse); }
 .orlo-chip[data-armed] { outline: 2px solid var(--orlo-color-error); outline-offset: 1px; }
-.orlo-chip:disabled { cursor: not-allowed; color: var(--orlo-disabled-fg); background: var(--orlo-disabled-bg); border-color: var(--orlo-disabled-border); }
+.orlo-chip:disabled, .orlo-chip[data-disabled] { cursor: not-allowed; color: var(--orlo-disabled-fg); background: var(--orlo-disabled-bg); border-color: var(--orlo-disabled-border); }
 .orlo-chip__icon { display: inline-flex; }
-.orlo-chip__remove { display: grid; place-items: center; inline-size: 1.375rem; block-size: 1.375rem; border: 0; border-radius: 3px; background: none; color: var(--orlo-color-fg-muted); cursor: pointer; }
-.orlo-chip__remove:hover { background: color-mix(in oklab, transparent, var(--orlo-color-fg) 10%); color: var(--orlo-color-fg); }
+.orlo-chip__remove { display: grid; place-items: center; inline-size: 1.5rem; block-size: 1.5rem; border: 0; border-radius: var(--orlo-radius-xs); background: none; color: var(--orlo-color-fg-muted); cursor: pointer; }
+.orlo-chip__remove:disabled { cursor: not-allowed; color: var(--orlo-disabled-fg); }
+@media (hover: hover) and (pointer: fine) { .orlo-chip__remove:hover:not(:disabled) { background: color-mix(in oklab, transparent, var(--orlo-color-fg) 10%); color: var(--orlo-color-fg); } }
 @media (hover: hover) and (pointer: fine) { button.orlo-chip:hover:not(:disabled) { border-color: var(--orlo-color-fg-muted); } }
 
 /* ---------- PIN ---------- */
