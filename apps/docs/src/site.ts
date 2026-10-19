@@ -1,11 +1,12 @@
 import { manifest, families } from "@orlo/react";
 
-export type SectionId = "home" | "start" | "foundations" | "styles" | "components" | "develop" | "brand";
+export type SectionId = "home" | "start" | "design-studio" | "components" | "foundations" | "styles" | "develop" | "brand";
 export type Page = { path: string; title: string; section: SectionId; group?: string; summary?: string };
 
-export const sections: { id: SectionId; title: string; path: string; icon: "Home" | "Rocket" | "Component" | "BookOpen" | "Palette" | "Terminal" | "Award" }[] = [
+export const sections: { id: SectionId; title: string; path: string; icon: "Home" | "Rocket" | "Wand" | "Component" | "BookOpen" | "Palette" | "Terminal" | "Award" }[] = [
   { id: "home", title: "Home", path: "", icon: "Home" },
   { id: "start", title: "Get started", path: "start", icon: "Rocket" },
+  { id: "design-studio", title: "Design Studio", path: "design-studio", icon: "Wand" },
   { id: "components", title: "Components", path: "components", icon: "Component" },
   { id: "foundations", title: "Foundations", path: "foundations", icon: "BookOpen" },
   { id: "styles", title: "Styles", path: "styles", icon: "Palette" },
@@ -20,9 +21,10 @@ export const tabTitle: Record<Tab, string> = { overview: "Overview", specs: "Spe
 /** Sidebar pages per section. Component tab pages exist as routes but are not listed individually. */
 export const pages: Page[] = [
   { path: "", title: "Home", section: "home" },
+  { path: "design-studio", title: "Design Studio", section: "design-studio", summary: "Visual workspace for composing, customizing, and exporting Orlo interfaces." },
   { path: "start", title: "Overview", section: "start", summary: "What Orlo is and how to begin." },
   { path: "start/installation", title: "Installation", section: "start", summary: "Add Orlo to a React app." },
-  { path: "start/theme-studio", title: "Theme Studio", section: "start", summary: "Generate an accessible theme from one colour." },
+  { path: "start/theme-studio", title: "Theme Studio (migrated)", section: "start", summary: "Theme Studio has evolved into the full Design Studio." },
   { path: "start/examples", title: "Examples", section: "start", summary: "Real screens built only from Orlo." },
   { path: "start/about", title: "About the name", section: "start", summary: "Orlo, the hem, and why the edges matter." },
   { path: "foundations", title: "Overview", section: "foundations" },

@@ -201,6 +201,17 @@ export function ThemeStudio() {
   return (
     <div className="wide">
       <PageHeader eyebrow="Get started" title="Theme Studio" lead="Pick one brand colour and see it in real screens. Orlo keeps the hue and moves only lightness until every accent pairing passes WCAG 2.2 AA, in light and dark." />
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: "var(--orlo-color-surface-raised)", border: "1px solid var(--orlo-color-border)", borderRadius: "var(--orlo-radius-md)", marginBlockEnd: "16px", flexWrap: "wrap", gap: "8px" }}>
+        <div>
+          <strong>Theme Studio is now Design Studio</strong>
+          <p style={{ margin: "2px 0 0", fontSize: "var(--orlo-text-sm)", color: "var(--orlo-color-fg-muted)" }}>
+            Compose, configure, and export complete multi-component screens in the new visual workspace.
+          </p>
+        </div>
+        <a href="../design-studio/" className="orlo-button" data-variant="solid" data-size="sm">
+          Open Design Studio
+        </a>
+      </div>
       <div className="workshop">
         <aside className="workshop__controls">
           <ColorPicker label="Brand colour" value={hex} onValueChange={setHex} swatches={["#1F5FA8", "#7C3AED", "#16A34A", "#FFE600", "#00C2FF", "#E11D48", "#A8370A"]} />
@@ -235,8 +246,8 @@ export function About() {
       <Wordmark height={64} style={{ marginBlock: 8 }} />
       <p>A hem is the careful finish that holds a garment together. Nobody looks at it first, but everyone notices when it's missing. Interfaces are the same: the moments between states, the failure paths and the edges where surfaces meet decide whether a product feels finished.</p>
       <p>That is the whole idea of Orlo, and the reason for its line: <strong>Nothing is an afterthought.</strong></p>
-      <H2>What Orlo is not</H2>
-      <Bullets items={["Not an Apple or Material skin. Orlo studies their motion principles and builds its own identity.", "Not a re-coloured fork of another library. Every component and primitive is written for Orlo.", "Not finished. Components are beta until they pass manual assistive-technology review."]} />
+      <H2>Design philosophy</H2>
+      <Bullets items={["Precision: Surfaces, geometry, and design tokens derive from a single unified system.", "Fluidity: Interruptible spring motion and physical gestures provide immediate tactile feedback.", "Accessibility: Semantic landmarks, keyboard navigation, high contrast, and reduced motion are core foundations."]} />
       <p className="orlo-hint">Meaning per the Cambridge Italian–English Dictionary entry for “orlo”. This is not trademark clearance.</p>
     </>
   );

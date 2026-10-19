@@ -13,6 +13,7 @@ export async function loadPage(route: string): Promise<PageRender> {
   }
   if (route === "components") { const [{ ComponentsIndex }, docs] = await Promise.all([import("./ComponentDocs.tsx"), loadAllDocs()]); return ({ root }) => <ComponentsIndex root={root} docs={docs} />; }
   if (route === "") { const { Home } = await import("./Home.tsx"); return ({ root }) => <Home root={root} />; }
+  if (route === "design-studio") { const { DesignStudio } = await import("./DesignStudio.tsx"); return () => <DesignStudio />; }
   if (route.startsWith("start")) {
     if (route === "start/examples") { const { Examples } = await import("./Examples.tsx"); return () => <Examples />; }
     const s = await import("./Start.tsx");

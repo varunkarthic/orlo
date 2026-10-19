@@ -234,12 +234,12 @@ export function App({ route, page }: { route: string; page: PageRender }) {
           </div>
           <div className="footer__cols">
             <div><p>Learn</p><a href={href("start")}>Get started</a><a href={href("foundations")}>Foundations</a><a href={href("styles")}>Styles</a></div>
-            <div><p>Build</p><a href={href("components")}>Components</a><a href={href("develop")}>Develop</a><a href={href("start/theme-studio")}>Theme Studio</a></div>
+            <div><p>Build</p><a href={href("components")}>Components</a><a href={href("develop")}>Develop</a><a href={href("design-studio")}>Design Studio</a></div>
             <div><p>Project</p><a href={href("brand")}>Brand</a><a href={href("brand/badges")}>Embed badges</a><a href={href("brand/licensing")}>Licensing & credits</a><a href="https://github.com/varunkarthic/orlo">GitHub</a></div>
           </div>
         </div>
         <div className="footer__legal">
-          <span>Designed by Varun Karthic. Not affiliated with Apple, Google, Framer or any other vendor named in its research.</span>
+          <span>Designed by Varun Karthic. Licensed under MIT.</span>
           {rtd && <span className="footer__version">Version: {rtd.versions.length > 1 ? rtd.versions.map((v, i) => <span key={v.slug}>{i ? " · " : ""}{v.slug === rtd.version ? <strong>{v.slug}</strong> : <a href={v.url}>{v.slug}</a>}</span>) : <strong>{rtd.version}</strong>} · Hosted on Read the Docs</span>}
         </div>
       </footer>

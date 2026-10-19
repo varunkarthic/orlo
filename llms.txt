@@ -5,9 +5,10 @@
 Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and components (@orlo/react). All components are beta.
 
 ## Docs
+- [Design Studio](design-studio/): Visual workspace for composing, customizing, and exporting Orlo interfaces.
 - [Overview](start/): What Orlo is and how to begin.
 - [Installation](start/installation/): Add Orlo to a React app.
-- [Theme Studio](start/theme-studio/): Generate an accessible theme from one colour.
+- [Theme Studio (migrated)](start/theme-studio/): Theme Studio has evolved into the full Design Studio.
 - [Examples](start/examples/): Real screens built only from Orlo.
 - [About the name](start/about/): Orlo, the hem, and why the edges matter.
 - [Overview](foundations/): 
