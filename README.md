@@ -111,7 +111,7 @@ packages/motion   spring presets, metrics, reduced-motion policy (wraps Motion)
 packages/react    components, provider, positioning, focus and layer primitives, icons
 apps/docs         prerendered documentation (Read the Docs custom build)
 assets/brand      logo SVGs and PNG/ICO exports
-docs/             research notes, decisions, status, README media
+docs/             Human Interface Guidelines, spatial systems, research notes, decisions, status
 e2e/              Playwright + axe tests
 ```
 
@@ -119,16 +119,16 @@ e2e/              Playwright + axe tests
 
 | Check | Status |
 |---|---|
-| Unit and component tests (Vitest) | automated |
-| Playwright end-to-end: deep links, focus, menus at edges, search, overflow | automated |
-| axe-core on key pages, desktop and mobile | automated |
+| Unit and component tests (Vitest) | automated (181 passed) |
+| Playwright end-to-end: deep links, focus, menus at edges, search, overflow | automated (97 passed) |
+| axe-core on key pages, desktop and mobile | automated (0 violations) |
 | Manual screen-reader testing | **not yet done** |
 | Visual regression snapshots | not yet automated |
 
-Current details are in [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
+Normative design specifications are published in [`docs/README.md`](docs/README.md) and [`docs/guidelines/`](docs/guidelines/). Current engineering details are in [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
 
 ## Credits
 
-Orlo's motion principles draw on Apple's Human Interface Guidelines and Material 3 Expressive. It is **not affiliated with Apple, Google, Framer or any other vendor**. Sources and licences are listed in [`docs/research/`](docs/research).
+Orlo's design and motion principles draw on Apple's Human Interface Guidelines and Google's Material 3 Expressive. It is **not affiliated with Apple, Google, Framer or any other vendor**. Sources and licences are listed in [`docs/research/`](docs/research).
 
 Agents should read [AGENTS.md](AGENTS.md) and [ORLO_DESIGN_RULES.md](ORLO_DESIGN_RULES.md). Licensed under the [MIT License](LICENSE).
