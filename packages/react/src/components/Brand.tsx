@@ -31,8 +31,8 @@ export type BuiltWithOrloProps = {
   /** Fixed brand colours, like store badges: they don't follow the page theme, so they look the same everywhere. */
   tone?: "dark" | "light" | "accent" | "outline";
   size?: "sm" | "md" | "lg";
-  /** `stacked` is the badge (caption over wordmark); `inline` is a single-line pill for footers. */
-  layout?: "stacked" | "inline";
+  /** `stacked` is compact; `inline` is a footer pill; `signature` includes the framework and designer credit. */
+  layout?: "stacked" | "inline" | "signature";
   /** Where the badge links. Pass `null` to render a non-interactive badge. */
   href?: string | null;
   className?: string;
@@ -42,12 +42,14 @@ const CAPTION = { built: "Built with", designed: "Designed with", made: "Made wi
 
 /**
  * An optional "Built with Orlo" badge for apps and sites made with Orlo. Never required; use it if you'd like to.
- * It is one link with a plain-text name ("Built with Orlo"), so screen readers don't spell out the artwork.
+ * It is one link with a plain-text name, so screen readers don't spell out the artwork.
  */
 export function BuiltWithOrlo({ kind = "built", tone = "dark", size = "md", layout = "stacked", href = "https://orlo-react.readthedocs.io/", className }: BuiltWithOrloProps) {
-  const name = `${CAPTION[kind]} Orlo`;
+  const name = layout === "signature" ? "Orlo — open-source design framework for React by Varun Karthic" : `${CAPTION[kind]} Orlo`;
   const inner = layout === "inline"
     ? <><Mark aria-hidden="true" role={undefined} className="orlo-bwo__mark" /><span className="orlo-bwo__caption">{CAPTION[kind]}</span><Wordmark aria-hidden="true" role={undefined} className="orlo-bwo__word" /></>
+    : layout === "signature"
+      ? <><Wordmark aria-hidden="true" role={undefined} className="orlo-bwo__word" /><span className="orlo-bwo__signature"><strong>Open-source design framework for React</strong><span>by Varun Karthic</span></span></>
     : <span className="orlo-bwo__text"><span className="orlo-bwo__caption">{CAPTION[kind]}</span><Wordmark aria-hidden="true" role={undefined} className="orlo-bwo__word" /></span>;
   const props = { className: ["orlo-bwo", className].filter(Boolean).join(" "), "data-tone": tone, "data-size": size, "data-layout": layout, "aria-label": name };
   return href === null ? <span role="img" {...props}>{inner}</span> : <a href={href} {...props}>{inner}</a>;

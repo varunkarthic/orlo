@@ -58,7 +58,8 @@ export const pages: Page[] = [
   { path: "develop/read-the-docs", title: "Hosting on Read the Docs", section: "develop", summary: "How this site is built and served." },
   { path: "develop/agents", title: "For AI agents", section: "develop", summary: "Rules for coding agents using Orlo." },
   { path: "develop/devices", title: "Device lab", section: "develop", summary: "Real pages in phone, tablet and laptop frames." },
-  { path: "brand", title: "Logo & usage", section: "brand", summary: "Wordmark, mark, favicons and rules." },
+  { path: "brand", title: "Brand overview", section: "brand", summary: "Orlo identity, badges, assets and usage." },
+  { path: "brand/badges", title: "Embed badges", section: "brand", summary: "Live badge variants, React code and static SVG embeds." },
   { path: "brand/licensing", title: "Licensing & credits", section: "brand", summary: "Designer, copyright, licence and attribution." },
 ];
 

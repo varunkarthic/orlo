@@ -101,7 +101,7 @@ export function App({ route, page }: { route: string; page: PageRender }) {
       <a className="skip" href="#main">Skip to content</a>
       <header className="header orlo-material">
         <div className="header__inner">
-          <a href={root} className="header__logo" aria-label="Orlo home"><Wordmark height={22} /></a>
+          <a href={root} className="header__logo" aria-label="Orlo home"><Wordmark height={22} /><span>Docs</span></a>
           <nav aria-label="Sections" className="header__nav">
             {NAV.map((s) => <a key={s.id} href={href(s.path)} aria-current={section === s.id ? "true" : undefined}>{s.title}</a>)}
           </nav>
@@ -163,13 +163,13 @@ export function App({ route, page }: { route: string; page: PageRender }) {
         <div className="footer__inner">
           <div className="footer__brand">
             <Wordmark height={20} />
-            <p>A design framework for React. Pre-release: nothing is published to npm yet.</p>
+            <p>Open-source design framework for React, designed by Varun Karthic. Pre-release: packages are not on npm yet.</p>
             <BuiltWithOrlo layout="inline" tone="outline" size="sm" href={href("brand")} kind="designed" />
           </div>
           <div className="footer__cols">
             <div><p>Learn</p><a href={href("start")}>Get started</a><a href={href("foundations")}>Foundations</a><a href={href("styles")}>Styles</a></div>
             <div><p>Build</p><a href={href("components")}>Components</a><a href={href("develop")}>Develop</a><a href={href("start/theme-studio")}>Theme Studio</a></div>
-            <div><p>Project</p><a href={href("brand")}>Brand</a><a href={href("brand/licensing")}>Licensing & credits</a><a href="https://github.com/varunkarthic/orlo">GitHub</a></div>
+            <div><p>Project</p><a href={href("brand")}>Brand</a><a href={href("brand/badges")}>Embed badges</a><a href={href("brand/licensing")}>Licensing & credits</a><a href="https://github.com/varunkarthic/orlo">GitHub</a></div>
           </div>
         </div>
         <div className="footer__legal">

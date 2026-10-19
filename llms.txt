@@ -42,7 +42,8 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Hosting on Read the Docs](develop/read-the-docs/): How this site is built and served.
 - [For AI agents](develop/agents/): Rules for coding agents using Orlo.
 - [Device lab](develop/devices/): Real pages in phone, tablet and laptop frames.
-- [Logo & usage](brand/): Wordmark, mark, favicons and rules.
+- [Brand overview](brand/): Orlo identity, badges, assets and usage.
+- [Embed badges](brand/badges/): Live badge variants, React code and static SVG embeds.
 - [Licensing & credits](brand/licensing/): Designer, copyright, licence and attribution.
 
 ## Components

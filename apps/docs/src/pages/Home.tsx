@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Wordmark, Button, Switch, SegmentedControl, Slider, Badge, Avatar, AvatarGroup, Progress, Icons, Stack, Marquee, Sparkline, Steps, manifest, families } from "@orlo/react";
-import { LinkCard } from "../kit.tsx";
+import { Badge, Button, BuiltWithOrlo, Icons, SegmentedControl, Slider, Switch, manifest, families } from "@orlo/react";
+
+const paths = [
+  { number: "01", label: "Start", title: "Set the foundation", body: "See the provider, tokens and first screen. Packages are currently pre-release and not on npm.", href: "start/", icon: Icons.Compass },
+  { number: "02", label: "Explore", title: "Find a component", body: "Browse the complete inventory, then open live examples, specs, keyboard behavior and code.", href: "components/", icon: Icons.Grid },
+  { number: "03", label: "Understand", title: "Design beyond rest", body: "Read the lifecycle, accessibility and failure guidance that makes components work together.", href: "foundations/lifecycle/", icon: Icons.Layers },
+  { number: "04", label: "Tune", title: "Make it your own", body: "Shape a theme and motion language with named roles instead of scattered constants.", href: "styles/", icon: Icons.Palette },
+] as const;
 
 export function Home({ root }: { root: string }) {
   const [saving, setSaving] = useState(false);
@@ -28,77 +34,40 @@ export function Home({ root }: { root: string }) {
   };
   return (
     <div className="home">
-      <section className="hero2">
+      <section className="hero2" aria-labelledby="home-title">
         <div className="hero2__text">
-          <Wordmark className="hero2__mark" />
-          <h1>Nothing is an afterthought.</h1>
-          <p className="lead">A design framework for React that finishes the edges: the press, the frame between two states, the image that never arrives, the focus that has to come back. {manifest.length} components, one motion grammar, all built in.</p>
-          <div className="hero2__actions">
-            <a className="orlo-button" data-variant="accent" href={`${root}start/`}>Get started</a>
-            <a className="orlo-button" data-variant="subtle" href={`${root}components/`}>Browse components</a>
-            <a className="orlo-button" data-variant="ghost" href={`${root}foundations/edge-cases/`}>See the details <Icons.ChevronRight size={16} /></a>
+          <p className="hero2__eyebrow"><span className="hero2__eyebrow-mark" aria-hidden="true">◌</span> OPEN-SOURCE DESIGN FRAMEWORK FOR REACT</p>
+          <h1 id="home-title">Design the parts between the moments.</h1>
+          <p className="hero2__lead">Orlo gives React interfaces a complete visual and behavioral grammar—from the first press to the interrupted transition, empty state and focus return.</p>
+          <div className="hero2__actions"><a className="orlo-button" data-variant="accent" href={`${root}start/`}>Start with Orlo <Icons.ChevronRight size={16} aria-hidden="true" /></a><a className="orlo-button" data-variant="subtle" href={`${root}components/`}>Explore components</a></div>
+          <p className="hero2__note">Designed by Varun Karthic <span aria-hidden="true">·</span> Pre-release, not yet on npm</p>
+        </div>
+        <div className="hero2__scene">
+          <div className="hero2__scene-head"><span>INTERACTIVE PREVIEW</span><span>01 / 04</span></div>
+          <div className="showcase orlo-material" aria-label="Live example: workspace preferences">
+            <header className="showcase__head"><div><span className="showcase__overline">Workspace / Preferences</span><strong>Make it yours.</strong></div><Badge tone="success" dot>Live</Badge></header>
+            <div className="showcase__body">
+              <Switch label="Notifications" description="Mentions and replies only." checked={notifications} onCheckedChange={(value) => { setNotifications(value); setMessage(""); }} />
+              <Switch label="Weekly digest" checked={digest} onCheckedChange={(value) => { setDigest(value); setMessage(""); }} />
+              <Slider label="Monthly budget" value={budget} onValueChange={(value) => { setBudget(value); setMessage(""); }} min={0} max={5000} step={50} format={(v) => new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v)} />
+              <SegmentedControl label="Layout" value={layout} onValueChange={(value) => { setLayout(value); setMessage(""); }} options={[{ value: "l", label: "List" }, { value: "g", label: "Grid" }, { value: "b", label: "Board" }]} />
+            </div>
+            <footer className="showcase__foot"><span className="showcase__message" role="status">{message}</span><Button variant="ghost" onClick={reset}>Reset</Button><Button variant="accent" loading={saving} loadingLabel="Saving" onClick={save}>Save changes</Button></footer>
           </div>
-        </div>
-        <div className="showcase orlo-material" aria-label="Live example: account settings">
-          <header className="showcase__head">
-            <Avatar name="Mira Okafor" size="lg" />
-            <div className="showcase__who"><strong>Mira Okafor</strong><span className="orlo-hint">Design lead · Lisbon</span></div>
-            <Badge tone="success" dot>Online</Badge>
-          </header>
-          <div className="showcase__body">
-            <Switch label="Notifications" description="Mentions and replies only." checked={notifications} onCheckedChange={(value) => { setNotifications(value); setMessage(""); }} />
-            <Switch label="Weekly digest" checked={digest} onCheckedChange={(value) => { setDigest(value); setMessage(""); }} />
-            <Slider label="Monthly budget" value={budget} onValueChange={(value) => { setBudget(value); setMessage(""); }} min={0} max={5000} step={50} format={(v) => new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v)} />
-            <SegmentedControl label="Layout" value={layout} onValueChange={(value) => { setLayout(value); setMessage(""); }} options={[{ value: "l", label: "List" }, { value: "g", label: "Grid" }, { value: "b", label: "Board" }]} />
-          </div>
-          <footer className="showcase__foot">
-            <span className="showcase__message" role="status">{message}</span>
-            <Button variant="ghost" onClick={reset}>Reset</Button>
-            <Button variant="accent" loading={saving} loadingLabel="Saving" onClick={save}>Save changes</Button>
-          </footer>
+          <div className="hero2__scene-foot"><span>Real components. Real states.</span><span>Try the controls ↑</span></div>
         </div>
       </section>
 
-      <Marquee label="What Orlo handles">{["Focus return", "Bounded retry", "Spring physics", "No-image mode", "RTL", "Reduced motion", "Forced colours", "Safe areas", "IME input", "Locale numbers", "Daylight saving", "Scroll lock", "Inert backgrounds", "Edge flipping"].map((t) => <Badge key={t} tone="neutral">{t}</Badge>)}</Marquee>
+      <div className="home__proof" aria-label="Framework at a glance"><div><strong>{manifest.length}</strong><span>documented components</span></div><div><strong>{families.length}</strong><span>component families</span></div><div><strong>1</strong><span>shared motion grammar</span></div><div><strong>0</strong><span>required badges</span></div></div>
 
-      <section className="home__section">
-        <h2>Start anywhere</h2>
-        <div className="card-grid card-grid--3">
-          <LinkCard href={`${root}start/`} title="Get started" body="Install, wrap your app, ship your first screen." art={<Steps steps={[{ label: "Install", state: "complete" }, { label: "Wrap", state: "current" }, { label: "Ship" }]} />} />
-          <LinkCard href={`${root}styles/`} title="Styles" body="Colour, type, shape, elevation, motion and icons." art={<div className="swatchrow">{["fg", "fg-muted", "border-control", "surface-sunken", "accent", "accent-subtle"].map((c) => <span key={c} style={{ background: `var(--orlo-color-${c})` }} />)}</div>} />
-          <LinkCard href={`${root}components/`} title="Components" body={`${manifest.length} components across ${families.length} families, from buttons to signature pads.`} art={<Stack direction="row" gap={2}><Badge tone="success">Paid</Badge><Badge tone="warning">Due</Badge><Progress label="Sync" value={64} showValue={false} /></Stack>} />
-          <LinkCard href={`${root}foundations/`} title="Foundations" body="Principles, accessibility, adaptive layout and layering." art={<AvatarGroup people={[{ name: "Ada Lovelace" }, { name: "Grace Hopper" }, { name: "Alan Turing" }, { name: "Barbara Liskov" }]} max={3} />} />
-          <LinkCard href={`${root}styles/motion/`} title="MotionLab" body="Tune a spring and read overshoot and settle time before committing." art={<Sparkline label="Spring" data={[0, 0.5, 0.92, 1.03, 1.01, 1, 1]} width={160} height={40} />} />
-          <LinkCard href={`${root}start/theme-studio/`} title="Theme Studio" body="One brand colour in, an accessible light and dark theme out." art={<div className="swatchrow">{["accent", "accent-subtle", "surface-selected", "success", "surface-raised", "canvas"].map((c) => <span key={c} style={{ background: `var(--orlo-color-${c})` }} />)}</div>} />
-        </div>
+      <section className="home__section home__paths" aria-labelledby="home-paths-title">
+        <div className="home__section-head"><div><p className="home__kicker">A PLACE TO BEGIN</p><h2 id="home-paths-title">Find your way into Orlo.</h2></div><p>Start from the task in front of you. Each page connects the design decision to its behavior and implementation.</p></div>
+        <div className="home__path-grid">{paths.map((path) => <a key={path.number} className="home__path" href={`${root}${path.href}`}><span className="home__path-top"><span>{path.number} / {path.label}</span><path.icon size={22} aria-hidden="true" /></span><span className="home__path-main"><strong>{path.title}</strong><span>{path.body}</span></span><span className="home__path-arrow" aria-hidden="true"><Icons.ArrowRight size={18} /></span></a>)}</div>
       </section>
 
-      <section className="home__section home__split">
-        <div>
-          <p className="eyebrow">Motion</p>
-          <h2>One spring grammar, not a hundred tweens</h2>
-          <p>Components ask for a purpose (<code>press</code>, <code>reveal</code>, <code>overlay</code>, <code>shared</code>) and Orlo supplies the physics. Every preset is checked analytically: under 5% overshoot and settled within 700 ms, enforced by a test. Interrupt anything mid-flight and it redirects from its current velocity.</p>
-          <a href={`${root}styles/motion/`}>Open the MotionLab →</a>
-        </div>
-        <div>
-          <p className="eyebrow">Edge cases</p>
-          <h2>The parts nobody screenshots</h2>
-          <p>Half-clipped text under a growing card. Focus thrown to a removed trigger. A spinner that flashes for 40 ms. A dead image beside a broken icon. Orlo designs these on purpose, and the Details Lab shows each one flawed beside fixed.</p>
-          <a href={`${root}foundations/edge-cases/`}>Open the Details Lab →</a>
-        </div>
-      </section>
+      <section className="home__section home__principle" aria-labelledby="home-principle-title"><div className="home__principle-copy"><p className="home__kicker">THE FRAMEWORK</p><h2 id="home-principle-title">A component is more than its resting state.</h2><p>Orlo documents the whole interaction: how an element enters, responds, hands off focus, handles interruption, fails and recovers—alone and alongside other components.</p><a href={`${root}foundations/lifecycle/`}>Explore lifecycle & composition <Icons.ArrowRight size={17} aria-hidden="true" /></a></div><div className="home__lifecycle" aria-label="Component lifecycle"><div><span>01</span><strong>Enter</strong><small>Placement · reveal</small></div><div><span>02</span><strong>Respond</strong><small>Input · feedback</small></div><div><span>03</span><strong>Interrupt</strong><small>Redirect · preserve</small></div><div><span>04</span><strong>Recover</strong><small>Failure · focus</small></div></div></section>
 
-      <section className="home__section">
-        <h2>Built in, not bolted on</h2>
-        <p className="lead" style={{ maxInlineSize: "52rem" }}>Positioning, focus scopes, scroll locking, the layer stack, the icon set, the theme generator and every component are written for Orlo. The only runtime dependencies are React and the Motion animation engine.</p>
-        <div className="stats">
-          <div><strong>{manifest.length}</strong><span>components</span></div>
-          <div><strong>{families.length}</strong><span>families</span></div>
-          <div><strong>15</strong><span>motion presets</span></div>
-          <div><strong>4</strong><span>motion policies</span></div>
-          <div><strong>2</strong><span>runtime dependencies</span></div>
-        </div>
-      </section>
+      <section className="home__section home__closing" aria-labelledby="home-closing-title"><div><p className="home__kicker">MAKE SOMETHING THOUGHTFUL</p><h2 id="home-closing-title">The details are the design.</h2><p>Build with Orlo, inspect the edge cases, and make the system feel like your own.</p><div className="home__closing-actions"><a className="orlo-button" data-variant="accent" href={`${root}start/`}>Read the getting-started guide</a><a href={`${root}brand/badges/`}>Get an embed badge <Icons.ArrowRight size={17} aria-hidden="true" /></a></div></div><BuiltWithOrlo layout="signature" tone="light" href={`${root}brand/badges/`} /></section>
     </div>
   );
 }

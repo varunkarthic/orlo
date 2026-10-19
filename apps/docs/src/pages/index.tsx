@@ -37,6 +37,7 @@ export async function loadPage(route: string): Promise<PageRender> {
     return ({ root }) => ({ develop: <d.DevelopOverview root={root} />, "develop/provider": <d.ProviderPage />, "develop/motion": <d.MotionApi />, "develop/positioning": <d.PositioningPage />, "develop/theming": <d.ThemingApi />, "develop/ssr": <d.SsrPage />, "develop/testing": <d.TestingPage />, "develop/read-the-docs": <d.RtdPage />, "develop/agents": <d.AgentsPage /> } as Record<string, ReactNode>)[route] ?? <h1>Not found</h1>;
   }
   if (route === "brand") { const { BrandPage } = await import("./Brand.tsx"); return ({ root }) => <BrandPage root={root} />; }
+  if (route === "brand/badges") { const { BadgesPage } = await import("./Badges.tsx"); return ({ root }) => <BadgesPage root={root} />; }
   if (route === "brand/licensing") { const { Licensing } = await import("./Licensing.tsx"); return () => <Licensing />; }
   return () => <h1>Not found</h1>;
 }

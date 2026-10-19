@@ -38,6 +38,14 @@ export const semantic = {
   },
 } as const;
 
+/** Fixed badge identity colours. Embeddable badges do not inherit the host page's theme. */
+export const brandBadge = {
+  dark: { bg: primitive.neutral[950], fg: semantic.light.canvas, border: primitive.neutral[700] },
+  light: { bg: semantic.light.surface, fg: primitive.neutral[900], border: semantic.light.border },
+  accent: { bg: primitive.accent[600], fg: semantic.light.surface, border: primitive.accent[700] },
+  outline: { bg: semantic.light.canvas, fg: primitive.neutral[900], border: primitive.neutral[500] },
+} as const;
+
 /** Identity tints (avatars, tags): [background, foreground], each pair >= 4.5:1. */
 export const tints = {
   light: [["#F3DCCB", "#6B2A06"], ["#DDE7D6", "#2B4A22"], ["#D9E3F0", "#1E3D63"], ["#EADCEC", "#522A57"], ["#F1E6C4", "#5A4405"], ["#D8E9E6", "#1D4A44"]],

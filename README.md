@@ -3,17 +3,17 @@
   <img src="assets/brand/orlo-wordmark-white.svg#gh-dark-mode-only" alt="Orlo" height="72">
 </p>
 
-<p align="center"><strong>Nothing is an afterthought.</strong><br>A design framework for React.</p>
+<p align="center"><strong>Design the parts between the moments.</strong><br>An open-source design framework for React by Varun Karthic.</p>
 
-<p align="center"><img src="docs/media/v3-after/home-light.png#gh-light-mode-only" alt="The refined Orlo documentation home page" width="900"><img src="docs/media/v3-after/home-dark.png#gh-dark-mode-only" alt="The refined Orlo documentation home page in dark mode" width="900"></p>
+<p align="center"><a href="https://orlo-react.readthedocs.io/en/latest/">Documentation</a> · <a href="https://orlo-react.readthedocs.io/en/latest/components/">Components</a> · <a href="https://orlo-react.readthedocs.io/en/latest/brand/badges/">Embed badges</a> · <a href="https://github.com/varunkarthic/orlo/blob/main/LICENSE">MIT License</a></p>
 
-Orlo is built on the idea that an interface is shaped as much by what happens *between* moments as by what appears on screen. The press, the frame between two states, the image that never arrives, the focus that has to come back: Orlo designs those on purpose.
+Orlo is built on the idea that an interface is shaped as much by what happens *between* moments as by what appears on screen. The press, the interrupted transition, the image that never arrives, and the focus that has to come back are all part of the design.
 
 The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is the finish that holds the whole together, even when nobody notices it.
 
 > **Status: beta, pre-release.** 122 components are documented in source; automated coverage is recorded per component in [`components.json`](components.json). None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
 
-**Start here:** [browse components](https://orlo-react.readthedocs.io/en/latest/components/) · [learn the design language](https://orlo-react.readthedocs.io/en/latest/foundations/) · [try Theme Studio](https://orlo-react.readthedocs.io/en/latest/start/theme-studio/) · [read the lifecycle guide](https://orlo-react.readthedocs.io/en/latest/foundations/lifecycle/)
+**Start here:** [getting started](https://orlo-react.readthedocs.io/en/latest/start/) · [browse components](https://orlo-react.readthedocs.io/en/latest/components/) · [learn the design language](https://orlo-react.readthedocs.io/en/latest/foundations/) · [read the lifecycle guide](https://orlo-react.readthedocs.io/en/latest/foundations/lifecycle/)
 
 ## Why Orlo
 
@@ -49,6 +49,10 @@ The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is th
 | Specialty | Knob, HoldToConfirm, SignaturePad, ShortcutRecorder, ReorderableList, Heatmap, JsonTree, DiffViewer, CodeBlock, Countdown, Marquee, BuiltWithOrlo |
 
 The machine-readable list is [`components.json`](components.json).
+
+## Embeddable badges
+
+Want to credit Orlo in a project footer or README? The optional [`BuiltWithOrlo` badge](https://orlo-react.readthedocs.io/en/latest/brand/badges/) comes in four fixed identity tones, three sizes, and signature, compact, or inline layouts. The signature shows “Open-source design framework for React” and “by Varun Karthic.” The Brand guide includes live previews, copyable React and HTML embeds, and self-contained SVG downloads for non-React sites. No badge is required by the MIT License.
 
 ## Documentation that behaves like the library
 

@@ -290,20 +290,20 @@
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .orlo-pblur__layer { display: none; } }
 
 /* ---------- Built with Orlo badge ---------- */
-/* Proportions scale from one height, like store badges: radius 24%, caption 22%, wordmark 40% of the height. */
+/* Compact badge proportions scale from one height; shape and identity colour use tokens. */
 .orlo-bwo {
-  --h: 2.75rem; --bwo-bg: #161513; --bwo-fg: #FAF9F6; --bwo-border: rgb(255 255 255 / 0.14);
+  --h: 2.75rem; --bwo-bg: var(--orlo-badge-dark-bg); --bwo-fg: var(--orlo-badge-dark-fg); --bwo-border: var(--orlo-badge-dark-border);
   display: inline-flex; align-items: center; gap: calc(var(--h) * 0.2); block-size: var(--h); padding-inline: calc(var(--h) * 0.38) calc(var(--h) * 0.42);
-  border: 1px solid var(--bwo-border); border-radius: calc(var(--h) * 0.24); background: var(--bwo-bg); color: var(--bwo-fg);
+  border: 1px solid var(--bwo-border); border-radius: var(--orlo-radius-md); background: var(--bwo-bg); color: var(--bwo-fg);
   font-family: var(--orlo-font-sans); line-height: 1; text-decoration: none; white-space: nowrap; vertical-align: middle;
   transition: var(--orlo-t-press), box-shadow var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast);
   -webkit-tap-highlight-color: transparent;
 }
 .orlo-bwo[data-size="sm"] { --h: 2.25rem; }
 .orlo-bwo[data-size="lg"] { --h: 3.25rem; }
-.orlo-bwo[data-tone="light"] { --bwo-bg: #FFFFFF; --bwo-fg: #1C1B18; --bwo-border: #E1DDD4; }
-.orlo-bwo[data-tone="accent"] { --bwo-bg: #A8370A; --bwo-fg: #FFFFFF; --bwo-border: transparent; }
-.orlo-bwo[data-tone="outline"] { --bwo-bg: transparent; --bwo-fg: currentColor; --bwo-border: color-mix(in oklab, currentColor 32%, transparent); }
+.orlo-bwo[data-tone="light"] { --bwo-bg: var(--orlo-badge-light-bg); --bwo-fg: var(--orlo-badge-light-fg); --bwo-border: var(--orlo-badge-light-border); }
+.orlo-bwo[data-tone="accent"] { --bwo-bg: var(--orlo-badge-accent-bg); --bwo-fg: var(--orlo-badge-accent-fg); --bwo-border: var(--orlo-badge-accent-border); }
+.orlo-bwo[data-tone="outline"] { --bwo-bg: var(--orlo-badge-outline-bg); --bwo-fg: var(--orlo-badge-outline-fg); --bwo-border: var(--orlo-badge-outline-border); }
 .orlo-bwo__text { display: grid; gap: calc(var(--h) * 0.07); justify-items: start; }
 .orlo-bwo__caption { font-size: calc(var(--h) * 0.22); font-weight: 500; letter-spacing: 0.01em; opacity: 0.82; }
 .orlo-bwo__word { display: block; block-size: calc(var(--h) * 0.4); inline-size: auto; }
@@ -313,7 +313,15 @@
 .orlo-bwo[data-layout="inline"] .orlo-bwo__mark { block-size: calc(var(--h) * 0.42); inline-size: auto; }
 .orlo-bwo[data-layout="inline"] .orlo-bwo__caption { font-size: calc(var(--h) * 0.4); opacity: 0.86; }
 .orlo-bwo[data-layout="inline"] .orlo-bwo__word { block-size: calc(var(--h) * 0.42); margin-block-start: calc(var(--h) * -0.06); }
+.orlo-bwo[data-layout="signature"] { display: grid; justify-items: start; gap: var(--orlo-space-2); inline-size: max-content; max-inline-size: 100%; block-size: auto; min-block-size: 5.75rem; padding: var(--orlo-space-4) var(--orlo-space-5); white-space: normal; border-radius: var(--orlo-radius-lg); }
+.orlo-bwo[data-layout="signature"] .orlo-bwo__word { block-size: 1.25rem; }
+.orlo-bwo[data-layout="signature"] .orlo-bwo__signature { display: grid; gap: var(--orlo-space-1); }
+.orlo-bwo__signature strong { font-size: var(--orlo-text-xs); font-weight: var(--orlo-weight-semibold); line-height: var(--orlo-leading-snug); }
+.orlo-bwo__signature > span { font-size: var(--orlo-text-xs); }
+.orlo-bwo[data-layout="signature"][data-size="sm"] { min-block-size: 5rem; padding: var(--orlo-space-3) var(--orlo-space-4); }
+.orlo-bwo[data-layout="signature"][data-size="lg"] { min-block-size: 6.75rem; padding: var(--orlo-space-5) var(--orlo-space-6); }
+.orlo-bwo[data-layout="signature"][data-size="lg"] .orlo-bwo__word { block-size: 1.5rem; }
 a.orlo-bwo:focus-visible { outline: none; box-shadow: var(--orlo-ring); }
 a.orlo-bwo:active { transform: scale(0.98); }
-@media (hover: hover) and (pointer: fine) { a.orlo-bwo:hover { box-shadow: 0 6px 16px -8px rgb(0 0 0 / 0.35); } }
+@media (hover: hover) and (pointer: fine) { a.orlo-bwo:hover { box-shadow: var(--orlo-shadow-2); } }
 @media (forced-colors: active) { .orlo-bwo { border-color: CanvasText; } }

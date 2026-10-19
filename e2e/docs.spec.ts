@@ -111,7 +111,7 @@ test("search palette navigates to a page", async ({ page, isMobile }) => {
   await expect(page).toHaveURL(/\/styles\/motion\/$/);
   await expect(page.getByRole("heading", { level: 1, name: "Motion" })).toBeVisible();
   await page.goBack();
-  await expect(page.getByRole("heading", { level: 1, name: /afterthought/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Design the parts between the moments." })).toBeVisible();
 });
 
 test("preferences: images off removes image requests and persists", async ({ page, isMobile }) => {
@@ -161,14 +161,14 @@ test("mobile navigation opens as a sheet", async ({ page, isMobile }) => {
 });
 
 test("no horizontal overflow on any page", async ({ page }) => {
-  for (const p of ["", "components/", "components/table/", "components/calendar/specs/", "start/examples/", "styles/motion/", "styles/color/", "foundations/edge-cases/", "start/theme-studio/", "develop/devices/", "components/data-list/"]) {
+  for (const p of ["", "components/", "components/table/", "components/calendar/specs/", "start/examples/", "styles/motion/", "styles/color/", "foundations/edge-cases/", "start/theme-studio/", "develop/devices/", "components/data-list/", "brand/", "brand/badges/"]) {
     await page.goto(p);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, `overflow on /${p}`).toBeLessThanOrEqual(0);
   }
 });
 
-for (const p of ["", "components/", "components/select/", "components/dialog/accessibility/", "components/calendar/", "start/examples/", "styles/motion/", "styles/color/", "start/theme-studio/", "foundations/accessibility/"]) {
+for (const p of ["", "components/", "components/select/", "components/dialog/accessibility/", "components/calendar/", "start/examples/", "styles/motion/", "styles/color/", "start/theme-studio/", "foundations/accessibility/", "brand/", "brand/badges/"]) {
   test(`axe: no serious violations on /${p}`, async ({ page }) => {
     await page.goto(p);
     const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();
@@ -218,6 +218,22 @@ test("home hero uses the page width and its own display typography", async ({ pa
   });
   expect(result.width).toBeGreaterThan(result.viewport * 0.9);
   expect(result.font).toBeGreaterThan(60);
+});
+
+test("Brand badge studio updates the preview and embed code", async ({ page }) => {
+  await page.goto("brand/badges/");
+  const studio = page.locator(".badge-studio");
+  await expect(studio.getByRole("img", { name: "Orlo — open-source design framework for React by Varun Karthic" })).toBeVisible();
+  await studio.getByRole("radio", { name: "Accent" }).click();
+  await studio.getByRole("radio", { name: "Inline" }).click();
+  await expect(studio.locator(".orlo-bwo")).toHaveAttribute("data-tone", "accent");
+  await expect(studio.locator(".orlo-bwo")).toHaveAttribute("data-layout", "inline");
+  await expect(page.getByLabel("React badge embed")).toContainText('layout="inline" tone="accent"');
+  await expect(page.getByLabel("HTML badge embed")).toContainText("orlo-badge-accent.svg");
+  const svg = await page.request.get("brand-badges/orlo-badge-accent.svg");
+  expect(svg.status()).toBe(200);
+  expect(svg.headers()["content-type"]).toContain("image/svg+xml");
+  expect(await svg.text()).toContain("by Varun Karthic");
 });
 
 test("theme studio settings tabs reveal actual scenes", async ({ page }) => {
