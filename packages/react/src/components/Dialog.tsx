@@ -25,7 +25,7 @@ type Common = {
   hideClose?: boolean;
 };
 
-type SurfaceKind = { kind: "dialog"; size?: "sm" | "md" | "lg"; role?: "dialog" | "alertdialog" } | { kind: "sheet"; side?: "end" | "start" | "bottom" };
+type SurfaceKind = { kind: "dialog"; size?: "sm" | "md" | "lg"; role?: "dialog" | "alertdialog" } | { kind: "sheet"; side?: "end" | "start" | "bottom" | "top"; centered?: boolean };
 
 function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
   const { title, description, children, footer, dismissible = true, initialFocus, hideClose, onClose } = props;
@@ -44,7 +44,8 @@ function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
 
   const isSheet = props.kind === "sheet";
   const side = isSheet ? props.side ?? "end" : undefined;
-  const offset = side === "bottom" ? { y: "100%" } : side === "start" ? { x: `${-100 * sign}%` } : side === "end" ? { x: `${100 * sign}%` } : { y: distance(12), scale: effective === "full" ? 0.98 : 1 };
+  const centered = isSheet ? props.centered : false;
+  const offset = side === "bottom" ? { y: "100%" } : side === "top" ? { y: "-100%" } : side === "start" ? { x: `${-100 * sign}%` } : side === "end" ? { x: `${100 * sign}%` } : { y: distance(12), scale: effective === "full" ? 0.98 : 1 };
   const hidden = isSheet && effective !== "full" ? { opacity: 0 } : { opacity: isSheet ? 1 : 0, ...offset, ...(isSheet ? {} : { filter: blur(6) }) };
   const onDragEnd = (_: unknown, info: PanInfo) => {
     const h = ref.current?.offsetHeight ?? 400;
@@ -52,7 +53,7 @@ function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
   };
 
   return (
-    <div className="orlo-modal" data-kind={props.kind} data-side={side} style={{ pointerEvents: present ? undefined : "none" }}>
+    <div className="orlo-modal" data-kind={props.kind} data-side={side} data-centered={centered || undefined} style={{ pointerEvents: present ? undefined : "none" }}>
       <motion.div className="orlo-scrim" aria-hidden="true" initial={{ opacity: 0 }} animate={{ opacity: 1, transition: transition("overlay") }} exit={{ opacity: 0, transition: transition("dismiss") }} />
       <motion.div
         ref={ref}
@@ -62,6 +63,7 @@ function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
         aria-labelledby={`${id}-t`}
         aria-describedby={description ? `${id}-d` : undefined}
         data-size={props.kind === "dialog" ? props.size ?? "md" : undefined}
+        data-centered={centered || undefined}
         tabIndex={-1}
         initial={hidden}
         animate={{ opacity: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)", transition: { ...transition(isSheet ? "overlay" : "reveal"), filter: transition("fade") } }}
@@ -83,6 +85,7 @@ function ModalSurface(props: Common & SurfaceKind & { onClose: () => void }) {
         {description && <p id={`${id}-d`} className="orlo-modal__desc">{description}</p>}
         {children && <div className="orlo-modal__body">{children}</div>}
         {footer && <footer className="orlo-modal__footer">{typeof footer === "function" ? footer(onClose) : footer}</footer>}
+        {side === "top" && <div className="orlo-sheet__handle orlo-sheet__handle--top" onPointerDown={(e) => drag.start(e)} aria-hidden="true"><span /></div>}
       </motion.div>
     </div>
   );
@@ -117,7 +120,7 @@ export function AlertDialog(p: DialogProps) {
   );
 }
 
-export type SheetProps = Common & { side?: "end" | "start" | "bottom" };
+export type SheetProps = Common & { side?: "end" | "start" | "bottom" | "top"; centered?: boolean };
 /** Edge-anchored modal panel. `bottom` can be dragged down to dismiss from its handle only, never from content. */
 export function Sheet(p: SheetProps) {
   const { open, close, trigger } = useSurface(p);

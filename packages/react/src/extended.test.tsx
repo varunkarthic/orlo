@@ -447,10 +447,28 @@ describe("NumberField quantity variant", () => {
 
 describe("RangeSlider enhancements", () => {
   it("supports orientation vertical and data-orientation", () => {
-    const { container } = wrap(<Orlo.RangeSlider label="Price Range" orientation="vertical" value={{ min: 20, max: 80 }} />);
+    const { container } = wrap(<Orlo.RangeSlider label="Price Range" orientation="vertical" value={[20, 80]} />);
     const slider = container.querySelector(".orlo-slider");
     expect(slider).toHaveAttribute("data-orientation", "vertical");
   });
 });
+
+describe("DatePicker allowInput and Sheet enhancements", () => {
+  it("renders text input when allowInput=true and opens popover via trigger", async () => {
+    wrap(<Orlo.DatePicker label="Flight Date" allowInput defaultValue={new Date(2026, 9, 20)} />);
+    const input = screen.getByRole("textbox", { name: /Flight Date/i });
+    expect(input).toBeInTheDocument();
+    const calBtn = screen.getByRole("button", { name: /Open calendar/i });
+    expect(calBtn).toBeInTheDocument();
+  });
+
+  it("renders Sheet with side top and data-centered", () => {
+    const { container } = wrap(<Orlo.Sheet title="Top Notice" side="top" centered defaultOpen><p>Hello</p></Orlo.Sheet>);
+    const modal = document.querySelector(".orlo-modal");
+    expect(modal).toHaveAttribute("data-side", "top");
+    expect(modal).toHaveAttribute("data-centered");
+  });
+});
+
 
 

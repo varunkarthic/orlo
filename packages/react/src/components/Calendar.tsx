@@ -114,7 +114,8 @@ export function Calendar(props: CalendarProps) {
                 const dis = disabled(d);
                 return (
                   <td key={d.getTime()} role="gridcell" aria-selected={sel || undefined} data-outside={out || undefined} data-in-range={inRange(d) || undefined}
-                    data-range-start={range && sameDay(d, rng.start) || undefined} data-range-end={range && sameDay(d, rng.end ?? hover) || undefined}>
+                    data-range-start={range && sameDay(d, rng.start) || undefined} data-range-end={range && sameDay(d, rng.end ?? hover) || undefined}
+                    data-provisional={range && !!rng.start && !rng.end || undefined}>
                     <button type="button" tabIndex={sameDay(d, focus) ? 0 : -1} aria-label={fmtDay.format(d)} aria-current={sameDay(d, today) ? "date" : undefined}
                       aria-disabled={dis || undefined} aria-pressed={sel} className="orlo-calendar__day"
                       onClick={() => { setFocus(d); select(d); }} onPointerEnter={() => setHover(d)} onFocus={() => setHover(d)}>
@@ -131,15 +132,93 @@ export function Calendar(props: CalendarProps) {
   );
 }
 
-export type DatePickerProps = { label: ReactNode; value?: Date | null; defaultValue?: Date | null; onValueChange?: (d: Date | null) => void; locale?: string; min?: Date; max?: Date; placeholder?: string; help?: ReactNode };
+export type DatePickerProps = {
+  label: ReactNode;
+  value?: Date | null;
+  defaultValue?: Date | null;
+  onValueChange?: (d: Date | null) => void;
+  locale?: string;
+  min?: Date;
+  max?: Date;
+  placeholder?: string;
+  help?: ReactNode;
+  allowInput?: boolean;
+};
 
 /** Button-shaped field that opens a Calendar in a popover (a docked sheet on phones). Selecting closes it and returns focus. */
-export function DatePicker({ label, value: v, defaultValue = null, onValueChange, locale: localeProp, min, max, placeholder = "Select a date", help }: DatePickerProps) {
+export function DatePicker({
+  label,
+  value: v,
+  defaultValue = null,
+  onValueChange,
+  locale: localeProp,
+  min,
+  max,
+  placeholder = "Select a date",
+  help,
+  allowInput = false,
+}: DatePickerProps) {
   const [value, setValue] = useControllable<Date | null>(v, defaultValue, onValueChange);
   const [open, setOpen] = useState(false);
   const id = useId();
   const locale = useLocale(localeProp);
-  const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+  const fmt = useMemo(() => new Intl.DateTimeFormat(locale, { dateStyle: "medium" }), [locale]);
+  const [text, setText] = useState(() => (value ? fmt.format(value) : ""));
+
+  useEffect(() => {
+    setText(value ? fmt.format(value) : "");
+  }, [value, fmt]);
+
+  const commitText = () => {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      setValue(null);
+      return;
+    }
+    const parsed = Date.parse(trimmed);
+    if (!isNaN(parsed)) {
+      const d = new Date(parsed);
+      const normalized = day(d.getFullYear(), d.getMonth(), d.getDate());
+      setValue(normalized);
+      setText(fmt.format(normalized));
+    } else {
+      setText(value ? fmt.format(value) : "");
+    }
+  };
+
+  if (allowInput) {
+    return (
+      <div className="orlo-field">
+        <label className="orlo-field__label" htmlFor={`${id}-input`}>{label}</label>
+        <div className="orlo-input-group">
+          <input
+            id={`${id}-input`}
+            type="text"
+            className="orlo-field__input"
+            value={text}
+            placeholder={placeholder}
+            aria-describedby={help ? `${id}-h` : undefined}
+            onChange={(e) => setText(e.target.value)}
+            onBlur={commitText}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                commitText();
+              }
+            }}
+          />
+          <Popover label="Choose date" open={open} onOpenChange={setOpen} trigger={
+            <button type="button" className="orlo-input-group__action" aria-label="Open calendar">
+              <Icons.Calendar size={18} />
+            </button>
+          }>
+            <Calendar value={value} onValueChange={(d) => { setValue(d); setOpen(false); }} locale={locale} min={min} max={max} autoFocus />
+          </Popover>
+        </div>
+        {help && <p id={`${id}-h`} className="orlo-field__msg">{help}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className="orlo-field">
       <span className="orlo-field__label" id={`${id}-l`}>{label}</span>

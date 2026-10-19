@@ -120,12 +120,17 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
   inline-size: 2.5rem; block-size: 2.5rem; border: 0; border-radius: 50%; background: none; color: inherit; font: inherit; font-weight: 500; font-variant-numeric: tabular-nums; cursor: pointer; position: relative;
 }
 .orlo-calendar__grid td[data-outside] .orlo-calendar__day { color: var(--orlo-color-fg-muted); font-weight: 400; }
-.orlo-calendar__day[aria-current="date"]::after { content: ""; position: absolute; inset-block-end: 5px; inset-inline-start: 50%; inline-size: 4px; block-size: 4px; margin-inline-start: -2px; border-radius: 50%; background: var(--orlo-color-accent); }
+.orlo-calendar__day[aria-current="date"]:not([aria-pressed="true"]) {
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1.5px var(--orlo-color-accent);
+}
+.orlo-calendar__day[aria-current="date"]::after { content: ""; position: absolute; inset-block-end: 4px; inset-inline-start: 50%; inline-size: 4px; block-size: 4px; margin-inline-start: -2px; border-radius: 50%; background: var(--orlo-color-accent); }
 .orlo-calendar__day[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
 .orlo-calendar__grid td[data-in-range] { background: var(--orlo-color-surface-selected); }
+.orlo-calendar__grid td[data-in-range][data-provisional] { background: color-mix(in oklab, var(--orlo-color-surface-selected) 60%, transparent); }
 .orlo-calendar__grid td[data-range-start] { border-start-start-radius: 999px; border-end-start-radius: 999px; }
 .orlo-calendar__grid td[data-range-end] { border-start-end-radius: 999px; border-end-end-radius: 999px; }
-.orlo-calendar__grid td[aria-selected="true"] .orlo-calendar__day { background: var(--orlo-color-accent); color: var(--orlo-color-accent-fg); font-weight: 600; }
+.orlo-calendar__grid td[aria-selected="true"] .orlo-calendar__day { background: var(--orlo-color-accent); color: var(--orlo-color-accent-fg); font-weight: 600; box-shadow: none; }
 .orlo-calendar__grid td[aria-selected="true"] .orlo-calendar__day::after { background: var(--orlo-color-accent-fg); }
 @media (hover: hover) and (pointer: fine) { .orlo-calendar__day:hover:not([aria-disabled="true"]) { background: color-mix(in oklab, transparent, var(--orlo-color-fg) 8%); } }
 @media (max-width: 380px) { .orlo-calendar__day { inline-size: 2.25rem; block-size: 2.25rem; } }
@@ -198,9 +203,36 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 .orlo-toggle-group .orlo-toggle { min-block-size: calc(var(--orlo-control-h) - 8px); }
 
 /* ---------- Split button / FAB / speed dial / hold ---------- */
-.orlo-split { display: inline-flex; }
+.orlo-split { display: inline-flex; vertical-align: middle; position: relative; }
 .orlo-split > .orlo-button { border-start-end-radius: 0; border-end-end-radius: 0; }
-.orlo-split > .orlo-icon-button { border-start-start-radius: 0; border-end-start-radius: 0; inline-size: calc(var(--orlo-control-h) - 4px); }
+.orlo-split > .orlo-icon-button {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  border-start-end-radius: var(--orlo-radius-md);
+  border-end-end-radius: var(--orlo-radius-md);
+  inline-size: calc(var(--orlo-control-h) - 4px);
+}
+.orlo-split[data-size="sm"] > .orlo-button {
+  border-start-start-radius: var(--orlo-radius-sm);
+  border-end-start-radius: var(--orlo-radius-sm);
+}
+.orlo-split[data-size="sm"] > .orlo-icon-button {
+  border-start-end-radius: var(--orlo-radius-sm);
+  border-end-end-radius: var(--orlo-radius-sm);
+  inline-size: 1.75rem;
+}
+.orlo-split[data-size="lg"] > .orlo-button {
+  border-start-start-radius: var(--orlo-radius-lg);
+  border-end-start-radius: var(--orlo-radius-lg);
+}
+.orlo-split[data-size="lg"] > .orlo-icon-button {
+  border-start-end-radius: var(--orlo-radius-lg);
+  border-end-end-radius: var(--orlo-radius-lg);
+}
+.orlo-split > :focus-visible {
+  position: relative;
+  z-index: 2;
+}
 .orlo-split[data-variant="solid"] > .orlo-icon-button { border-inline-start: 1px solid color-mix(in oklab, var(--orlo-color-accent-fg) 35%, transparent); }
 .orlo-split[data-variant="subtle"] > .orlo-icon-button { border-inline-start-width: 0; }
 .orlo-fab {

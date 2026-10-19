@@ -5,14 +5,22 @@ import { Icons } from "../internal/icons.tsx";
 import { Menu, type MenuItem } from "./Menu.tsx";
 import { useDismiss } from "../internal/hooks.ts";
 
-export type SplitButtonProps = { children: ReactNode; onClick: () => void; items: MenuItem[]; menuLabel?: string; variant?: "solid" | "subtle"; disabled?: boolean };
+export type SplitButtonProps = {
+  children: ReactNode;
+  onClick: () => void;
+  items: MenuItem[];
+  menuLabel?: string;
+  variant?: "solid" | "subtle" | "accent" | "tonal";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+};
 
 /** Primary action plus a menu of related alternatives. Two real buttons, two tab stops, one visual unit. */
-export function SplitButton({ children, onClick, items, menuLabel = "More options", variant = "solid", disabled }: SplitButtonProps) {
+export function SplitButton({ children, onClick, items, menuLabel = "More options", variant = "solid", size = "md", disabled }: SplitButtonProps) {
   return (
-    <div className="orlo-split" data-variant={variant} role="group">
-      <button type="button" className="orlo-button" data-variant={variant} disabled={disabled} onClick={onClick}>{children}</button>
-      <Menu placement="bottom-end" items={items} trigger={<button type="button" className="orlo-icon-button" data-variant={variant} aria-label={menuLabel} disabled={disabled}><Icons.ChevronDown size={18} /></button>} />
+    <div className="orlo-split" data-variant={variant} data-size={size} role="group">
+      <button type="button" className="orlo-button" data-variant={variant} data-size={size} disabled={disabled} onClick={onClick}>{children}</button>
+      <Menu placement="bottom-end" items={items} trigger={<button type="button" className="orlo-icon-button" data-variant={variant} data-size={size} aria-label={menuLabel} disabled={disabled}><Icons.ChevronDown size={size === "sm" ? 14 : 18} /></button>} />
     </div>
   );
 }

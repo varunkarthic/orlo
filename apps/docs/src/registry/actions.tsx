@@ -12,6 +12,74 @@ function SplitDemo() { const { toast } = useToast(); return <SplitButton onClick
 
 const wait = (ms: number, signal: AbortSignal) => new Promise<void>((res, rej) => { const t = setTimeout(res, ms); signal.addEventListener("abort", () => { clearTimeout(t); rej(new Error("aborted")); }); });
 let flaky = 0;
+function SegmentedViewDemo() {
+  const [view, setView] = useState("list");
+  const items = [
+    { id: "1", title: "Design tokens", status: "Ready", time: "10m ago", icon: <Icons.Sparkle size={16} /> },
+    { id: "2", title: "Motion presets", status: "In review", time: "1h ago", icon: <Icons.Sparkle size={16} /> },
+    { id: "3", title: "Accessibility audit", status: "Done", time: "2d ago", icon: <Icons.Check size={16} /> },
+  ];
+  return (
+    <Stack gap={3} style={{ inlineSize: "100%", maxInlineSize: "36rem" }}>
+      <Stack direction="row" justify="space-between" align="center" wrap gap={2}>
+        <SegmentedControl
+          label="View format"
+          value={view}
+          onValueChange={setView}
+          options={[
+            { value: "list", label: "List" },
+            { value: "grid", label: "Grid" },
+            { value: "board", label: "Board" },
+          ]}
+        />
+        <SegmentedControl
+          label="Theme"
+          size="sm"
+          options={[
+            { value: "light", label: <Icons.Sun size={14} />, "aria-label": "Light" },
+            { value: "dark", label: <Icons.Moon size={14} />, "aria-label": "Dark" },
+          ]}
+        />
+      </Stack>
+      <div style={{ minBlockSize: "7rem" }}>
+        {view === "list" && (
+          <Stack gap={2}>
+            {items.map((it) => (
+              <div key={it.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", background: "var(--orlo-color-surface)", borderRadius: "var(--orlo-radius-md)", border: "1px solid var(--orlo-color-border)" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontWeight: 500 }}>{it.icon} {it.title}</span>
+                <span style={{ fontSize: "var(--orlo-text-xs)", color: "var(--orlo-color-fg-muted)" }}>{it.status} • {it.time}</span>
+              </div>
+            ))}
+          </Stack>
+        )}
+        {view === "grid" && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+            {items.map((it) => (
+              <div key={it.id} style={{ display: "flex", flexDirection: "column", gap: 6, padding: "12px", background: "var(--orlo-color-surface)", borderRadius: "var(--orlo-radius-md)", border: "1px solid var(--orlo-color-border)" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontWeight: 500, fontSize: "var(--orlo-text-sm)" }}>{it.icon} {it.title}</span>
+                <span style={{ fontSize: "var(--orlo-text-xs)", color: "var(--orlo-color-accent-text)", background: "var(--orlo-color-accent-subtle)", padding: "2px 6px", borderRadius: 4, alignSelf: "flex-start" }}>{it.status}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {view === "board" && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+            {["To do", "In review", "Done"].map((col, idx) => (
+              <div key={col} style={{ background: "var(--orlo-color-surface-sunken)", padding: "8px", borderRadius: "var(--orlo-radius-md)", minBlockSize: 90 }}>
+                <div style={{ fontSize: "var(--orlo-text-xs)", fontWeight: 600, color: "var(--orlo-color-fg-muted)", marginBlockEnd: 6 }}>{col}</div>
+                {items.filter((_, i) => i === idx).map((it) => (
+                  <div key={it.id} style={{ background: "var(--orlo-color-surface)", padding: "6px 8px", borderRadius: "var(--orlo-radius-sm)", border: "1px solid var(--orlo-color-border)", fontSize: "var(--orlo-text-xs)", fontWeight: 500 }}>
+                    {it.title}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </Stack>
+  );
+}
 
 export const actions: Record<string, Doc> = {
   "async-button": {
@@ -77,7 +145,7 @@ export const actions: Record<string, Doc> = {
     keyboard: [["Enter / Space", "Copy"]], semantics: ["Result is announced through a polite live region inside the button."], edge: ["Clipboard permission denied", "Clicking again while “Copied” restarts the timer"],
   },
   "segmented-control": {
-    demo: () => <><SegmentedControl label="View" options={[{ value: "list", label: "List" }, { value: "grid", label: "Grid" }, { value: "board", label: "Board" }]} /><SegmentedControl label="Theme" size="sm" options={[{ value: "light", label: <Icons.Sun size={16} />, "aria-label": "Light" }, { value: "dark", label: <Icons.Moon size={16} />, "aria-label": "Dark" }]} /></>,
+    demo: () => <SegmentedViewDemo />,
     code: `<SegmentedControl label="View" value={view} onValueChange={setView}\n  options={[{ value: "list", label: "List" }, { value: "grid", label: "Grid" }]} />`,
     props: [["label", "string", "Accessible group name."], ["options", "{ value, label, aria-label? }[]", "Use aria-label for icon-only options."], ["value / defaultValue / onValueChange", "", "Controlled or uncontrolled."], ["size", '"sm" | "md"', ""]],
     notes: ["The selection surface travels between options with the `shift` spring; rapid changes redirect it mid-flight.", "Selection is shown by a raised surface and heavier weight, not by colour."],
