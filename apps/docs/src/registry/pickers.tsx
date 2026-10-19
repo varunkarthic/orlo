@@ -10,7 +10,7 @@ function RangeCal() {
 const in2w = () => { const d = new Date(); d.setDate(d.getDate() + 14); return d; };
 
 function RangePickerDemo() {
-  const [r, setR] = useState<DateRange>({ start: new Date(), end: in2w() });
+  const [r, setR] = useState<DateRange>({ start: null, end: null });
   return (
     <div style={{ inlineSize: "min(100%, 22rem)" }}>
       <DateRangePicker
