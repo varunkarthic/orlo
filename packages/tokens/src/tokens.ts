@@ -73,8 +73,8 @@ export const space = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 
 export const rhythm = {
   "icon-sm": 6, icon: 8, "icon-lg": 10,
   label: 8, message: 6,
-  inline: 12, field: 24, group: 32, section: 72,
-  "inset-sm": 16, inset: 24, "inset-lg": 32,
+  inline: 12, control: 8, tab: 8, field: 24, card: 16, panel: 24, group: 32, section: 72,
+  "inset-xs": 4, "inset-sm": 16, inset: 24, "inset-lg": 32, "inset-tab": 4, "inset-modal": 24, "inset-sheet": 24,
 } as const;
 /** The icon size that pairs with each text size: about 1.15 to 1.25 times the font size, so strokes match text weight. */
 export const iconSize = { xs: 14, sm: 16, md: 20, lg: 22, xl: 24 } as const;

@@ -12,7 +12,7 @@ export { Switch, type SwitchProps } from "./components/Switch.tsx";
 export { Select, type SelectProps, type SelectOption } from "./components/Select.tsx";
 export { Slider, type SliderProps } from "./components/Slider.tsx";
 // Navigation
-export { Tabs, type TabsProps, type TabItem } from "./components/Tabs.tsx";
+export { Tabs, type TabsProps, type TabItem, type TabsVariant } from "./components/Tabs.tsx";
 export { Breadcrumbs, type Crumb } from "./components/Breadcrumbs.tsx";
 export { Pagination, pageRange, type PaginationProps } from "./components/Pagination.tsx";
 export { Menu, type MenuProps, type MenuItem } from "./components/Menu.tsx";
@@ -23,15 +23,15 @@ export { Popover, type PopoverProps } from "./components/Popover.tsx";
 export { Tooltip, type TooltipProps } from "./components/Tooltip.tsx";
 export { useToast, type ToastOptions } from "./components/Toast.tsx";
 // Disclosure
-export { Accordion, type AccordionProps, type AccordionItem } from "./components/Accordion.tsx";
+export { Accordion, Collapsible, type AccordionProps, type AccordionItem, type CollapsibleProps } from "./components/Accordion.tsx";
 // Data display
-export { Badge, type BadgeProps } from "./components/Badge.tsx";
+export { Badge, StatusDot, type BadgeProps, type StatusDotProps, type StatusKind } from "./components/Badge.tsx";
 export { Card } from "./components/Card.tsx";
 export { Avatar, AvatarGroup, initials, hashSeed, avatarArt, type AvatarProps, type AvatarVariant } from "./components/Avatar.tsx";
 export { Table, type TableProps, type Column } from "./components/Table.tsx";
 export { Kbd, Divider, Stack, EmptyState, AnimatedNumber, type StackProps } from "./components/Misc.tsx";
 // Feedback
-export { Alert, type AlertProps } from "./components/Alert.tsx";
+export { Alert, Callout, type AlertProps, type CalloutProps, type CalloutVariant } from "./components/Alert.tsx";
 export { Progress, type ProgressProps } from "./components/Progress.tsx";
 export { Spinner } from "./components/Spinner.tsx";
 export { Skeleton } from "./components/Skeleton.tsx";
@@ -55,7 +55,7 @@ export { RangeSlider, type RangeSliderProps } from "./components/RangeSlider.tsx
 export { Rating, type RatingProps } from "./components/Rating.tsx";
 export { Knob, type KnobProps } from "./components/Knob.tsx";
 export { ColorPicker, type ColorPickerProps } from "./components/ColorPicker.tsx";
-export { Calendar, DatePicker, monthGrid, weekStart, type CalendarProps, type DatePickerProps, type DateRange } from "./components/Calendar.tsx";
+export { Calendar, DatePicker, DateRangePicker, monthGrid, weekStart, type CalendarProps, type DatePickerProps, type DateRangePickerProps, type DateRange } from "./components/Calendar.tsx";
 export { TimeField, type TimeFieldProps } from "./components/TimeField.tsx";
 export { FileDropzone, formatBytes, matchesAccept, dragVerdict, type FileDropzoneProps } from "./components/FileDropzone.tsx";
 export { SignaturePad, type SignaturePadProps, type SignatureValue } from "./components/SignaturePad.tsx";
@@ -66,7 +66,7 @@ export { SplitButton, Fab, SpeedDial, HoldToConfirm, type SplitButtonProps, type
 export { NavigationRail, BottomNavigation, Steps, TableOfContents, type NavItem, type Step } from "./components/Navigation.tsx";
 export { ContextMenu, HoverCard, Tour, type ContextMenuProps, type HoverCardProps, type TourProps, type TourStep } from "./components/Overlays2.tsx";
 export { TreeView, visibleNodes, type TreeNode, type TreeViewProps } from "./components/TreeView.tsx";
-export { Splitter, ReadMore, ScrollArea, type SplitterProps } from "./components/Layout2.tsx";
+export { Splitter, ReadMore, ScrollArea, AspectRatio, type SplitterProps, type AspectRatioProps } from "./components/Layout2.tsx";
 export { Chip, Timeline, DataList, Sparkline, Meter, Heatmap, Highlight, RelativeTime, Countdown, type ChipProps, type TimelineItem, type SparklineProps, type MeterProps, type HeatmapProps } from "./components/Data2.tsx";
 export { JsonTree, DiffViewer, diffLines, CodeBlock, Marquee, ReorderableList, type CodeBlockProps, type ReorderableListProps } from "./components/Data3.tsx";
 export { Banner, OfflineIndicator, ProgressRing, type BannerProps, type ProgressRingProps } from "./components/Feedback2.tsx";

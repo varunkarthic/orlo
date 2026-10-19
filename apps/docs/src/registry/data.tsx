@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Badge, Avatar, AvatarGroup, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime, Button, Stack, TextField, EmptyState, Icons, Card } from "@orlo/react";
+import { Badge, StatusDot, Avatar, AvatarGroup, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime, Button, Stack, TextField, EmptyState, Icons, Card } from "@orlo/react";
 import { people, sampleImage } from "./shared.tsx";
 import type { Doc } from "./types.ts";
 
@@ -42,4 +42,42 @@ export const data: Record<string, Doc> = {
   meter: { demo: () => <MeterDemo />, code: `<Meter label="Storage used" value={72} low={50} high={85} />\n<Meter variant="gauge" label="CPU" value={64} />`, props: [["value / min / max", "number", ""], ["low / high", "number", "Zone thresholds."], ["optimum", '"low" | "high"', "Which end is good."], ["variant", '"bar" | "gauge"', ""]], notes: ["For a measurement in a range. Use Progress for task completion.", "Zones are named in text (“good”, “fair”, “critical”), not only coloured."], semantics: ["role=meter with aria-valuetext including the zone."] },
   highlight: { demo: () => <p style={{ maxInlineSize: "34rem" }}><Highlight text="Café culture in Orlo: the cafe on the corner serves café au lait." query="cafe" /></p>, code: `<Highlight text={title} query={search} />`, notes: ["Accent- and case-insensitive (cafe matches café).", "Regex characters in the query are treated literally."] },
   "relative-time": { demo: () => <Stack gap={2}><span>Edited <RelativeTime date={new Date("2026-10-18T09:59:40Z")} /></span><span>Deployed <RelativeTime date={new Date("2026-10-18T07:00:00Z")} /></span><span>Expires <RelativeTime date={new Date("2026-10-20T10:00:00Z")} /></span></Stack>, code: `<RelativeTime date={updatedAt} />`, notes: ["Updates every second when fresh, then every 30 s, then every 10 min.", "Exact time in the title and a machine-readable datetime."] },
+  "status-dot": {
+    demo: () => (
+      <Stack gap={4}>
+        <Stack direction="row" gap={6} align="center" wrap>
+          <StatusDot tone="online" showLabel />
+          <StatusDot tone="busy" ping showLabel />
+          <StatusDot tone="away" showLabel />
+          <StatusDot tone="pending" showLabel />
+          <StatusDot tone="offline" showLabel />
+        </Stack>
+        <Stack direction="row" gap={4} align="center" wrap>
+          <StatusDot tone="online" size="sm" showLabel label="API Healthy" />
+          <StatusDot tone="busy" size="md" ping showLabel label="98% Load" />
+          <StatusDot tone="offline" size="lg" showLabel label="Cluster Down" />
+        </Stack>
+      </Stack>
+    ),
+    code: `<StatusDot tone="online" showLabel />\n<StatusDot tone="busy" ping showLabel label="High load" />`,
+    props: [
+      ["tone", '"online" | "offline" | "busy" | "away" | "pending"', "Determines color and default accessible label."],
+      ["ping", "boolean", "Animates a subtle radiating ping ring around the dot."],
+      ["size", '"sm" | "md" | "lg"', "Defaults to md (8px dot)."],
+      ["label", "string", "Custom label. Falls back to capitalised tone."],
+      ["showLabel", "boolean", "Renders visible text label beside the dot."],
+    ],
+    notes: [
+      "Always pairs status color with accessible text (aria-label or visible label); color alone never communicates state.",
+      "The ping animation is paused when prefers-reduced-motion is active.",
+      "Matches system status indicators found in modern dashboard headers and presence avatars.",
+    ],
+    specs: [
+      ["Small dot", "6px"],
+      ["Medium dot", "8px"],
+      ["Large dot", "10px"],
+      ["Ping ring", "useOrloMotion transition with pulse cadence"],
+    ],
+    semantics: ["role=status with accessible name communicating tone and state."],
+  },
 };

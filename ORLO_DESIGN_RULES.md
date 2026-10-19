@@ -19,8 +19,19 @@ Short and normative. Agents and people building with Orlo follow these.
 - Under reduced motion, travel becomes a fade. Under `off`, changes are instant. Never override the OS setting silently.
 - Animate transform and opacity. Interruptions redirect; they never restart.
 
-## Input and layout
-- Hover styles go only under `(hover: hover) and (pointer: fine)`. Touch targets are at least 24 px, and 44 px in touch density.
+## Spacing, rhythm and layout
+- Ground all spatial layout in an 8pt primary grid with a 4pt subgrid. Use tokens `--orlo-space-*`, never random pixel values.
+- Respect spatial hierarchy and Gestalt proximity:
+  - Intra-control: 4–8px (`--orlo-space-1`, `--orlo-space-2`) between glyphs, badges, and text.
+  - Inter-control: 8–12px (`--orlo-gap-control`) between buttons, chips, and toolbar items.
+  - Field-to-field: 20–24px (`--orlo-space-6`) for vertical form flow.
+  - Card & panel padding: 16–24px (`--orlo-gap-card`, `--orlo-gap-panel`).
+  - Section breaks: 48–72px (`--orlo-space-12`, `--orlo-space-16`).
+- Tab bars & segmented navigation (Apple HIG & Material 3):
+  - Segmented pill tabs enforce 4px container inset (`--orlo-inset-tab`) and 4px tab gap (`--orlo-gap-tab`).
+  - Panels must sit at least 24px (`--orlo-space-6`) clear of the tab navigation.
+  - Target sizing: ≥ 44×44pt on touch interfaces per Apple HIG / WCAG 2.5.5; 32–40px on fine pointers.
+- Hover styles go only under `(hover: hover) and (pointer: fine)`.
 - Prefer container queries over viewport breakpoints for components. Use logical properties so RTL works.
 - Overlays dock to a bottom sheet on narrow screens without remounting.
 

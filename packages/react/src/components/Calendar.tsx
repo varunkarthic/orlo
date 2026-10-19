@@ -153,3 +153,67 @@ export function DatePicker({ label, value: v, defaultValue = null, onValueChange
     </div>
   );
 }
+
+export type DateRangePickerProps = {
+  label: ReactNode;
+  value?: DateRange;
+  defaultValue?: DateRange;
+  onValueChange?: (r: DateRange) => void;
+  locale?: string;
+  min?: Date;
+  max?: Date;
+  placeholder?: string;
+  help?: ReactNode;
+};
+
+/**
+ * Button-shaped field that opens a range Calendar in a popover. Formats both start and end dates with clean localized formatting.
+ */
+export function DateRangePicker({
+  label,
+  value: v,
+  defaultValue = { start: null, end: null },
+  onValueChange,
+  locale: localeProp,
+  min,
+  max,
+  placeholder = "Select date range",
+  help,
+}: DateRangePickerProps) {
+  const [value, setValue] = useControllable<DateRange>(v, defaultValue, onValueChange);
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  const locale = useLocale(localeProp);
+  const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+
+  const text = value?.start && value?.end
+    ? `${fmt.format(value.start)} – ${fmt.format(value.end)}`
+    : value?.start
+    ? `${fmt.format(value.start)} – …`
+    : placeholder;
+
+  return (
+    <div className="orlo-field">
+      <span className="orlo-field__label" id={`${id}-l`}>{label}</span>
+      <Popover label="Choose date range" open={open} onOpenChange={setOpen} trigger={
+        <button type="button" className="orlo-field__input orlo-select" aria-labelledby={`${id}-l ${id}-v`} aria-describedby={help ? `${id}-h` : undefined}>
+          <span id={`${id}-v`} data-placeholder={!value?.start || undefined}>{text}</span><Icons.Calendar size={18} />
+        </button>}>
+        <Calendar
+          mode="range"
+          value={value}
+          onValueChange={(r) => {
+            setValue(r);
+            if (r.start && r.end) setOpen(false);
+          }}
+          locale={locale}
+          min={min}
+          max={max}
+          autoFocus
+        />
+      </Popover>
+      {help && <p id={`${id}-h`} className="orlo-field__msg">{help}</p>}
+    </div>
+  );
+}
+

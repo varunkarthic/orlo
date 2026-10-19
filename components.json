@@ -1180,6 +1180,62 @@
       "summary": "KPI with direction in icon, sign and words.",
       "tested": [],
       "docs": "components/stat-card/"
+    },
+    {
+      "name": "Callout",
+      "slug": "callout",
+      "family": "Feedback",
+      "maturity": "beta",
+      "summary": "Editorial callout with icon, tone and optional title, inspired by Apple HIG.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/callout/"
+    },
+    {
+      "name": "AspectRatio",
+      "slug": "aspect-ratio",
+      "family": "Layout",
+      "maturity": "beta",
+      "summary": "Constrains content to a fixed aspect ratio without layout shift.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/aspect-ratio/"
+    },
+    {
+      "name": "Collapsible",
+      "slug": "collapsible",
+      "family": "Disclosure",
+      "maturity": "beta",
+      "summary": "Animated single-item disclosure panel with spring physics and accessible semantics.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/collapsible/"
+    },
+    {
+      "name": "StatusDot",
+      "slug": "status-dot",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Live status indicator dot with tone mapping, accessible label and pulse ring.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/status-dot/"
+    },
+    {
+      "name": "DateRangePicker",
+      "slug": "date-range-picker",
+      "family": "Pickers",
+      "maturity": "beta",
+      "summary": "Dual-date range picker with popover calendar, formatted range preview and keyboard navigation.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/date-range-picker/"
     }
   ]
 }

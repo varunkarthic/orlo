@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Accordion, TreeView, ReadMore, Card, Stack, Divider, Splitter, ScrollArea, Avatar, Icons } from "@orlo/react";
+import { Accordion, Collapsible, TreeView, ReadMore, Card, Stack, Divider, Splitter, ScrollArea, AspectRatio, Avatar, Icons, Button } from "@orlo/react";
 import type { Doc } from "./types.ts";
 
 const long = "Orlo treats the edge of every state as part of the design. When a surface grows over neighbouring content, one layer must clearly own that space; otherwise a half-severed line of text is left behind and the whole screen feels unfinished. The same care applies to truncation: whole lines, an ellipsis, and a way to see the rest.";
@@ -23,6 +23,29 @@ export const structure: Record<string, Doc> = {
     specs: [["Header height", "calc(--orlo-control-h + 12px)"], ["Divider", "--orlo-color-border"], ["Panel text", "--orlo-color-fg-muted"], ["Motion", "expand / dismiss springs"]],
     keyboard: [["Enter / Space", "Toggle section"], ["Tab", "Next header or content"]], semantics: ["Each header is a heading containing a button with aria-expanded and aria-controls; panels are labelled regions."],
   },
+  collapsible: {
+    demo: () => (
+      <div style={{ inlineSize: "min(100%, 28rem)" }}>
+        <Collapsible title="Advanced layout settings">
+          <Stack gap={2}>
+            <p>Configure custom container query triggers, gutter widths, and aspect ratio locks.</p>
+            <div><Button size="sm" variant="subtle">Reset to defaults</Button></div>
+          </Stack>
+        </Collapsible>
+      </div>
+    ),
+    code: `<Collapsible title="Advanced layout settings">\n  <p>Panel contents with measured spring height animation.</p>\n</Collapsible>`,
+    props: [
+      ["title", "ReactNode", "Trigger label."],
+      ["open / defaultOpen / onOpenChange", "boolean", "Controllable disclosure state."],
+      ["disabled", "boolean", "Disables the toggle."],
+    ],
+    notes: [
+      "Independent single-section disclosure without the multiple-panel grouping of Accordion.",
+      "Uses measured content height for smooth spring animation without clipped intermediate frames.",
+      "Full keyboard support with Space/Enter and ARIA aria-expanded attributes.",
+    ],
+  },
   "tree-view": {
     demo: () => <TreeDemo />, code: `<TreeView label="Project files" nodes={nodes} defaultExpanded={["src"]} onSelect={open} />`,
     props: [["nodes", "TreeNode[]", "{ id, label, icon?, children?, disabled? }"], ["expanded / defaultExpanded / onExpandedChange", "string[]", ""], ["selected / onSelect", "", ""]],
@@ -37,6 +60,32 @@ export const structure: Record<string, Doc> = {
   card: {
     demo: () => <div className="grid" style={{ inlineSize: "100%" }}><Card><strong>Surface</strong><p style={{ marginBlockEnd: 0 }}>Answers to its own width with container queries.</p></Card><Card><Stack direction="row" gap={3} align="center"><Avatar name="Grace Hopper" /><div><strong>Grace Hopper</strong><span className="orlo-hint">Rear admiral</span></div></Stack></Card></div>,
     code: `<Card>…</Card>`, notes: ["Declares an inline-size container so children adapt to the card, not the viewport."], specs: [["Surface", "--orlo-color-surface"], ["Border", "--orlo-color-border"], ["Corner radius", "--orlo-radius-lg"], ["Padding", "--orlo-space-5"]],
+  },
+  "aspect-ratio": {
+    demo: () => (
+      <div style={{ inlineSize: "min(100%, 20rem)" }}>
+        <Card style={{ padding: 0, overflow: "hidden" }}>
+          <AspectRatio ratio={16 / 9}>
+            <div style={{ display: "grid", placeItems: "center", background: "var(--orlo-color-surface-selected)", color: "var(--orlo-color-fg-muted)", fontWeight: 600 }}>
+              16 : 9 Aspect Ratio
+            </div>
+          </AspectRatio>
+          <div style={{ padding: "var(--orlo-space-3)" }}>
+            <strong>Fixed ratio media card</strong>
+            <p className="orlo-hint" style={{ margin: 0 }}>Never causes cumulative layout shift.</p>
+          </div>
+        </Card>
+      </div>
+    ),
+    code: `<AspectRatio ratio={16 / 9}>\n  <img src="/photo.jpg" alt="Preview" />\n</AspectRatio>`,
+    props: [
+      ["ratio", "number", "Width / height ratio (e.g. 16/9, 4/3, 1). Default 16/9."],
+      ["children", "ReactNode", "Contained element."],
+    ],
+    notes: [
+      "Prevents layout shift (CLS) as images, videos and iframes load.",
+      "Works with container queries and fluid widths.",
+    ],
   },
   stack: {
     demo: () => <Stack direction="row" gap={3} wrap>{[1, 2, 3, 4].map((i) => <div key={i} style={{ padding: 16, borderRadius: 8, background: "var(--orlo-color-surface-selected)" }}>Item {i}</div>)}</Stack>,
@@ -54,3 +103,4 @@ export const structure: Record<string, Doc> = {
     code: `<ScrollArea label="Release notes" maxHeight={240}>…</ScrollArea>`, notes: ["Edge shadows appear only when there is more to see in that direction.", "Focusable and labelled, so keyboard users can scroll it.", "Overscroll is contained so the page doesn't scroll behind it."],
   },
 };
+

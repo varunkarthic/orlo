@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, DatePicker, TimeField, ColorPicker, FileDropzone, Stack, type DateRange } from "@orlo/react";
+import { Calendar, DatePicker, DateRangePicker, TimeField, ColorPicker, FileDropzone, Stack, type DateRange } from "@orlo/react";
 import type { Doc } from "./types.ts";
 
 function RangeCal() {
@@ -8,6 +8,20 @@ function RangeCal() {
   return <Stack gap={2}><Calendar mode="range" value={r} onValueChange={setR} /><span className="orlo-hint">{r.start ? `${f.format(r.start)} → ${r.end ? f.format(r.end) : "pick an end date"}` : "Pick a start date"}</span></Stack>;
 }
 const in2w = () => { const d = new Date(); d.setDate(d.getDate() + 14); return d; };
+
+function RangePickerDemo() {
+  const [r, setR] = useState<DateRange>({ start: new Date(), end: in2w() });
+  return (
+    <div style={{ inlineSize: "min(100%, 22rem)" }}>
+      <DateRangePicker
+        label="Trip dates"
+        value={r}
+        onValueChange={setR}
+        help="Select check-in and check-out dates."
+      />
+    </div>
+  );
+}
 
 export const pickers: Record<string, Doc> = {
   calendar: {
@@ -31,6 +45,28 @@ export const pickers: Record<string, Doc> = {
     code: `<DatePicker label="Departure" value={date} onValueChange={setDate} min={new Date()} />`,
     notes: ["Selecting a date closes the popover and returns focus to the field.", "Below 520 px the calendar docks to the bottom edge instead of squeezing beside the field."],
     keyboard: [["Enter / Space", "Open"], ["Calendar keys", "As Calendar"], ["Escape", "Close without changing"]], semantics: ["Field is a button labelled by the label and current value; the popover is a labelled dialog."],
+  },
+  "date-range-picker": {
+    demo: () => <RangePickerDemo />,
+    code: `<DateRangePicker\n  label="Trip dates"\n  value={range}\n  onValueChange={setRange}\n  min={new Date()}\n/>`,
+    props: [
+      ["label", "ReactNode", "Field label."],
+      ["value / defaultValue / onValueChange", "{ start: Date | null, end: Date | null }", "Selected range state."],
+      ["locale", "string", "Intl locale formatting."],
+      ["min / max / isDateDisabled", "Date / (d: Date) => boolean", "Clamp or disable calendar dates."],
+      ["help / error", "ReactNode", "Renders assistive caption or error message."],
+    ],
+    notes: [
+      "Combines Popover and range-mode Calendar into an intuitive dual-date field trigger.",
+      "Automatically closes and returns focus once a complete start and end range is picked.",
+      "Displays localized date strings with an arrow separator.",
+    ],
+    keyboard: [
+      ["Enter / Space", "Open popover calendar"],
+      ["Calendar keys", "Navigate and select range endpoints"],
+      ["Escape", "Close dialog"],
+    ],
+    semantics: ["Trigger button labelled with label and chosen range; anchored dialog with calendar grid."],
   },
   "time-field": {
     demo: () => <Stack direction="row" gap={4} wrap><TimeField label="Start time" defaultValue="09:30" /><TimeField label="24-hour (de-DE)" locale="de-DE" defaultValue="18:45" /><TimeField label="Empty, 15-min steps" minuteStep={15} /></Stack>,

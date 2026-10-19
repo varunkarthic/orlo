@@ -59,3 +59,68 @@ export function Accordion({ items, type = "multiple", value: v, defaultValue = [
     </div>
   );
 }
+
+export type CollapsibleProps = {
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  title?: ReactNode;
+  trigger?: ReactNode;
+  children: ReactNode;
+  disabled?: boolean;
+  className?: string;
+};
+
+/**
+ * An independent animated disclosure surface with spring physics and accessible semantics.
+ */
+export function Collapsible({
+  open: o,
+  defaultOpen = false,
+  onOpenChange,
+  title,
+  trigger,
+  children,
+  disabled,
+  className,
+}: CollapsibleProps) {
+  const [open, setOpen] = useControllable(o, defaultOpen, onOpenChange);
+  const id = useId();
+  const { transition } = useOrloMotion();
+  const label = trigger ?? title;
+
+  return (
+    <div className={["orlo-collapsible", className].filter(Boolean).join(" ")} data-open={open || undefined}>
+      <button
+        type="button"
+        id={`${id}-trigger`}
+        aria-expanded={open}
+        aria-controls={`${id}-region`}
+        disabled={disabled}
+        className="orlo-collapsible__trigger"
+        onClick={() => setOpen(!open)}
+      >
+        <span>{label}</span>
+        <motion.span aria-hidden="true" animate={{ rotate: open ? 180 : 0 }} transition={transition("press")} style={{ display: "inline-flex" }}>
+          <Icons.ChevronDown size={18} />
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            id={`${id}-region`}
+            role="region"
+            aria-labelledby={`${id}-trigger`}
+            className="orlo-collapsible__region"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1, transition: transition("expand") }}
+            exit={{ height: 0, opacity: 0, transition: transition("dismiss") }}
+          >
+            <div className="orlo-collapsible__content">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+

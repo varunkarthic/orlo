@@ -11,9 +11,9 @@ Orlo is built on the idea that an interface is shaped as much by what happens *b
 
 The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is the finish that holds the whole together, even when nobody notices it.
 
-> **Status: beta, pre-release.** 122 components are documented in source; automated coverage is recorded per component in [`components.json`](components.json). None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
+> **Status: beta, pre-release.** 127 components are documented in source; automated coverage is recorded per component in [`components.json`](components.json). None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
 
-**Start here:** [getting started](https://orlo-react.readthedocs.io/en/latest/start/) · [browse components](https://orlo-react.readthedocs.io/en/latest/components/) · [learn the design language](https://orlo-react.readthedocs.io/en/latest/foundations/) · [read the lifecycle guide](https://orlo-react.readthedocs.io/en/latest/foundations/lifecycle/)
+**Start here:** [getting started](https://orlo-react.readthedocs.io/en/latest/start/) · [browse components](https://orlo-react.readthedocs.io/en/latest/components/) · [learn the design language](https://orlo-react.readthedocs.io/en/latest/foundations/) · [spacing & layout guidelines](https://orlo-react.readthedocs.io/en/latest/styles/spacing/) · [read the lifecycle guide](https://orlo-react.readthedocs.io/en/latest/foundations/lifecycle/)
 
 ## Why Orlo
 
@@ -24,6 +24,8 @@ The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is th
 <img src="docs/media/details-lab.png" alt="Details Lab: a flawed card slicing through text beside Orlo's version with a scrim" width="800">
 
 **One motion grammar.** Components ask for a purpose (`press`, `reveal`, `overlay`, `shared`) and Orlo supplies an interruptible spring. Reduced motion replaces travel with a fade; `off` makes changes instant.
+
+**8pt & 4pt Spatial Hierarchy (Apple HIG + Material 3).** Every element, margin, tab, and control sits on a rigorous 8pt primary spatial rhythm with a 4pt subgrid (`--orlo-space-*`, `--orlo-gap-*`). From 4px micro-insets in segmented controls to 24px form field flows and 44×44pt touch targets, spacing reinforces Gestalt proximity and natural cognitive flow.
 
 **A lifecycle, not a resting frame.** Every component page now carries the same behavioural contract: stable entry, equivalent input acknowledgement, meaningful change, clear resolution, interruption and safe recovery. The [Lifecycle & composition guide](apps/docs/src/pages/FoundationsPages.tsx) defines how overlays, fields, asynchronous actions and nested surfaces hand off focus, layers, state and failure.
 
@@ -39,12 +41,12 @@ The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is th
 |---|---|
 | Actions | Button, IconButton, CopyButton, SegmentedControl, ToggleButton, ToggleGroup, SplitButton, Fab, SpeedDial |
 | Forms | TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Slider, PasswordField, NumberField, SearchField, Combobox, TagInput, PinInput, RadioCards, RangeSlider, Rating |
-| Pickers | Calendar, DatePicker, TimeField, ColorPicker, FileDropzone |
-| Navigation | Tabs, Menu, CommandPalette, Breadcrumbs, Pagination, NavigationRail, BottomNavigation, Steps, TableOfContents |
+| Pickers | Calendar, DatePicker, DateRangePicker, TimeField, ColorPicker, FileDropzone |
+| Navigation | Tabs (line & pill variants), Menu, CommandPalette, Breadcrumbs, Pagination, NavigationRail, BottomNavigation, Steps, TableOfContents |
 | Overlays | Dialog, AlertDialog, Sheet, Popover, Tooltip, Toast, ContextMenu, HoverCard, Tour |
-| Disclosure & layout | Accordion, TreeView, ReadMore, Card, Stack, Divider, Splitter, ScrollArea |
-| Data display | Badge, Avatar, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime |
-| Feedback | Alert, Progress, Spinner, Skeleton, EmptyState, Banner, OfflineIndicator, ProgressRing |
+| Disclosure & layout | Accordion, Collapsible, TreeView, ReadMore, Card, Stack, Divider, Splitter, ScrollArea, AspectRatio |
+| Data display | Badge, StatusDot, Avatar, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime |
+| Feedback | Alert, Callout, Progress, Spinner, Skeleton, EmptyState, Banner, OfflineIndicator, ProgressRing |
 | Media | OrloImage, Carousel, BeforeAfter, Lightbox |
 | Specialty | Knob, HoldToConfirm, SignaturePad, ShortcutRecorder, ReorderableList, Heatmap, JsonTree, DiffViewer, CodeBlock, Countdown, Marquee, BuiltWithOrlo |
 
@@ -56,9 +58,10 @@ Want to credit Orlo in a project footer or README? The optional [`BuiltWithOrlo`
 
 ## Documentation that behaves like the library
 
-The docs are an Orlo application in their own right:
-- **Live examples.** Each component has a calm preview, alternate states, usage code, anatomy, keyboard behaviour and semantics where relevant.
-- **A coherent shell.** Search, preferences, navigation, code and demos use the same tokens and controls as the package.
+The documentation site is redesigned with an Apple HIG aesthetic:
+- **Segmented Pill Navigation.** Frosted glass tab bar (`backdrop-filter: blur(20px)`) with sliding tactile active highlights.
+- **Apple-grade Previews.** Tactile stage canvas with interactive theme, density, RTL, and instant code inspector toggles.
+- **Editorial Callouts.** Structured notes, tips, warnings, and specifications matching Apple design guidelines.
 - **Practical labs.** MotionLab, Theme Studio, Details Lab, failure states and device-focused checks make behaviour inspectable.
 - **Static by design.** Every route is prerendered for Read the Docs; deep links work without an application server ([`.readthedocs.yaml`](.readthedocs.yaml)).
 

@@ -295,3 +295,112 @@ describe("BuiltWithOrlo", () => {
     expect(badge).toHaveTextContent("by Varun Karthic");
   });
 });
+
+describe("Callout", () => {
+  it("renders with tone, icon, and role note", () => {
+    wrap(
+      <Orlo.Callout title="Important Note" tone="note">
+        This is editorial guidance.
+      </Orlo.Callout>
+    );
+    const callout = screen.getByRole("note");
+    expect(callout).toHaveAttribute("data-tone", "note");
+    expect(screen.getByText("Important Note")).toBeInTheDocument();
+    expect(screen.getByText("This is editorial guidance.")).toBeInTheDocument();
+  });
+
+  it("renders action if provided", () => {
+    wrap(
+      <Orlo.Callout
+        title="Upgrade available"
+        tone="tip"
+        action={<button type="button">Upgrade now</button>}
+      >
+        New release installed.
+      </Orlo.Callout>
+    );
+    expect(screen.getByRole("button", { name: "Upgrade now" })).toBeInTheDocument();
+  });
+});
+
+describe("AspectRatio", () => {
+  it("renders container with inline aspect-ratio style", () => {
+    const { container } = wrap(
+      <Orlo.AspectRatio ratio={16 / 9}>
+        <img alt="Scenic preview" src="preview.jpg" />
+      </Orlo.AspectRatio>
+    );
+    const el = container.querySelector(".orlo-aspect-ratio") as HTMLElement;
+    expect(el).toBeInTheDocument();
+    expect(el.style.aspectRatio).toBe("1.7777777777777777");
+    expect(screen.getByRole("img", { name: "Scenic preview" })).toBeInTheDocument();
+  });
+});
+
+describe("Collapsible", () => {
+  it("toggles open and closed on trigger click", async () => {
+    wrap(
+      <Orlo.Collapsible trigger="Show details">
+        <p>Hidden disclosure content</p>
+      </Orlo.Collapsible>
+    );
+    const button = screen.getByRole("button", { name: "Show details" });
+    expect(button).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(button);
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Hidden disclosure content")).toBeInTheDocument();
+
+    await userEvent.click(button);
+    expect(button).toHaveAttribute("aria-expanded", "false");
+  });
+});
+
+describe("StatusDot", () => {
+  it("renders role status with accessible text and tone", () => {
+    wrap(<Orlo.StatusDot tone="online" size="md" showLabel />);
+    const dot = screen.getByRole("status");
+    expect(dot).toHaveAttribute("data-status", "online");
+    expect(dot).toHaveAttribute("data-tone", "success");
+    expect(screen.getByText("Online")).toBeInTheDocument();
+  });
+
+  it("renders ping pulse element when ping=true", () => {
+    const { container } = wrap(<Orlo.StatusDot tone="busy" ping />);
+    expect(container.querySelector(".orlo-status-dot__ping")).toBeInTheDocument();
+  });
+});
+
+describe("DateRangePicker", () => {
+  it("renders field button with label and opens popover on click", async () => {
+    wrap(
+      <Orlo.DateRangePicker
+        label="Trip Dates"
+        value={{ start: null, end: null }}
+      />
+    );
+    const trigger = screen.getByRole("button", { name: /Trip Dates/ });
+    expect(trigger).toBeInTheDocument();
+    await userEvent.click(trigger);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+});
+
+describe("Tabs with variant", () => {
+  it("applies data-variant pill", () => {
+    const { container } = wrap(
+      <Orlo.Tabs
+        defaultValue="overview"
+        variant="pill"
+        items={[
+          { value: "overview", label: "Overview", content: "Overview content" },
+          { value: "specs", label: "Specs", content: "Specs content" },
+        ]}
+      />
+    );
+    const tabsRoot = container.querySelector(".orlo-tabs");
+    expect(tabsRoot).toHaveAttribute("data-variant", "pill");
+    expect(screen.getByRole("tab", { name: "Overview" })).toBeInTheDocument();
+  });
+});
+

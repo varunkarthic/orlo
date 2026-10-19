@@ -25,6 +25,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Overview](styles/): 
 - [Color](styles/color/): Palette, roles and measured contrast.
 - [Typography](styles/typography/): Type scale, rhythm and numerals.
+- [Spacing & layout](styles/spacing/): 8pt grid, element rhythm, tab bars, touch targets, and spatial hierarchy inspired by Apple HIG and Material 3.
 - [Shape](styles/shape/): Radii, strokes and corners.
 - [Elevation](styles/elevation/): Surfaces, shadows and scrims.
 - [Materials](styles/materials/): Solid and frosted glass, with a readability guard.
@@ -169,3 +170,8 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Kanban](components/kanban/): Board with pointer drag and a complete keyboard path.
 - [ProgressiveBlur](components/progressive-blur/): Layered blur band so content softens under sticky chrome instead of being sliced.
 - [StatCard](components/stat-card/): KPI with direction in icon, sign and words.
+- [Callout](components/callout/): Editorial callout with icon, tone and optional title, inspired by Apple HIG.
+- [AspectRatio](components/aspect-ratio/): Constrains content to a fixed aspect ratio without layout shift.
+- [Collapsible](components/collapsible/): Animated single-item disclosure panel with spring physics and accessible semantics.
+- [StatusDot](components/status-dot/): Live status indicator dot with tone mapping, accessible label and pulse ring.
+- [DateRangePicker](components/date-range-picker/): Dual-date range picker with popover calendar, formatted range preview and keyboard navigation.

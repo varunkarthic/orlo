@@ -38,3 +38,44 @@ export function Alert({ tone = "info", title, open = true, children, action }: A
     </AnimatePresence>
   );
 }
+
+export type CalloutVariant = "note" | "tip" | "important" | "caution";
+
+export type CalloutProps = {
+  variant?: CalloutVariant;
+  tone?: CalloutVariant;
+  title?: ReactNode;
+  children: ReactNode;
+  icon?: ReactNode;
+  action?: ReactNode;
+  className?: string;
+};
+
+const calloutGlyph: Record<CalloutVariant, ReactNode> = {
+  note: <Icons.Info size={18} />,
+  tip: <Icons.Sparkle size={18} />,
+  important: <Icons.Alert size={18} />,
+  caution: <Icons.Alert size={18} />,
+};
+
+/** Editorial callout box with icon, optional title, and tone styling. Inspired by Apple HIG editorial notes. */
+export function Callout({ variant, tone: toneProp, title, children, icon, action, className }: CalloutProps) {
+  const v = variant ?? toneProp ?? "note";
+  return (
+    <aside
+      role="note"
+      className={["orlo-callout", className].filter(Boolean).join(" ")}
+      data-variant={v}
+      data-tone={v}
+      aria-label={typeof title === "string" ? title : `${v} note`}
+    >
+      <span className="orlo-callout__icon" aria-hidden="true">{icon ?? calloutGlyph[v]}</span>
+      <div className="orlo-callout__content">
+        {title && <strong className="orlo-callout__title">{title}</strong>}
+        <div className="orlo-callout__body">{children}</div>
+      </div>
+      {action && <div className="orlo-callout__action">{action}</div>}
+    </aside>
+  );
+}
+

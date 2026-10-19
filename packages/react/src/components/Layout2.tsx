@@ -81,3 +81,22 @@ export function ScrollArea({ children, maxHeight = 240, label, style }: { childr
     </div>
   );
 }
+
+export type AspectRatioProps = {
+  ratio?: number;
+  children: ReactNode;
+  className?: string;
+  style?: CSSProperties;
+};
+
+/**
+ * Constrains child content to a fixed aspect ratio (width / height), preventing layout shifts.
+ */
+export function AspectRatio({ ratio = 16 / 9, children, className, style }: AspectRatioProps) {
+  return (
+    <div className={["orlo-aspect-ratio", className].filter(Boolean).join(" ")} style={{ ...style, aspectRatio: `${ratio}` }}>
+      {children}
+    </div>
+  );
+}
+

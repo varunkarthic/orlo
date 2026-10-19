@@ -447,9 +447,117 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 .orlo-lightbox__img .orlo-image__placeholder { position: static; min-block-size: 40dvh; min-inline-size: min(80vw, 30rem); color: #CBC5B8; }
 .orlo-lightbox figcaption { color: #CBC5B8; font-size: var(--orlo-text-sm); text-align: center; max-inline-size: 60ch; }
 .orlo-lightbox__nav { background: rgb(255 255 255 / 0.1) !important; color: #fff !important; border-color: transparent !important; }
-@media (max-width: 599px) { .orlo-lightbox__nav { display: none; } .orlo-lightbox__stage { grid-template-columns: 1fr; } }
+/* ---------- Callout (Apple HIG Editorial Notes) ---------- */
+.orlo-callout {
+  display: flex; gap: var(--orlo-gap-inline); align-items: flex-start;
+  padding: var(--orlo-space-4) var(--orlo-space-5);
+  border-radius: var(--orlo-radius-lg);
+  border: 1px solid var(--orlo-color-border);
+  background: var(--orlo-color-surface-raised);
+  border-inline-start-width: 4px;
+}
+.orlo-callout[data-variant="note"] {
+  border-inline-start-color: var(--orlo-color-info);
+  background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-info) 4%);
+}
+.orlo-callout[data-variant="tip"] {
+  border-inline-start-color: var(--orlo-color-success);
+  background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-success) 4%);
+}
+.orlo-callout[data-variant="important"] {
+  border-inline-start-color: var(--orlo-color-accent);
+  background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-accent) 4%);
+}
+.orlo-callout[data-variant="caution"] {
+  border-inline-start-color: var(--orlo-color-warning);
+  background: color-mix(in oklab, var(--orlo-color-surface-raised), var(--orlo-color-warning) 5%);
+}
+.orlo-callout__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: none; margin-block-start: 2px;
+}
+.orlo-callout[data-variant="note"] .orlo-callout__icon { color: var(--orlo-color-info); }
+.orlo-callout[data-variant="tip"] .orlo-callout__icon { color: var(--orlo-color-success); }
+.orlo-callout[data-variant="important"] .orlo-callout__icon { color: var(--orlo-color-accent); }
+.orlo-callout[data-variant="caution"] .orlo-callout__icon { color: var(--orlo-color-warning); }
+.orlo-callout__content { flex: 1; min-inline-size: 0; }
+.orlo-callout__title { display: block; margin-block-end: var(--orlo-space-1); color: var(--orlo-color-fg); font-size: var(--orlo-text-sm); font-weight: 600; }
+.orlo-callout__body { color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); line-height: var(--orlo-leading-relaxed); }
+.orlo-callout__action { flex: none; align-self: center; }
+
+/* ---------- Aspect ratio ---------- */
+.orlo-aspect-ratio { position: relative; inline-size: 100%; overflow: hidden; border-radius: inherit; }
+.orlo-aspect-ratio > * { inline-size: 100%; block-size: 100%; object-fit: cover; }
+
+/* ---------- Collapsible ---------- */
+.orlo-collapsible { border-radius: var(--orlo-radius-md); border: 1px solid var(--orlo-color-border); background: var(--orlo-color-surface); }
+.orlo-collapsible__trigger {
+  display: flex; inline-size: 100%; align-items: center; justify-content: space-between;
+  gap: var(--orlo-space-3); min-block-size: var(--orlo-control-h); padding: var(--orlo-space-2) var(--orlo-space-4);
+  background: none; border: 0; border-radius: inherit; color: var(--orlo-color-fg); font: inherit; font-size: var(--orlo-text-sm); font-weight: 600; text-align: start; cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) { .orlo-collapsible__trigger:hover { background: color-mix(in oklab, transparent, var(--orlo-color-fg) 4%); } }
+.orlo-collapsible__trigger:focus-visible { outline: 2px solid var(--orlo-color-focus); outline-offset: -2px; }
+.orlo-collapsible__region { overflow: hidden; }
+.orlo-collapsible__content { padding: 0 var(--orlo-space-4) var(--orlo-space-4); color: var(--orlo-color-fg-muted); font-size: var(--orlo-text-sm); line-height: var(--orlo-leading-relaxed); }
+
+/* ---------- Status dot ---------- */
+.orlo-status-dot {
+  position: relative; display: inline-flex; align-items: center; gap: var(--orlo-space-2);
+  vertical-align: middle; flex: none;
+}
+.orlo-status-dot__indicator {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+}
+.orlo-status-dot[data-size="sm"] .orlo-status-dot__indicator { inline-size: 8px; block-size: 8px; }
+.orlo-status-dot[data-size="md"] .orlo-status-dot__indicator { inline-size: 10px; block-size: 10px; }
+.orlo-status-dot[data-size="lg"] .orlo-status-dot__indicator { inline-size: 12px; block-size: 12px; }
+.orlo-status-dot__label {
+  font-size: var(--orlo-text-sm); color: var(--orlo-color-fg); line-height: 1;
+}
+.orlo-status-dot__core {
+  inline-size: 100%; block-size: 100%; border-radius: 50%;
+  background: var(--orlo-color-fg-muted);
+}
+.orlo-status-dot[data-tone="success"] .orlo-status-dot__core { background: var(--orlo-color-success); }
+.orlo-status-dot[data-tone="error"] .orlo-status-dot__core { background: var(--orlo-color-error); }
+.orlo-status-dot[data-tone="warning"] .orlo-status-dot__core { background: var(--orlo-color-warning); }
+.orlo-status-dot[data-tone="accent"] .orlo-status-dot__core { background: var(--orlo-color-accent); }
+.orlo-status-dot__ping {
+  position: absolute; inset: -3px; border-radius: 50%;
+  border: 2px solid currentColor; opacity: 0.75;
+  animation: orlo-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+.orlo-status-dot[data-tone="success"] .orlo-status-dot__ping { color: var(--orlo-color-success); }
+.orlo-status-dot[data-tone="error"] .orlo-status-dot__ping { color: var(--orlo-color-error); }
+.orlo-status-dot[data-tone="warning"] .orlo-status-dot__ping { color: var(--orlo-color-warning); }
+.orlo-status-dot[data-tone="accent"] .orlo-status-dot__ping { color: var(--orlo-color-accent); }
+@keyframes orlo-ping { 75%, 100% { transform: scale(1.8); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .orlo-status-dot__ping { display: none; } }
+
+/* ---------- Pill & Enclosed Tabs (Apple HIG Segments) ---------- */
+.orlo-tabs[data-variant="pill"] .orlo-tabs__list {
+  display: inline-flex; gap: var(--orlo-gap-tab); padding: var(--orlo-inset-tab, 4px);
+  border: 1px solid var(--orlo-color-border); border-radius: var(--orlo-radius-md);
+  background: var(--orlo-color-surface-sunken); border-block-end: 1px solid var(--orlo-color-border);
+}
+.orlo-tabs[data-variant="pill"] .orlo-tabs__tab {
+  position: relative; z-index: 1; min-block-size: calc(var(--orlo-control-h) - 6px);
+  padding-inline: var(--orlo-space-3); border-radius: calc(var(--orlo-radius-md) - 2px);
+  margin-block-end: 0; font-weight: 500;
+}
+.orlo-tabs[data-variant="pill"] .orlo-tabs__tab[aria-selected="true"] {
+  color: var(--orlo-color-fg); font-weight: 600;
+}
+.orlo-tabs[data-variant="pill"] .orlo-tabs__indicator {
+  position: absolute; inset: 0; block-size: 100%; border-radius: calc(var(--orlo-radius-md) - 2px);
+  background: var(--orlo-color-surface-raised); z-index: -1;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08), 0 0 0 1px var(--orlo-color-border);
+}
 
 @media (forced-colors: active) {
   .orlo-chip, .orlo-pin__box, .orlo-radio-card, .orlo-toggle, .orlo-range__thumb, .orlo-calendar__day { border: 1px solid ButtonText; }
   .orlo-chip[aria-pressed="true"], .orlo-toggle[aria-pressed="true"], .orlo-calendar__grid td[aria-selected="true"] .orlo-calendar__day { background: Highlight; color: HighlightText; }
 }
+

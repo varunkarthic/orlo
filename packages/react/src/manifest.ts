@@ -137,5 +137,10 @@ export const manifest: ManifestEntry[] = [
   { name: "Kanban", slug: "kanban", family: "Workspace", maturity: "beta", summary: "Board with pointer drag and a complete keyboard path.", tested: ["unit"] },
   { name: "ProgressiveBlur", slug: "progressive-blur", family: "Layout", maturity: "beta", summary: "Layered blur band so content softens under sticky chrome instead of being sliced.", tested: [] },
   { name: "StatCard", slug: "stat-card", family: "Data display", maturity: "beta", summary: "KPI with direction in icon, sign and words.", tested: [] },
+  { name: "Callout", slug: "callout", family: "Feedback", maturity: "beta", summary: "Editorial callout with icon, tone and optional title, inspired by Apple HIG.", tested: ["unit"] },
+  { name: "AspectRatio", slug: "aspect-ratio", family: "Layout", maturity: "beta", summary: "Constrains content to a fixed aspect ratio without layout shift.", tested: ["unit"] },
+  { name: "Collapsible", slug: "collapsible", family: "Disclosure", maturity: "beta", summary: "Animated single-item disclosure panel with spring physics and accessible semantics.", tested: ["unit", "keyboard"] },
+  { name: "StatusDot", slug: "status-dot", family: "Data display", maturity: "beta", summary: "Live status indicator dot with tone mapping, accessible label and pulse ring.", tested: ["unit"] },
+  { name: "DateRangePicker", slug: "date-range-picker", family: "Pickers", maturity: "beta", summary: "Dual-date range picker with popover calendar, formatted range preview and keyboard navigation.", tested: ["unit"] },
 ];
 export const families: ManifestEntry["family"][] = ["Actions", "Forms", "Pickers", "Navigation", "Overlays", "Disclosure", "Layout", "Typography", "Data display", "Charts", "Feedback", "Media", "Editors", "AI", "Workspace", "Specialty"];

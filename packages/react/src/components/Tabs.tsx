@@ -4,14 +4,16 @@ import { useOrloMotion } from "@orlo/motion";
 import { useControllable } from "../internal/hooks.ts";
 
 export type TabItem = { value: string; label: ReactNode; content: ReactNode; disabled?: boolean };
-export type TabsProps = { items: TabItem[]; value?: string; defaultValue?: string; onValueChange?: (v: string) => void; label?: string };
+export type TabsVariant = "line" | "pill" | "enclosed";
+export type TabsProps = { items: TabItem[]; value?: string; defaultValue?: string; onValueChange?: (v: string) => void; label?: string; variant?: TabsVariant };
 
 /**
  * Tabs with automatic activation and roving focus (arrows respect RTL, Home/End).
  * The indicator is one shared element that travels to the new tab; it never animates through tabs in between.
+ * Supports line (default underline indicator) and pill (Apple-style segmented surface) variants.
  * Inactive panels are unmounted, so their controls never sit in the tab order.
  */
-export function Tabs({ items, value: v, defaultValue, onValueChange, label }: TabsProps) {
+export function Tabs({ items = [], value: v, defaultValue, onValueChange, label, variant = "line" }: TabsProps) {
   const [value, setValue] = useControllable(v, defaultValue ?? items[0]?.value, onValueChange);
   const id = useId();
   const list = useRef<HTMLDivElement>(null);
@@ -31,7 +33,7 @@ export function Tabs({ items, value: v, defaultValue, onValueChange, label }: Ta
 
   const current = items.find((t) => t.value === value);
   return (
-    <div className="orlo-tabs">
+    <div className="orlo-tabs" data-variant={variant}>
       <div ref={list} role="tablist" aria-label={label} className="orlo-tabs__list" onKeyDown={onKey}>
         {items.map((t) => {
           const selected = t.value === value;

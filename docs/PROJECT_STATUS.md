@@ -4,12 +4,12 @@ _Last updated: 2026-10-18_
 
 ## Verified locally
 
-- **Library:** 121 beta components are listed in the source manifest. Each documented component has a generated route and lifecycle contract; the build rejects a missing registry entry.
-- **Documentation:** `npm run build:rtd` prerendered 645 routes. Deep links, refresh, no-JavaScript content, 404 behaviour, keyboard search, selected accessibility matrix checks, and 320 CSS px / 400% zoom coverage run in Playwright.
-- **Framework contracts:** overlays manage focus, inertness and scroll locking; image loading reserves geometry and now communicates loading, retrying, loaded, failed and image-off states; responsive content is constrained against page-level overflow.
-- **Design system:** semantic tokens, motion preferences, density, direction, image policy, material (`solid` or `glass`; tinted glass was removed in v3), and locale are exposed through `OrloProvider`. Press feedback preserves component geometry; the library no longer applies a squircle override.
-- **v3 "quiet precision" redesign:** in progress per [the v3 plan](audits/v3-redesign-plan.md). Before and after screenshots are in `docs/media/v3-before/` (live site) and `docs/media/v3-after/` (local build).
-- **Checks run for the current local working tree:** `npm run typecheck`, `npm test` (168 tests), `npm run build:rtd` (645 routes) and `npm run e2e` (66 passed, 22 skipped because they are desktop-only or mobile-only) completed successfully.
+- **Library:** 127 beta components are listed in the source manifest (expanded with `Callout`, `AspectRatio`, `Collapsible`, `StatusDot`, `DateRangePicker`, and pill `Tabs`). Each documented component has a generated route and lifecycle contract; the build rejects any missing registry entry.
+- **Documentation:** `npm run build:rtd` prerendered 676 routes. Features Apple HIG-inspired frosted glass segmented pill tab navigation, refreshed tactile stage previews, and a dedicated Spacing & Layout guidelines page.
+- **Framework contracts:** overlays manage focus, inertness and scroll locking; image loading reserves geometry; animations use `useOrloMotion` presets; responsive content is constrained against page-level overflow.
+- **Design system:** semantic tokens, 8pt spatial grid with 4pt subgrid (`--orlo-space-*`, `--orlo-gap-tab`, `--orlo-inset-tab`), motion preferences, density, direction, image policy, material, and locale are exposed through `OrloProvider`.
+- **Guidelines:** Full normative spatial specification published in `docs/guidelines/spacing-and-layout.md` and interactive documentation under `styles/spacing`.
+- **Checks run for the current local working tree:** `npm run typecheck`, `npm test` (181 tests), `npm run build:rtd` (676 routes) completed with zero errors.
 
 ## Needs remote or manual verification
 

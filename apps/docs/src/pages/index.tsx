@@ -29,7 +29,7 @@ export async function loadPage(route: string): Promise<PageRender> {
     if (route === "styles/motion") { const { MotionLab } = await import("./MotionLab.tsx"); return () => <MotionLab />; }
     if (route === "styles/materials") { const { Materials } = await import("./Materials.tsx"); return () => <Materials />; }
     const s = await import("./Styles.tsx");
-    return ({ root }) => ({ styles: <s.StylesOverview root={root} />, "styles/color": <s.Color />, "styles/typography": <s.Typography />, "styles/shape": <s.Shape />, "styles/elevation": <s.Elevation />, "styles/icons": <s.IconsPage />, "styles/density": <s.Density /> } as Record<string, ReactNode>)[route] ?? <h1>Not found</h1>;
+    return ({ root }) => ({ styles: <s.StylesOverview root={root} />, "styles/color": <s.Color />, "styles/typography": <s.Typography />, "styles/spacing": <s.SpacingAndLayout />, "styles/shape": <s.Shape />, "styles/elevation": <s.Elevation />, "styles/icons": <s.IconsPage />, "styles/density": <s.Density /> } as Record<string, ReactNode>)[route] ?? <h1>Not found</h1>;
   }
   if (route.startsWith("develop")) {
     if (route === "develop/devices") { const { DeviceLab } = await import("./DeviceLab.tsx"); return ({ root }) => <DeviceLab root={root} />; }

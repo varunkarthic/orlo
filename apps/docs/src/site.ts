@@ -40,6 +40,7 @@ export const pages: Page[] = [
   { path: "styles", title: "Overview", section: "styles" },
   { path: "styles/color", title: "Color", section: "styles", summary: "Palette, roles and measured contrast." },
   { path: "styles/typography", title: "Typography", section: "styles", summary: "Type scale, rhythm and numerals." },
+  { path: "styles/spacing", title: "Spacing & layout", section: "styles", summary: "8pt grid, element rhythm, tab bars, touch targets, and spatial hierarchy inspired by Apple HIG and Material 3." },
   { path: "styles/shape", title: "Shape", section: "styles", summary: "Radii, strokes and corners." },
   { path: "styles/elevation", title: "Elevation", section: "styles", summary: "Surfaces, shadows and scrims." },
   { path: "styles/materials", title: "Materials", section: "styles", summary: "Solid and frosted glass, with a readability guard." },
