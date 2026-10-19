@@ -404,3 +404,53 @@ describe("Tabs with variant", () => {
   });
 });
 
+describe("TextArea enhancements", () => {
+  it("applies resize locks and bound styles", () => {
+    wrap(<Orlo.TextArea label="Bio" resize="vertical" minHeight={80} maxHeight={300} minWidth="200px" maxWidth="500px" />);
+    const textarea = screen.getByRole("textbox", { name: "Bio" });
+    expect(textarea).toHaveAttribute("data-resize", "vertical");
+    expect(textarea.style.minHeight).toBe("80px");
+    expect(textarea.style.maxHeight).toBe("300px");
+    expect(textarea.style.minWidth).toBe("200px");
+    expect(textarea.style.maxWidth).toBe("500px");
+  });
+});
+
+describe("PinInput enhancements", () => {
+  it("renders 1-16 digits with group separators", () => {
+    const { container } = wrap(<Orlo.PinInput label="Security PIN" length={8} groupSize={4} />);
+    const inputs = screen.getAllByRole("textbox");
+    expect(inputs).toHaveLength(8);
+    const sep = container.querySelectorAll(".orlo-pin__sep");
+    expect(sep).toHaveLength(1);
+  });
+
+  it("clears stale error on character entry", async () => {
+    const { rerender } = wrap(<Orlo.PinInput label="Code" length={4} error="Code expired" />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Code expired");
+    const [first] = screen.getAllByRole("textbox");
+    await userEvent.type(first, "1");
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+});
+
+describe("NumberField quantity variant", () => {
+  it("renders Add button at 0 and morphs to count controls on click", async () => {
+    const onChange = vi.fn();
+    wrap(<Orlo.NumberField label="Tickets" variant="quantity" value={0} onValueChange={onChange} />);
+    const addBtn = screen.getByRole("button", { name: /Add Tickets/i });
+    expect(addBtn).toBeInTheDocument();
+    await userEvent.click(addBtn);
+    expect(onChange).toHaveBeenCalledWith(1);
+  });
+});
+
+describe("RangeSlider enhancements", () => {
+  it("supports orientation vertical and data-orientation", () => {
+    const { container } = wrap(<Orlo.RangeSlider label="Price Range" orientation="vertical" value={{ min: 20, max: 80 }} />);
+    const slider = container.querySelector(".orlo-slider");
+    expect(slider).toHaveAttribute("data-orientation", "vertical");
+  });
+});
+
+

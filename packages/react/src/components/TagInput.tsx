@@ -42,28 +42,30 @@ export function TagInput({ label, value: v, defaultValue = [], onValueChange, va
   return (
     <div className="orlo-field" data-invalid={error ? "" : undefined}>
       <label className="orlo-field__label" htmlFor={id}>{label}</label>
-      <div className="orlo-field__input orlo-tags" onClick={() => input.current?.focus()}>
+      <motion.div layout className="orlo-field__input orlo-tags" onClick={() => input.current?.focus()} transition={transition("shift")}>
         <ul className="orlo-tags__list" aria-label="Added">
-          <AnimatePresence initial={false}>
+          <AnimatePresence initial={false} mode="popLayout">
             {tags.map((t, i) => (
-              <motion.li key={t} className="orlo-chip" data-armed={armed && i === tags.length - 1 || undefined} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1, transition: transition("reveal") }} exit={{ opacity: 0, scale: 0.9, transition: transition("dismiss") }}>
+              <motion.li key={t} className="orlo-chip" data-armed={armed && i === tags.length - 1 || undefined} layout initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1, transition: transition("reveal") }} exit={{ opacity: 0, scale: 0.85, transition: transition("dismiss") }} transition={transition("shift")}>
                 <span>{t}</span>
                 <button type="button" className="orlo-chip__remove" aria-label={`Remove ${t}`} onClick={(e) => { e.stopPropagation(); remove(i); }}><Icons.X size={14} /></button>
               </motion.li>
             ))}
           </AnimatePresence>
         </ul>
-        <input ref={input} id={id} value={text} placeholder={tags.length ? "" : placeholder} aria-describedby={`${id}-msg`} aria-invalid={error ? true : undefined}
-          onChange={(e) => { setText(e.target.value); setArmed(false); setError(undefined); }}
-          onPaste={(e) => { const t = e.clipboardData.getData("text"); if (/[,;\n]/.test(t)) { e.preventDefault(); add(t.split(/[,;\n]/)); } }}
-          onBlur={() => text.trim() && add([text])}
-          onKeyDown={(e) => {
-            if (e.nativeEvent.isComposing) return;
-            if ((e.key === "Enter" || e.key === "," || (e.key === "Tab" && text.trim())) && text.trim()) { e.preventDefault(); add([text]); }
-            else if (e.key === "Backspace" && !text && tags.length) { e.preventDefault(); armed ? remove(tags.length - 1) : setArmed(true); }
-            else if (e.key === "Escape") setArmed(false);
-          }} />
-      </div>
+        <motion.div layout className="orlo-tags__input-wrap" transition={transition("shift")}>
+          <input ref={input} id={id} value={text} placeholder={tags.length ? "" : placeholder} aria-describedby={`${id}-msg`} aria-invalid={error ? true : undefined}
+            onChange={(e) => { setText(e.target.value); setArmed(false); setError(undefined); }}
+            onPaste={(e) => { const t = e.clipboardData.getData("text"); if (/[,;\n]/.test(t)) { e.preventDefault(); add(t.split(/[,;\n]/)); } }}
+            onBlur={() => text.trim() && add([text])}
+            onKeyDown={(e) => {
+              if (e.nativeEvent.isComposing) return;
+              if ((e.key === "Enter" || e.key === "," || (e.key === "Tab" && text.trim())) && text.trim()) { e.preventDefault(); add([text]); }
+              else if (e.key === "Backspace" && !text && tags.length) { e.preventDefault(); armed ? remove(tags.length - 1) : setArmed(true); }
+              else if (e.key === "Escape") setArmed(false);
+            }} />
+        </motion.div>
+      </motion.div>
       <p id={`${id}-msg`} className="orlo-field__msg" role={error ? "alert" : undefined}>{error ?? (armed ? "Press Backspace again to remove." : help)}</p>
       <span className="orlo-visually-hidden" aria-live="polite">{tags.length} added</span>
     </div>

@@ -16,7 +16,15 @@
 .orlo-search > .orlo-field__input { padding-inline-start: var(--orlo-control-h); }
 .orlo-search input::-webkit-search-cancel-button { display: none; }
 .orlo-number-field > .orlo-field__input { text-align: center; padding-inline: var(--orlo-control-h); font-variant-numeric: tabular-nums; }
+.orlo-number-field--standalone > .orlo-field__input { text-align: start; padding-inline: var(--orlo-space-3); }
 .orlo-number-field > .orlo-input-group__action:first-child { inset-inline-start: 4px; inset-inline-end: auto; }
+.orlo-quantity-wrap { display: inline-flex; align-items: center; }
+.orlo-quantity { display: inline-flex; align-items: center; justify-content: space-between; min-inline-size: 7.5rem; max-inline-size: 8.5rem; border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-full); background: var(--orlo-color-surface); padding: 2px; }
+.orlo-quantity .orlo-input-group__action { position: static; inline-size: 1.75rem; block-size: 1.75rem; border-radius: 50%; }
+.orlo-quantity__val { font-variant-numeric: tabular-nums; font-weight: 600; font-size: var(--orlo-text-sm); color: var(--orlo-color-fg); padding-inline: var(--orlo-space-2); min-inline-size: 2rem; text-align: center; }
+.orlo-password__input { transition: filter var(--orlo-duration-effects-fast) var(--orlo-ease-effects-fast); }
+.orlo-password--dissolving { filter: blur(1.5px); }
+@media (prefers-reduced-motion: reduce) { .orlo-password--dissolving { filter: none; } }
 .orlo-field__msg[data-warn] { color: var(--orlo-color-warning); font-weight: 500; }
 .orlo-strength { display: flex; align-items: center; gap: var(--orlo-space-3); }
 .orlo-strength__bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; flex: 1; max-inline-size: 10rem; }
@@ -29,7 +37,8 @@
 .orlo-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-block: 5px; block-size: auto; cursor: text; }
 .orlo-tags:focus-within { border-color: var(--orlo-color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--orlo-color-focus) 28%, transparent); }
 .orlo-tags__list { display: contents; list-style: none; margin: 0; padding: 0; }
-.orlo-tags input { flex: 1; min-inline-size: 6rem; border: 0; outline: none; background: none; color: inherit; font: inherit; min-block-size: 1.75rem; }
+.orlo-tags__input-wrap { display: flex; flex: 1; min-inline-size: 6rem; }
+.orlo-tags__input-wrap input, .orlo-tags input { flex: 1; inline-size: 100%; border: 0; outline: none; background: none; color: inherit; font: inherit; min-block-size: 1.75rem; }
 .orlo-chip {
   display: inline-flex; align-items: center; gap: var(--orlo-gap-icon-sm); min-block-size: 2rem; padding-block: 0; padding-inline: var(--orlo-space-3); border-radius: var(--orlo-radius-sm);
   border: 1px solid var(--orlo-color-border); background: var(--orlo-color-surface-raised); color: var(--orlo-color-fg);
@@ -49,14 +58,17 @@ li.orlo-chip, .orlo-chip[data-kind="input"] { cursor: default; padding-inline-en
 /* ---------- PIN ---------- */
 .orlo-pin { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-inline-size: 0; }
 .orlo-pin legend { padding: 0; margin-block-end: 6px; }
-.orlo-pin__boxes { display: flex; gap: 8px; }
+.orlo-pin__boxes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.orlo-pin__cell { display: inline-flex; align-items: center; gap: 8px; }
+.orlo-pin__sep { display: inline-flex; align-items: center; justify-content: center; color: var(--orlo-color-fg-muted); font-size: 1.125rem; font-weight: 600; user-select: none; padding-inline: 2px; }
 .orlo-pin__box {
   inline-size: 2.75rem; block-size: 3.25rem; text-align: center; font: inherit; font-size: 1.375rem; font-weight: 600; font-variant-numeric: tabular-nums;
   border: 1px solid var(--orlo-color-border-control); border-radius: var(--orlo-radius-md); background: var(--orlo-color-surface-raised); color: inherit; caret-color: var(--orlo-color-accent);
 }
-.orlo-pin__box:focus-visible { outline: none; border-color: var(--orlo-color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--orlo-color-focus) 28%, transparent); }
+.orlo-pin__box:focus, .orlo-pin__box:focus-visible { outline: none; border-color: var(--orlo-color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--orlo-color-focus) 28%, transparent); }
 .orlo-pin[data-invalid] .orlo-pin__box { border-color: var(--orlo-color-error); }
-@media (max-width: 380px) { .orlo-pin__box { inline-size: 2.4rem; } }
+@media (max-width: 640px) { .orlo-pin__box { inline-size: 2.25rem; block-size: 2.75rem; font-size: 1.15rem; } }
+@media (max-width: 440px) { .orlo-pin__box { inline-size: 1.95rem; block-size: 2.4rem; font-size: 1rem; } .orlo-pin__boxes { gap: 4px; } .orlo-pin__cell { gap: 4px; } }
 
 /* ---------- Rating ---------- */
 .orlo-rating-wrap { display: grid; gap: 4px; }

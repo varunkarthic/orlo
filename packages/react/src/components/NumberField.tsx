@@ -26,10 +26,32 @@ export type NumberFieldProps = {
   help?: ReactNode;
   disabled?: boolean;
   name?: string;
+  /** "stepper" (default), "standard" (clean input without side buttons), or "quantity" (Add morphs to [- count +]). */
+  variant?: "stepper" | "standard" | "quantity";
+  /** Whether to show ± stepper buttons (defaults to true for "stepper" variant, false for "standard"). */
+  stepper?: boolean;
+  /** Label for initial Add button in quantity picker mode. */
+  addLabel?: string;
 };
 
-/** Spinbutton with locale-aware parsing and formatting, clamping on commit, PageUp/PageDown ×10, and hold-to-repeat steppers. */
-export function NumberField({ label, value: v, defaultValue = null, onValueChange, min = -Infinity, max = Infinity, step = 1, format, locale: localeProp, help, disabled, name }: NumberFieldProps) {
+/** Spinbutton with locale-aware parsing and formatting, clamping on commit, PageUp/PageDown ×10, and hold-to-repeat steppers or quantity picker morph. */
+export function NumberField({
+  label,
+  value: v,
+  defaultValue = null,
+  onValueChange,
+  min = -Infinity,
+  max = Infinity,
+  step = 1,
+  format,
+  locale: localeProp,
+  help,
+  disabled,
+  name,
+  variant = "stepper",
+  stepper: stepperProp,
+  addLabel = "Add",
+}: NumberFieldProps) {
   const [value, setValue] = useControllable<number | null>(v, defaultValue, onValueChange);
   const locale = useLocale(localeProp);
   const fmt = useMemo(() => new Intl.NumberFormat(locale, { maximumFractionDigits: 20, ...format }), [locale, format]);
@@ -37,10 +59,16 @@ export function NumberField({ label, value: v, defaultValue = null, onValueChang
   const [editing, setEditing] = useState(false);
   const id = useId();
   const repeat = useRef<ReturnType<typeof setTimeout>>(undefined);
+
   useEffect(() => { if (!editing) setText(value === null ? "" : fmt.format(value)); }, [value, editing, fmt]);
   useEffect(() => () => clearTimeout(repeat.current), []);
+
   const clamp = (n: number) => Math.min(max, Math.max(min, +n.toFixed(10)));
-  const commit = (n: number | null) => { const c = n === null ? null : clamp(n); setValue(c); setText(c === null ? "" : fmt.format(c)); };
+  const commit = (n: number | null) => {
+    const c = n === null ? null : clamp(n);
+    setValue(c);
+    setText(c === null ? "" : fmt.format(c));
+  };
   const bump = (d: number) => commit((value ?? (min > -Infinity ? min : 0)) + d);
   const hold = (d: number) => {
     bump(d);
@@ -48,12 +76,72 @@ export function NumberField({ label, value: v, defaultValue = null, onValueChang
     go(400);
   };
   const stop = () => clearTimeout(repeat.current);
+
+  const showStepper = stepperProp !== undefined ? stepperProp : variant === "stepper";
+
+  if (variant === "quantity") {
+    const isZero = value === null || value === 0;
+    return (
+      <div className="orlo-field">
+        <label className="orlo-field__label" htmlFor={id}>{label}</label>
+        <div className="orlo-quantity-wrap">
+          {isZero ? (
+            <button
+              type="button"
+              className="orlo-button orlo-quantity__add"
+              data-variant="subtle"
+              data-size="sm"
+              disabled={disabled}
+              aria-label={`${addLabel} ${label}`}
+              onClick={() => commit(min > 0 ? min : 1)}
+            >
+              <Icons.Plus size={16} aria-hidden="true" />
+              <span>{addLabel}</span>
+            </button>
+          ) : (
+            <div className="orlo-input-group orlo-number-field orlo-quantity">
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Decrease"
+                className="orlo-input-group__action"
+                disabled={disabled}
+                onClick={() => {
+                  const next = (value ?? 1) - step;
+                  if (next <= 0) commit(0);
+                  else bump(-step);
+                }}
+              >
+                <Icons.Minus size={16} />
+              </button>
+              <span className="orlo-quantity__val" aria-live="polite">{fmt.format(value ?? 0)}</span>
+              <button
+                type="button"
+                tabIndex={-1}
+                aria-label="Increase"
+                className="orlo-input-group__action"
+                disabled={disabled || (value ?? 0) >= max}
+                onClick={() => bump(step)}
+              >
+                <Icons.Plus size={16} />
+              </button>
+            </div>
+          )}
+        </div>
+        {name && <input type="hidden" name={name} value={value ?? 0} />}
+        {help && <p id={`${id}-h`} className="orlo-field__msg">{help}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className="orlo-field">
       <label className="orlo-field__label" htmlFor={id}>{label}</label>
-      <div className="orlo-input-group orlo-number-field">
-        <button type="button" tabIndex={-1} aria-label="Decrease" className="orlo-input-group__action" disabled={disabled || (value ?? 0) <= min}
-          onPointerDown={(e) => { e.preventDefault(); hold(-step); }} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><Icons.Minus size={18} /></button>
+      <div className={`orlo-input-group orlo-number-field ${!showStepper ? "orlo-number-field--standalone" : ""}`}>
+        {showStepper && (
+          <button type="button" tabIndex={-1} aria-label="Decrease" className="orlo-input-group__action" disabled={disabled || (value ?? 0) <= min}
+            onPointerDown={(e) => { e.preventDefault(); hold(-step); }} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><Icons.Minus size={18} /></button>
+        )}
         <input id={id} className="orlo-field__input" role="spinbutton" inputMode="decimal" autoComplete="off" disabled={disabled} name={name}
           aria-valuenow={value ?? undefined} aria-valuemin={Number.isFinite(min) ? min : undefined} aria-valuemax={Number.isFinite(max) ? max : undefined}
           aria-valuetext={value === null ? "Empty" : fmt.format(value)} aria-describedby={help ? `${id}-h` : undefined}
@@ -66,8 +154,10 @@ export function NumberField({ label, value: v, defaultValue = null, onValueChang
             const map: Record<string, () => void> = { ArrowUp: () => bump(step), ArrowDown: () => bump(-step), PageUp: () => bump(big), PageDown: () => bump(-big), Home: () => Number.isFinite(min) && commit(min), End: () => Number.isFinite(max) && commit(max), Enter: () => commit(parseLocaleNumber(text, locale)) };
             if (map[e.key]) { e.preventDefault(); map[e.key](); }
           }} />
-        <button type="button" tabIndex={-1} aria-label="Increase" className="orlo-input-group__action" disabled={disabled || (value ?? 0) >= max}
-          onPointerDown={(e) => { e.preventDefault(); hold(step); }} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><Icons.Plus size={18} /></button>
+        {showStepper && (
+          <button type="button" tabIndex={-1} aria-label="Increase" className="orlo-input-group__action" disabled={disabled || (value ?? 0) >= max}
+            onPointerDown={(e) => { e.preventDefault(); hold(step); }} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><Icons.Plus size={18} /></button>
+        )}
       </div>
       {help && <p id={`${id}-h`} className="orlo-field__msg">{help}</p>}
     </div>

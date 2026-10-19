@@ -20,24 +20,31 @@ export function PasswordField({ label, help, error, showStrength, id, value, onK
   const auto = useId(); const fid = id ?? auto;
   const ref = useRef<HTMLInputElement>(null);
   const [visible, setVisible] = useState(false);
+  const [dissolving, setDissolving] = useState(false);
   const [caps, setCaps] = useState(false);
   const strength = passwordStrength(typeof value === "string" ? value : "");
   const toggle = () => {
-    const el = ref.current; if (!el) return setVisible((v) => !v);
+    const el = ref.current;
+    if (!el) return setVisible((v) => !v);
     const [a, b, dir] = [el.selectionStart, el.selectionEnd, el.selectionDirection];
+    setDissolving(true);
     setVisible((v) => !v);
-    requestAnimationFrame(() => { el.focus({ preventScroll: true }); if (a !== null && b !== null) el.setSelectionRange(a, b, dir ?? undefined); });
+    requestAnimationFrame(() => {
+      el.focus({ preventScroll: true });
+      if (a !== null && b !== null) el.setSelectionRange(a, b, dir ?? undefined);
+    });
+    setTimeout(() => setDissolving(false), 180);
   };
   const capsCheck = (e: React.KeyboardEvent) => setCaps(e.getModifierState?.("CapsLock") ?? false);
   const msg = error ?? (caps ? "Caps Lock is on." : help);
   return (
     <div className="orlo-field" data-invalid={error ? "" : undefined}>
       <label className="orlo-field__label" htmlFor={fid}>{label}</label>
-      <div className="orlo-input-group">
-        <input ref={ref} id={fid} type={visible ? "text" : "password"} className="orlo-field__input" value={value} autoComplete="current-password" spellCheck={false}
+      <div className="orlo-input-group orlo-password-group">
+        <input ref={ref} id={fid} type={visible ? "text" : "password"} className={["orlo-field__input", "orlo-password__input", dissolving ? "orlo-password--dissolving" : ""].filter(Boolean).join(" ")} value={value} autoComplete="current-password" spellCheck={false}
           aria-invalid={error ? true : undefined} aria-describedby={`${fid}-msg${showStrength ? ` ${fid}-str` : ""}`}
           onKeyDown={(e) => { capsCheck(e); onKeyDown?.(e); }} onKeyUp={(e) => { capsCheck(e); onKeyUp?.(e); }} onBlur={() => setCaps(false)} {...rest} />
-        <button type="button" className="orlo-input-group__action" aria-label={visible ? "Hide password" : "Show password"} aria-pressed={visible} aria-controls={fid} onClick={toggle} onMouseDown={(e) => e.preventDefault()}>
+        <button type="button" className="orlo-input-group__action orlo-password__toggle" aria-label={visible ? "Hide password" : "Show password"} aria-pressed={visible} aria-controls={fid} onClick={toggle} onMouseDown={(e) => e.preventDefault()}>
           {visible ? <Icons.EyeOff size={18} /> : <Icons.Eye size={18} />}
         </button>
       </div>
