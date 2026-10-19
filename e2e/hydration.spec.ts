@@ -15,7 +15,7 @@ for (const chunk of [extra, ...Array.from({ length: Math.ceil(routes.length / 20
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(`${page.url()}: ${e.message}`));
     page.on("console", (m) => { if (m.type() === "error" && !/Failed to load resource|404/.test(m.text())) errors.push(`${page.url()}: ${m.text()}`); });
-    for (const r of chunk) { await page.goto(r, { waitUntil: "load" }); await page.waitForTimeout(400); }
+    for (const r of chunk) { await page.goto(r, { waitUntil: "load" }); await page.waitForTimeout(60); }
     expect(errors).toEqual([]);
   });
 }

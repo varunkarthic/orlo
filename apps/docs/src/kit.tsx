@@ -132,3 +132,17 @@ export function LinkCard({ href, title, body, art, cta = "Explore" }: { href: st
     </a>
   );
 }
+
+export function Callout({ title, children, tone = "info" }: { title?: string; children: ReactNode; tone?: "info" | "tip" | "warning" }) {
+  return (
+    <aside className="callout" data-tone={tone}>
+      <div className="callout__icon" aria-hidden="true">
+        {tone === "warning" ? <Icons.AlertCircle size={18} /> : tone === "tip" ? <Icons.Sparkles size={18} /> : <Icons.Info size={18} />}
+      </div>
+      <div className="callout__content">
+        {title && <strong className="callout__title">{title}</strong>}
+        <div className="callout__body">{children}</div>
+      </div>
+    </aside>
+  );
+}
