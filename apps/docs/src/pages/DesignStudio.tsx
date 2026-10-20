@@ -471,7 +471,7 @@ export function DesignStudio() {
 
   // Studio Workspace / Camera state
   const [interactMode, setInteractMode] = useState<boolean>(false);
-  const [viewport, setViewport] = useState<ViewportMode>("desktop");
+  const [viewport, setViewport] = useState<ViewportMode>("responsive");
   const [orientation, setOrientation] = useState<Orientation>("landscape");
   const [zoom, setZoom] = useState<number>(1);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -486,12 +486,42 @@ export function DesignStudio() {
   // Navigation & sidebars state
   const [activeLeftTab, setActiveLeftTab] = useState<"palette" | "layers">("palette");
   const [activeRightTab, setActiveRightTab] = useState<"props" | "theme" | "motion" | "code">("props");
+  const [mobilePanel, setMobilePanel] = useState<"components" | "canvas" | "inspector">("canvas");
   const [paletteFilter, setPaletteFilter] = useState<string>("");
   const [paletteCategory, setPaletteCategory] = useState<string>("All");
   const [showTemplatesModal, setShowTemplatesModal] = useState<boolean>(false);
   const [lastSavedTime, setLastSavedTime] = useState<string>("Just now");
 
   const canvasViewportRef = useRef<HTMLDivElement>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const viewportDims = useMemo(() => {
+    if (viewport === "responsive") return { width: "100%", height: "100%", isFixed: false };
+    if (viewport === "desktop") return { width: 1440, height: 900, isFixed: true };
+    if (viewport === "tablet") {
+      return orientation === "portrait"
+        ? { width: 768, height: 1024, isFixed: true }
+        : { width: 1024, height: 768, isFixed: true };
+    }
+    return orientation === "portrait"
+      ? { width: 375, height: 812, isFixed: true }
+      : { width: 812, height: 375, isFixed: true };
+  }, [viewport, orientation]);
+  const fitScale = viewportDims.isFixed && canvasSize.width && canvasSize.height
+    ? Math.min(1, canvasSize.width / Number(viewportDims.width), canvasSize.height / Number(viewportDims.height))
+    : 1;
+  const effectiveZoom = zoom * fitScale;
+  useEffect(() => {
+    const el = canvasViewportRef.current;
+    if (!el) return;
+    const measure = () => {
+      const gutter = parseFloat(getComputedStyle(el).getPropertyValue("--orlo-space-6")) || 0;
+      setCanvasSize({ width: Math.max(0, el.clientWidth - gutter * 2), height: Math.max(0, el.clientHeight - gutter * 2) });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   const draggingId = useRef<string | null>(null);
   const dragStartPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const itemStartPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -578,6 +608,7 @@ export function DesignStudio() {
     pushState([...items, newItem]);
     setSelectedId(newId);
     setActiveRightTab("props");
+    setMobilePanel("canvas");
     toast({ title: `Added ${paletteItem.name}`, tone: "neutral" });
   };
 
@@ -694,8 +725,8 @@ export function DesignStudio() {
 
     const onPointerMove = (ev: PointerEvent) => {
       if (!draggingId.current) return;
-      const dx = (ev.clientX - dragStartPos.current.x) / zoom;
-      const dy = (ev.clientY - dragStartPos.current.y) / zoom;
+      const dx = (ev.clientX - dragStartPos.current.x) / effectiveZoom;
+      const dy = (ev.clientY - dragStartPos.current.y) / effectiveZoom;
       let targetX = Math.max(0, itemStartPos.current.x + dx);
       let targetY = Math.max(0, itemStartPos.current.y + dy);
 
@@ -1070,23 +1101,6 @@ ${elementsCode.join("\n\n")}
     e.target.value = "";
   };
 
-  // Viewport dimensions calculation
-  const viewportDims = useMemo(() => {
-    if (viewport === "responsive") return { width: "100%", height: "100%", isFixed: false };
-    if (viewport === "desktop") return { width: 1440, height: 900, isFixed: true };
-    if (viewport === "tablet") {
-      return orientation === "portrait"
-        ? { width: 768, height: 1024, isFixed: true }
-        : { width: 1024, height: 768, isFixed: true };
-    }
-    if (viewport === "mobile") {
-      return orientation === "portrait"
-        ? { width: 375, height: 812, isFixed: true }
-        : { width: 812, height: 375, isFixed: true };
-    }
-    return { width: "100%", height: "100%", isFixed: false };
-  }, [viewport, orientation]);
-
   // Filtered components in palette
   const filteredPalette = useMemo(() => {
     return COMPONENT_PALETTE.filter((comp) => {
@@ -1100,7 +1114,7 @@ ${elementsCode.join("\n\n")}
   }, [paletteFilter, paletteCategory]);
 
   return (
-    <div className="design-studio" data-mode={mode} data-interact={interactMode || undefined}>
+    <div className="design-studio" data-mode={mode} data-interact={interactMode || undefined} data-mobile-panel={mobilePanel}>
       {/* ---------- STUDIO TOPBAR (Full Bleed Header) ---------- */}
       <header className="design-studio__topbar">
         {/* Left: Brand badge, Title & Auto-save status */}
@@ -1200,7 +1214,7 @@ ${elementsCode.join("\n\n")}
             >
               <Icons.Minus size={14} />
             </button>
-            <span className="design-studio__zoom-label">{Math.round(zoom * 100)}%</span>
+            <span className="design-studio__zoom-label">{Math.round(effectiveZoom * 100)}%</span>
             <button
               type="button"
               className="design-studio__icon-tool"
@@ -1217,8 +1231,8 @@ ${elementsCode.join("\n\n")}
                 setZoom(1);
                 setPan({ x: 0, y: 0 });
               }}
-              title="Reset camera (100%)"
-              aria-label="Reset Camera"
+              title="Fit canvas"
+              aria-label="Fit Canvas"
             >
               <Icons.Home size={14} />
             </button>
@@ -1299,6 +1313,13 @@ ${elementsCode.join("\n\n")}
             <span>Copy Code</span>
           </Button>
         </div>
+        <nav className="design-studio__mobile-panels" aria-label="Studio panels">
+          {(["components", "canvas", "inspector"] as const).map((panel) => (
+            <button key={panel} type="button" aria-pressed={mobilePanel === panel} onClick={() => setMobilePanel(panel)}>
+              {panel === "components" ? "Components" : panel === "canvas" ? "Canvas" : "Inspector"}
+            </button>
+          ))}
+        </nav>
       </header>
 
       {/* ---------- STUDIO WORKSPACE (3 Columns) ---------- */}
@@ -1475,7 +1496,7 @@ ${elementsCode.join("\n\n")}
         </aside>
 
         {/* === CENTER CANVAS: Infinite-Feeling Viewport & Device Frame === */}
-        <main
+        <div
           ref={canvasViewportRef}
           className={`design-studio__canvas-viewport design-studio__grid--${gridPattern}`}
           onPointerDown={handleCanvasPointerDown}
@@ -1484,13 +1505,16 @@ ${elementsCode.join("\n\n")}
           <div
             className="design-studio__camera-stage"
             style={{
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              inlineSize: viewportDims.isFixed ? viewportDims.width : "100%",
+              blockSize: viewportDims.isFixed ? viewportDims.height : "100%",
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${effectiveZoom})`,
               transformOrigin: "center center",
             }}
           >
             {/* Device Frame Simulation */}
             <div
               className={`design-studio__device-frame ${viewportDims.isFixed ? `is-${viewport}` : "is-responsive"}`}
+              data-orlo-theme={mode}
               style={{
                 inlineSize: typeof viewportDims.width === "number" ? `${viewportDims.width}px` : "100%",
                 blockSize: typeof viewportDims.height === "number" ? `${viewportDims.height}px` : "100%",
@@ -1518,8 +1542,8 @@ ${elementsCode.join("\n\n")}
               <div
                 className="design-studio__canvas-surface"
                 style={{
-                  minInlineSize: viewportDims.isFixed ? undefined : "1200px",
-                  minBlockSize: viewportDims.isFixed ? undefined : "900px",
+                  minInlineSize: viewportDims.isFixed ? undefined : "100%",
+                  minBlockSize: viewportDims.isFixed ? undefined : "100%",
                 }}
               >
                 <OrloProvider
@@ -1608,7 +1632,7 @@ ${elementsCode.join("\n\n")}
               )}
             </div>
           </div>
-        </main>
+        </div>
 
         {/* === RIGHT SIDEBAR: Props, Theme, Motion, Code Inspectors === */}
         <aside className="design-studio__sidebar-right">
@@ -1641,9 +1665,11 @@ ${elementsCode.join("\n\n")}
               type="button"
               className={`design-studio__tab-btn ${activeRightTab === "code" ? "is-active" : ""}`}
               onClick={() => setActiveRightTab("code")}
+              aria-label="React code"
+              title="React code"
             >
               <Icons.Code size={14} />
-              <span>React Code</span>
+              <span>Code</span>
             </button>
           </div>
 
@@ -2148,7 +2174,7 @@ ${elementsCode.join("\n\n")}
       </div>
 
       {/* ---------- STUDIO STATUS BAR (Bottom 32px) ---------- */}
-      <footer className="design-studio__statusbar">
+      <footer className="design-studio__statusbar" tabIndex={0} aria-label="Studio status; scroll horizontally for more details">
         <div className="design-studio__statusbar-left">
           <span>{items.length} layers on canvas</span>
           <span className="design-studio__dot-sep" />
@@ -2170,7 +2196,7 @@ ${elementsCode.join("\n\n")}
         <div className="design-studio__statusbar-right">
           <span>{viewport.toUpperCase()}</span>
           <span className="design-studio__dot-sep" />
-          <span>Zoom {Math.round(zoom * 100)}%</span>
+          <span>Zoom {Math.round(effectiveZoom * 100)}%</span>
           <span className="design-studio__dot-sep" />
           <span title="Stored in browser localStorage">Draft Auto-Saved</span>
         </div>

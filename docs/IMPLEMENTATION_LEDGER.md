@@ -1,0 +1,40 @@
+# Implementation ledger
+
+This is the live audit and work log for `ORLO_IMPLEMENTATION_MASTER_PROMPT.md` (supplied 2026-10-20). It is **not** a completion claim. Entries marked “open” have not passed the prompt's release gate; an existing demo or changelog statement is not evidence that its behaviour is correct.
+
+## Baseline and architecture
+
+- Baseline: `main` at `2b453ed` before this work; feature branch `fix/master-prompt-alignment`. The starting worktree was clean. The last `main` CI run was green, but that does not verify this branch.
+- Workspaces: `packages/tokens` generates CSS variables and themes; `packages/motion` owns spring presets and the React motion hook; `packages/react` owns exported controls, provider, internal focus/position/layer primitives and the manifest; `apps/docs` owns the static documentation, registry, preview shell and experimental Design Studio.
+- `packages/react/src/manifest.ts` and generated `components.json` list 131 beta components. `apps/docs/src/site.ts` builds page routes plus Overview/Specs/Guidelines/Accessibility/Code for each component. `apps/docs/build.mjs` rejects missing registry entries and currently prerenders 698 routes. Read the Docs runs that build via `.readthedocs.yaml`; GitHub Actions runs typecheck, Vitest, build and Chromium Playwright on PRs and `main` pushes.
+- Local gate after the fixes: `npm run typecheck` passed; `npm test` passed 202 tests in 8 files without the former jsdom canvas diagnostic; `npm run build:rtd` produced 698 routes; `npm run e2e` passed 101 tests with 23 intentional skips. The initial E2E run did have a timeout in the images-off persistence test; three isolated repeats passed and the stabilized test passed in two subsequent full runs. Hosted CI is not yet verified for this branch.
+
+## Reproduced issues and current slices
+
+| ID | Severity | Reproduction / cause | Acceptance and state |
+|---|---|---|---|
+| STUDIO-01 | High | At 390px the new Studio opened a 1440px canvas at scale 1, placing the first node hundreds of pixels off-screen; at 1280px the desktop frame was also partly outside the viewport. The toolbar overflowed and the two side panels were unavailable below desktop widths. | Implemented and locally tested: fluid default canvas, measured fit for fixed devices, reachable panel navigation and toolbar rows, and Playwright bounds/interactions at 390/1280px. Authored absolute-position layouts may still extend past a narrow preview; native horizontal scroll is tested, but mobile-first exported layout remains open. Source: `DesignStudio.tsx`, `docs.css`, `e2e/docs.spec.ts`. |
+| STUDIO-02 | Medium | The selected avatar's floating actions were anchored to its right edge and clipped on a 390px canvas. | Implemented and locally tested: anchor to logical start; Playwright asserts the toolbar is inside the viewport. |
+| STUDIO-03 | High | With the documentation in dark mode, the Studio's default light preview inherited a dark canvas behind light-theme controls; form labels had almost no contrast. | Implemented and locally tested: semantic preview tokens scoped to the device frame; Playwright checks preview-versus-site theme separation. Visually reviewed in narrow dark mode. |
+| DOCS-01 | Medium | README advertised 127 components, old test counts and the superseded Theme Studio screenshot; `PROJECT_STATUS.md` made unsupported universal readiness/accessibility claims. | Implemented in source: README/status text now uses measured counts and explicit limits. Markdown links and hosted rendering still need review. |
+| E2E-01 | Medium | In the first full parallel run, the images-off persistence test timed out once, although the UI and three isolated repeats showed persisted `disabled` state. Its old assertion could observe zero images before the preview was ready. | Implemented and locally tested: wait for initial preview and `data-state=disabled` before reload; two subsequent full E2E runs passed. Continue monitoring CI for recurrence. |
+| TEST-01 | Low | Vitest printed jsdom's unimplemented canvas diagnostic while the `SignaturePad` render test still passed. | Implemented and locally tested: render-only test explicitly mocks the unavailable canvas context. Real drawing still requires a separate browser test. |
+
+## Dependency-aware queue
+
+The source at baseline already contains a Design Studio even though the prompt proposes implementing it after foundations. This branch first repairs its newly introduced reachability regression without treating the Studio as complete. The remaining work follows the prompt's dependency order:
+
+| Prompt track | Current disposition | Next measurable gate |
+|---|---|---|
+| §1 shared geometry, semantic theme, motion, resistance | Open; existing tokens and motion hooks are present, but complete cross-component consistency is unverified. | Audit actual raw values and focus/pressed indicators; choose one shared primitive and test normal/reduced/off interruption. |
+| §2 docs landing, navigation, template and semantics | Open; static routes and common component tabs exist. README truth pass is underway. | Reproduce each reported sidebar/tab/copy/scroll defect across mobile, RTL and back/forward; fix shared docs source. |
+| §3 existing components | Open; do not infer correctness from the 131 manifest entries. | Track each reported defect against a focused reproduction, library change, docs example and regression test, starting with safety and input failures. |
+| §4 generalized drag-and-drop and selective additions | Partial, not validated: `DndContext`, sortable hooks, overlay, indicator and modifiers are already exported from `packages/react/src/components/Dnd.tsx`. Their existence does not establish the full pointer/touch/keyboard/alternative matrix or integration quality. New additions are deferred until existing controls are stable. | Reproduce drag/cancel/move between containers with keyboard and touch, verify announcements and a non-drag alternative, then audit dependency/license/bundle. |
+| §5 Design Studio | Partial, experimental. The current preview, palette, inspector and export UI exist, but exported TypeScript, persistence and seven acceptance scenarios have not been validated. | Close STUDIO-01/02, then test generated code in a consumer fixture, import/export, keyboard moves and all seven scenarios. |
+| §6 research additions / §7 release / §8 definition of done | Open. No new component count target substitutes for quality gates. | Complete itemized issue log, manual input/a11y/browser matrix, package/release review and hosted CI. |
+
+The prompt's detailed §3 items and §5 scenarios remain in scope. They must be moved to “implemented and tested,” “already correct with evidence,” “superseded with rationale,” or “blocked/deferred with reason” one by one before the assignment can be called complete. This ledger currently records an initial audit and an incremental repair, not that final disposition.
+
+## Verification conventions
+
+For each next slice, record its reproduction, affected files, focused and full checks, rendered review, commit/PR and remaining risks here. A local pass is not CI. Automated axe checks are scoped smoke tests, not an accessibility-conformance statement. Manual screen-reader, cross-browser, touch, pen, long-label, 200–400% reflow, RTL, reduced/off-motion and generated-code validation are still outstanding unless recorded with direct evidence.

@@ -491,10 +491,16 @@ describe("Batch C components (PieChart, DocumentViewer, SignaturePad)", () => {
   });
 
   it("renders SignaturePad without Type instead button", () => {
-    wrap(<Orlo.SignaturePad label="Sign contract" />);
-    expect(screen.queryByText("Type instead")).not.toBeInTheDocument();
-    expect(screen.getByText("Undo")).toBeInTheDocument();
-    expect(screen.getByText("Clear")).toBeInTheDocument();
+    // jsdom has no canvas renderer; drawing itself is exercised in a browser.
+    const context = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
+    try {
+      wrap(<Orlo.SignaturePad label="Sign contract" />);
+      expect(screen.queryByText("Type instead")).not.toBeInTheDocument();
+      expect(screen.getByText("Undo")).toBeInTheDocument();
+      expect(screen.getByText("Clear")).toBeInTheDocument();
+    } finally {
+      context.mockRestore();
+    }
   });
 });
 

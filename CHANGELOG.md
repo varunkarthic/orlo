@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Documentation and Design Studio reachability
+- Fixed the Studio opening with an off-screen canvas on narrow viewports. Fixed-size device previews now fit their available pane; Components, Canvas and Inspector remain reachable on smaller screens, and selected-node actions stay within the viewport.
+- Scoped the Studio device canvas to the preview theme so light-preview labels remain legible when the documentation is dark.
+- Corrected README/status counts and retired Theme Studio marketing copy. Added an evidence-based implementation ledger for the remaining master-prompt work and verification limits.
+- Made the images-off persistence browser test wait for the preview's actual disabled state before reloading.
+- Added the Design Studio to scoped axe smoke checks and gave its horizontally scrollable mobile status bar a keyboard focus path. Mocked the absent canvas context in the render-only SignaturePad unit test to remove a misleading jsdom diagnostic.
+
+The implementation notes below describe code changes, not a blanket release, accessibility or cross-browser verification claim. See [`docs/IMPLEMENTATION_LEDGER.md`](docs/IMPLEMENTATION_LEDGER.md) for current evidence and open work.
+
 ### Master Implementation (October 2026)
 - **Foundations & Core Fixes:**
   - `gesture.ts`: Added logarithmic `elasticResistance` (`log1p` model) for natural bounded overdrag physics.

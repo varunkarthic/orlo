@@ -117,12 +117,16 @@ test("search palette navigates to a page", async ({ page, isMobile }) => {
 test("preferences: images off removes image requests and persists", async ({ page, isMobile }) => {
   test.skip(isMobile, "covered on desktop");
   await page.goto("components/image/");
+  const image = page.locator(".stage .orlo-image").first();
+  await expect(image).toBeVisible();
   await page.getByRole("button", { name: "Preferences" }).click();
   await page.getByRole("radiogroup", { name: "Images" }).getByRole("radio", { name: "Off" }).click();
   await page.keyboard.press("Escape");
+  await expect(image).toHaveAttribute("data-state", "disabled");
   await expect(page.locator(".stage img")).toHaveCount(0);
   await page.reload();
-  await expect(page.locator(".stage .orlo-image[data-state=disabled]").first()).toBeVisible();
+  await expect(image).toHaveAttribute("data-state", "disabled");
+  await expect(image).toBeVisible();
 });
 
 test("theme toggle switches to dark without reload", async ({ page, isMobile }) => {
@@ -191,7 +195,65 @@ test("docs controls and section starts align at tablet and phone widths", async 
   await expect(page.getByRole("radio", { name: "Small", exact: true })).toBeVisible();
 });
 
-for (const p of ["", "components/", "components/select/", "components/dialog/accessibility/", "components/calendar/", "start/examples/", "styles/motion/", "styles/color/", "start/theme-studio/", "foundations/accessibility/", "brand/", "brand/badges/"]) {
+test("Design Studio keeps its canvas and panels reachable across widths", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("orlo-prefs", JSON.stringify({ theme: "dark" })));
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto("design-studio/");
+  const studio = page.locator(".design-studio");
+  const canvas = studio.locator(".design-studio__canvas-viewport");
+  await expect(page.locator(".orlo-root").first()).toHaveAttribute("data-orlo-theme", "dark");
+  const frameTheme = await studio.locator(".design-studio__device-frame").evaluate((frame) => {
+    const root = document.querySelector(".orlo-root")!;
+    return {
+      preview: getComputedStyle(frame).getPropertyValue("--orlo-color-canvas").trim(),
+      site: getComputedStyle(root).getPropertyValue("--orlo-color-canvas").trim(),
+    };
+  });
+  expect(frameTheme.preview).not.toBe(frameTheme.site);
+  const firstNode = studio.locator(".design-studio__node").first();
+  await expect(firstNode).toBeVisible();
+  const initialNode = await firstNode.boundingBox();
+  expect(initialNode!.x).toBeGreaterThanOrEqual(0);
+  expect(initialNode!.x + initialNode!.width).toBeLessThanOrEqual(390);
+  const canvasSurface = studio.locator(".design-studio__canvas-surface");
+  const emailField = studio.locator(".design-studio__node").nth(2);
+  await canvasSurface.evaluate((surface) => { surface.scrollLeft = surface.scrollWidth; });
+  const scrolledField = await emailField.boundingBox();
+  expect(scrolledField!.x).toBeGreaterThanOrEqual(0);
+  expect(scrolledField!.x + scrolledField!.width).toBeLessThanOrEqual(390);
+  await canvasSurface.evaluate((surface) => { surface.scrollLeft = 0; });
+  const nodeTools = await studio.locator(".design-studio__node-tools").boundingBox();
+  expect(nodeTools!.x).toBeGreaterThanOrEqual(0);
+  expect(nodeTools!.x + nodeTools!.width).toBeLessThanOrEqual(390);
+
+  await studio.getByRole("button", { name: "Components", exact: true }).last().click();
+  await expect(studio.locator(".design-studio__sidebar-left")).toBeVisible();
+  await studio.locator(".design-studio__palette-card").first().click();
+  await expect(canvas).toBeVisible();
+  await expect(studio.locator(".design-studio__node")).toHaveCount(7);
+  await studio.getByRole("button", { name: "Inspector", exact: true }).click();
+  await expect(studio.locator(".design-studio__sidebar-right")).toBeVisible();
+  await studio.getByRole("button", { name: "Canvas", exact: true }).click();
+  await expect(studio.locator(".design-studio__statusbar")).toHaveAttribute("tabindex", "0");
+
+  await studio.getByRole("button", { name: "Desktop 1440 Viewport" }).click();
+  const bounds = await canvas.boundingBox();
+  const frame = await studio.locator(".design-studio__device-frame").boundingBox();
+  expect(frame!.x).toBeGreaterThanOrEqual(bounds!.x);
+  expect(frame!.x + frame!.width).toBeLessThanOrEqual(bounds!.x + bounds!.width);
+  expect(frame!.y).toBeGreaterThanOrEqual(bounds!.y);
+  expect(frame!.y + frame!.height).toBeLessThanOrEqual(bounds!.y + bounds!.height);
+
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.reload();
+  const title = await studio.locator(".design-studio__doc-title").boundingBox();
+  const topbarLeft = await studio.locator(".design-studio__topbar-left").boundingBox();
+  const topbarCenter = await studio.locator(".design-studio__topbar-center").boundingBox();
+  expect(title!.height).toBeLessThanOrEqual(24);
+  expect(topbarCenter!.y).toBeGreaterThanOrEqual(topbarLeft!.y + topbarLeft!.height - 1);
+});
+
+for (const p of ["", "design-studio/", "components/", "components/select/", "components/dialog/accessibility/", "components/calendar/", "start/examples/", "styles/motion/", "styles/color/", "start/theme-studio/", "foundations/accessibility/", "brand/", "brand/badges/"]) {
   test(`axe: no serious violations on /${p}`, async ({ page }) => {
     await page.goto(p);
     const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag22aa"]).analyze();

@@ -11,13 +11,13 @@ Orlo is built on the idea that an interface is shaped as much by what happens *b
 
 The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is the finish that holds the whole together, even when nobody notices it.
 
-> **Status: beta, pre-release.** 127 components are documented in source; automated coverage is recorded per component in [`components.json`](components.json). None is marked stable yet: that needs manual screen-reader and visual review. Nothing is published to npm.
+> **Status: beta, pre-release.** The current manifest documents 131 components in [`components.json`](components.json). Coverage and maturity vary by component; the catalogue records both. Orlo is not published to npm, and automated checks are not a substitute for manual assistive-technology review.
 
 **Start here:** [getting started](https://orlo-react.readthedocs.io/en/latest/start/) · [browse components](https://orlo-react.readthedocs.io/en/latest/components/) · [learn the design language](https://orlo-react.readthedocs.io/en/latest/foundations/) · [spacing & layout guidelines](https://orlo-react.readthedocs.io/en/latest/styles/spacing/) · [read the lifecycle guide](https://orlo-react.readthedocs.io/en/latest/foundations/lifecycle/)
 
 ## Why Orlo
 
-**Everything is built in.** Every component, plus positioning, focus scopes, scroll locking, the layer stack, the icon set and the theme generator, is written for Orlo. The only runtime dependencies are React and the [Motion](https://motion.dev) animation engine. It is not a wrapper around another component library.
+**One system, not a wrapper.** Components share Orlo's tokens, motion presets, positioning, focus, and layer primitives. React and React DOM are peer dependencies; the workspace also depends on [Motion](https://motion.dev). See each package manifest for the exact dependency contract.
 
 **Finished edges.** The Details Lab puts careless behaviour beside deliberate behaviour: half-clipped text under a growing card, focus sent to a trigger that no longer exists, and repeated-click races.
 
@@ -25,13 +25,13 @@ The name is Italian for an edge, rim or hem (pronounced **OR-loh**). A hem is th
 
 **One motion grammar.** Components ask for a purpose (`press`, `reveal`, `overlay`, `shared`) and Orlo supplies an interruptible spring. Reduced motion replaces travel with a fade; `off` makes changes instant.
 
-**8pt & 4pt Spatial Hierarchy (Apple HIG + Material 3).** Every element, margin, tab, and control sits on a rigorous 8pt primary spatial rhythm with a 4pt subgrid (`--orlo-space-*`, `--orlo-gap-*`). From 4px micro-insets in segmented controls to 24px form field flows and 44×44pt touch targets, spacing reinforces Gestalt proximity and natural cognitive flow.
+**A shared spatial grammar.** Orlo uses an 8pt rhythm with a 4pt subgrid (`--orlo-space-*`, `--orlo-gap-*`), semantic corner radii, and explicit control and touch-target guidance. The [design rules](ORLO_DESIGN_RULES.md) describe the intended system; individual surfaces are still being audited against it.
 
 **A lifecycle, not a resting frame.** Every component page now carries the same behavioural contract: stable entry, equivalent input acknowledgement, meaningful change, clear resolution, interruption and safe recovery. The [Lifecycle & composition guide](apps/docs/src/pages/FoundationsPages.tsx) defines how overlays, fields, asynchronous actions and nested surfaces hand off focus, layers, state and failure.
 
 **Failure is designed.** Images reserve their space before loading, decode before they appear, retry a limited number of times and fall back to a designed placeholder. `images="off"` makes every managed image a placeholder and stops all image requests.
 
-**Accessibility lives in behaviour.** Orlo follows WAI-ARIA keyboard patterns for menus, tabs, trees, grids, comboboxes and sliders. Modals make the page inert, lock scrolling once and return focus to a valid element. Colour is never the only signal.
+**Accessibility lives in behaviour.** Orlo includes keyboard and focus handling for menus, tabs, trees, grids, comboboxes, sliders, and overlays. Automated tests cover selected interactions and pages; manual screen-reader and cross-browser review remain necessary.
 
 **Locale-aware.** The calendar's week start, digits and names come from `Intl`. Number fields parse "1.234,5" in German. Arrow keys and layouts mirror in right-to-left text. The tag input, combobox and command palette ignore keystrokes during IME composition.
 
@@ -56,16 +56,9 @@ The machine-readable list is [`components.json`](components.json).
 
 Want to credit Orlo in a project footer or README? The optional [`BuiltWithOrlo` badge](https://orlo-react.readthedocs.io/en/latest/brand/badges/) comes in four fixed identity tones, three sizes, and signature, compact, or inline layouts. The signature shows “Open-source design framework for React” and “by Varun Karthic.” The Brand guide includes live previews, copyable React and HTML embeds, and self-contained SVG downloads for non-React sites. No badge is required by the MIT License.
 
-## Documentation that behaves like the library
+## Explore the documentation
 
-The documentation site is redesigned with an Apple HIG aesthetic:
-- **Segmented Pill Navigation.** Frosted glass tab bar (`backdrop-filter: blur(20px)`) with sliding tactile active highlights.
-- **Apple-grade Previews.** Tactile stage canvas with interactive theme, density, RTL, and instant code inspector toggles.
-- **Editorial Callouts.** Structured notes, tips, warnings, and specifications matching Apple design guidelines.
-- **Practical labs.** MotionLab, Theme Studio, Details Lab, failure states and device-focused checks make behaviour inspectable.
-- **Static by design.** Every route is prerendered for Read the Docs; deep links work without an application server ([`.readthedocs.yaml`](.readthedocs.yaml)).
-
-<img src="docs/media/v3-after/theme-studio-light.png" alt="Orlo Theme Studio with a composed settings scene" width="800">
+The [component reference](https://orlo-react.readthedocs.io/en/latest/components/) separates live examples, specifications, guidelines, accessibility, and code. [Foundations](https://orlo-react.readthedocs.io/en/latest/foundations/) explains interaction lifecycles and composition; the [motion lab](https://orlo-react.readthedocs.io/en/latest/styles/motion/) and [device lab](https://orlo-react.readthedocs.io/en/latest/develop/devices/) make behaviour easier to inspect. The [Design Studio](https://orlo-react.readthedocs.io/en/latest/design-studio/) is an experimental visual workspace, not a replacement for testing exported code in an application. Routes are statically prerendered for Read the Docs ([`.readthedocs.yaml`](.readthedocs.yaml)).
 
 ## Run it locally
 
@@ -74,6 +67,7 @@ Orlo is not on npm yet. From a clone:
 ```bash
 npm install
 npm run dev          # docs + live demos at http://localhost:5173
+npm run typecheck
 npm test             # unit and component tests
 npm run build:rtd    # static site -> apps/docs/dist
 npm run e2e          # Playwright + axe against the built site
@@ -100,7 +94,7 @@ To theme Orlo from a single colour:
 
 ```ts
 import { createTheme, themeToCss } from "@orlo/tokens";
-const css = themeToCss(createTheme("#1F5FA8"), ":root"); // accent roles meet WCAG AA in light and dark
+const css = themeToCss(createTheme("#1F5FA8"), ":root");
 ```
 
 ## Repository
@@ -117,18 +111,10 @@ e2e/              Playwright + axe tests
 
 ## Verification and limits
 
-| Check | Status |
-|---|---|
-| Unit and component tests (Vitest) | automated (181 passed) |
-| Playwright end-to-end: deep links, focus, menus at edges, search, overflow | automated (97 passed) |
-| axe-core on key pages, desktop and mobile | automated (0 violations) |
-| Manual screen-reader testing | **not yet done** |
-| Visual regression snapshots | not yet automated |
-
-Normative design specifications are published in [`docs/README.md`](docs/README.md) and [`docs/guidelines/`](docs/guidelines/). Current engineering details are in [`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md).
+Run `npm run typecheck && npm test && npm run build:rtd && npm run e2e` before proposing a change. Playwright includes selected axe checks; this does **not** establish site-wide accessibility conformance. Manual screen-reader, device, and cross-browser review remain open. Current evidence and unresolved work are tracked in the [implementation ledger](docs/IMPLEMENTATION_LEDGER.md); normative design guidance is in [`docs/README.md`](docs/README.md) and [`docs/guidelines/`](docs/guidelines/).
 
 ## Credits
 
-Orlo's design and motion principles draw on Apple's Human Interface Guidelines and Google's Material 3 Expressive. It is **not affiliated with Apple, Google, Framer or any other vendor**. Sources and licences are listed in [`docs/research/`](docs/research).
+Orlo studies established interface guidance while developing its own visual and interaction language. It is **not affiliated with Apple, Google, Framer or any other vendor**. Sources and licences are listed in [`docs/research/`](docs/research).
 
 Agents should read [AGENTS.md](AGENTS.md) and [ORLO_DESIGN_RULES.md](ORLO_DESIGN_RULES.md). Licensed under the [MIT License](LICENSE).
