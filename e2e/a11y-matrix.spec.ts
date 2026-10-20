@@ -8,6 +8,8 @@ const noOverflow = async (page: Page) => page.evaluate(() => document.documentEl
 
 test("forced colours: key pages stay operable and axe-clean", async ({ page, isMobile }) => {
   test.skip(isMobile);
+  // Three full-page axe runs can exceed the default budget when the export compiler test runs in parallel.
+  test.setTimeout(60_000);
   await page.emulateMedia({ forcedColors: "active" });
   for (const p of ["components/button/", "components/dialog/", "components/data-grid/"]) {
     await page.goto(p);

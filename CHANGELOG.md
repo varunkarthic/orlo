@@ -8,6 +8,9 @@
 - Corrected README/status counts and retired Theme Studio marketing copy. Added an evidence-based implementation ledger for the remaining master-prompt work and verification limits.
 - Made the images-off persistence browser test wait for the preview's actual disabled state before reloading.
 - Added the Design Studio to scoped axe smoke checks and gave its horizontally scrollable mobile status bar a keyboard focus path. Mocked the absent canvas context in the render-only SignaturePad unit test to remove a misleading jsdom diagnostic.
+- Corrected Studio exports for the built-in Settings and Feedback templates: Avatar now uses a public variant, Segmented Control emits typed options, Toggle Group is single-select, and Number Field uses an interactive default value. Exported TSX includes scoped accent tokens and Orlo styles; inspector text is escaped. A browser-driven TypeScript compilation check covers all six templates, Toggle Group and edited text/theme cases.
+- Reworded the Studio contrast indicator to describe only the two accent pairings it checks, rather than claiming complete WCAG conformance.
+- Gave the existing multi-page forced-colours axe scan a scoped parallel-run timeout after confirming the scan passes twice in isolation.
 
 The implementation notes below describe code changes, not a blanket release, accessibility or cross-browser verification claim. See [`docs/IMPLEMENTATION_LEDGER.md`](docs/IMPLEMENTATION_LEDGER.md) for current evidence and open work.
 

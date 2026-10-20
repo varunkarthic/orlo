@@ -35,7 +35,7 @@ import {
   OrloProvider,
   useToast,
 } from "@orlo/react";
-import { createTheme, contrast, semantic } from "@orlo/tokens";
+import { createTheme, contrast, semantic, themeToCss } from "@orlo/tokens";
 
 export type Density = "comfortable" | "compact" | "touch";
 export type ViewportMode = "responsive" | "desktop" | "tablet" | "mobile";
@@ -86,6 +86,18 @@ export type MotionPhysics = {
   mass: number;
 };
 
+// Text entered in the inspector must remain literal text in copied TSX.
+const jsxEntities: Record<string, string> = {
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;",
+  "{": "&#123;", "}": "&#125;", "\n": "&#10;", "\r": "&#13;",
+};
+const escapeJsx = (value: unknown) => String(value).replace(/[&<>"{}\n\r]/g, (character) => jsxEntities[character]);
+const finiteNumber = (value: unknown, fallback: number) => {
+  if (value === null || value === undefined || value === "") return fallback;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
 // 6 Complete Templates as specified in Master Prompt Section 5
 export const STUDIO_TEMPLATES: {
   id: string;
@@ -101,7 +113,7 @@ export const STUDIO_TEMPLATES: {
       {
         id: "avatar-1",
         type: "avatar",
-        props: { name: "Alex Rivera", size: "lg", variant: "art" },
+        props: { name: "Alex Rivera", size: "lg", variant: "marble" },
         x: 40,
         y: 40,
         zIndex: 1,
@@ -441,14 +453,14 @@ const COMPONENT_PALETTE: {
   { type: "badge", name: "Badge", category: "Data & Charts", icon: "Shield", defaultProps: { label: "Verified Tier", tone: "accent" } },
   { type: "stat-card", name: "Stat Card", category: "Data & Charts", icon: "Activity", defaultProps: { label: "Cache Hit Ratio", value: "98.4%", delta: 2.1, deltaLabel: "vs 24h avg" } },
   { type: "chip", name: "Chip", category: "Data & Charts", icon: "Tag", defaultProps: { label: "React 19 Ready", selected: true } },
-  { type: "avatar", name: "Avatar", category: "Data & Charts", icon: "User", defaultProps: { name: "Varun Karthic", size: "md", variant: "art" } },
+  { type: "avatar", name: "Avatar", category: "Data & Charts", icon: "User", defaultProps: { name: "Varun Karthic", size: "md", variant: "marble" } },
   { type: "pie-chart", name: "Pie Chart", category: "Data & Charts", icon: "PieChart", defaultProps: { title: "Bandwidth Distribution", data: [{ label: "API", value: 55 }, { label: "Images", value: 30 }, { label: "Static", value: 15 }] } },
   { type: "sparkline", name: "Sparkline", category: "Data & Charts", icon: "TrendingUp", defaultProps: { label: "Request Velocity", data: [12, 19, 14, 25, 32, 28, 45, 58] } },
 
   // Feedback
   { type: "progress", name: "Progress", category: "Feedback", icon: "BarChart", defaultProps: { label: "Sync Status", value: 78 } },
   { type: "spinner", name: "Spinner", category: "Feedback", icon: "Refresh", defaultProps: { size: "md" } },
-  { type: "callout", name: "Callout", category: "Feedback", icon: "AlertCircle", defaultProps: { title: "Production Ready", message: "All WCAG 2.2 AA accessibility gates passed.", tone: "note" } },
+  { type: "callout", name: "Callout", category: "Feedback", icon: "AlertCircle", defaultProps: { title: "Review before release", message: "Check keyboard and contrast behaviour in your application.", tone: "note" } },
 
   // Composed
   { type: "card", name: "Card", category: "Composed", icon: "Layout", defaultProps: { title: "Service Worker Settings", description: "Configures client cache policies and offline routing." } },
@@ -818,182 +830,183 @@ export function DesignStudio() {
     const usedImports = new Set<string>(["OrloProvider"]);
     const elementsCode: string[] = [];
 
-    items.forEach((item) => {
+    items.forEach((sourceItem) => {
+      const item = { ...sourceItem, x: finiteNumber(sourceItem.x, 0), y: finiteNumber(sourceItem.y, 0) };
       switch (item.type) {
         case "button":
           usedImports.add("Button");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Button variant="${item.props.variant || "solid"}" size="${item.props.size || "md"}">\n        ${item.props.label || "Click"}\n      </Button>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Button variant="${escapeJsx(item.props.variant || "solid")}" size="${escapeJsx(item.props.size || "md")}">\n        ${escapeJsx(item.props.label || "Click")}\n      </Button>\n    </div>`
           );
           break;
         case "async-button":
           usedImports.add("AsyncButton");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <AsyncButton action={async () => new Promise((r) => setTimeout(r, ${item.props.timeoutMs || 1500}))}>\n        ${item.props.label || "Save"}\n      </AsyncButton>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <AsyncButton action={async () => new Promise((r) => setTimeout(r, ${finiteNumber(item.props.timeoutMs, 1500)}))}>\n        ${escapeJsx(item.props.label || "Save")}\n      </AsyncButton>\n    </div>`
           );
           break;
         case "button-group":
           usedImports.add("ButtonGroup");
           usedImports.add("Button");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ButtonGroup label="Actions">\n        ${(item.props.labels || ["Action 1", "Action 2"]).map((l: string) => `<Button>${l}</Button>`).join("\n        ")}\n      </ButtonGroup>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ButtonGroup label="Actions">\n        ${(item.props.labels || ["Action 1", "Action 2"]).map((l: string) => `<Button>${escapeJsx(l)}</Button>`).join("\n        ")}\n      </ButtonGroup>\n    </div>`
           );
           break;
         case "icon-button":
           usedImports.add("IconButton");
           usedImports.add("Icons");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <IconButton label="${item.props.label || "Icon"}">\n        <Icons.Heart size={18} />\n      </IconButton>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <IconButton label="${escapeJsx(item.props.label || "Icon")}">\n        <Icons.Heart size={18} />\n      </IconButton>\n    </div>`
           );
           break;
         case "toggle-button":
           usedImports.add("ToggleButton");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ToggleButton defaultPressed={${!!item.props.defaultPressed}}>\n        ${item.props.label || "Toggle"}\n      </ToggleButton>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ToggleButton defaultPressed={${!!item.props.defaultPressed}}>\n        ${escapeJsx(item.props.label || "Toggle")}\n      </ToggleButton>\n    </div>`
           );
           break;
         case "segmented-control":
           usedImports.add("SegmentedControl");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <SegmentedControl label="${item.props.label || "Mode"}" options={${JSON.stringify(item.props.options || ["A", "B"])}} defaultValue="${item.props.value || "A"}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <SegmentedControl label="${escapeJsx(item.props.label || "Mode")}" options={${JSON.stringify((item.props.options || ["A", "B"]).map((option: string) => ({ value: option, label: option })))}} defaultValue="${escapeJsx(item.props.value || "A")}" />\n    </div>`
           );
           break;
         case "toggle-group":
           usedImports.add("ToggleGroup");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ToggleGroup label="${item.props.label || "Format"}" items={${JSON.stringify((item.props.options || ["A", "B"]).map((o: string) => ({ value: o, label: o })))}} defaultValue={["${item.props.value || "A"}"]} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ToggleGroup label="${escapeJsx(item.props.label || "Format")}" type="single" items={${JSON.stringify((item.props.options || ["A", "B"]).map((o: string) => ({ value: o, label: o })))}} defaultValue={${JSON.stringify([item.props.value || "A"])}} />\n    </div>`
           );
           break;
         case "text-field":
           usedImports.add("TextField");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 280 }}>\n      <TextField label="${item.props.label || "Input"}" placeholder="${item.props.placeholder || ""}" help="${item.props.help || ""}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 280 }}>\n      <TextField label="${escapeJsx(item.props.label || "Input")}" placeholder="${escapeJsx(item.props.placeholder || "")}" help="${escapeJsx(item.props.help || "")}" />\n    </div>`
           );
           break;
         case "text-area":
           usedImports.add("TextArea");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 280 }}>\n      <TextArea label="${item.props.label || "Comments"}" resize="${item.props.resize || "vertical"}" placeholder="${item.props.placeholder || ""}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 280 }}>\n      <TextArea label="${escapeJsx(item.props.label || "Comments")}" resize="${escapeJsx(item.props.resize || "vertical")}" placeholder="${escapeJsx(item.props.placeholder || "")}" />\n    </div>`
           );
           break;
         case "number-field":
           usedImports.add("NumberField");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <NumberField label="${item.props.label || "Quantity"}" variant="${item.props.variant || "quantity"}" value={${item.props.value ?? 1}} min={${item.props.min ?? 0}} max={${item.props.max ?? 100}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <NumberField label="${escapeJsx(item.props.label || "Quantity")}" variant="${escapeJsx(item.props.variant || "quantity")}" defaultValue={${finiteNumber(item.props.value, 1)}} min={${finiteNumber(item.props.min, 0)}} max={${finiteNumber(item.props.max, 100)}} step={${finiteNumber(item.props.step, 1)}} />\n    </div>`
           );
           break;
         case "pin-input":
           usedImports.add("PinInput");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <PinInput label="${item.props.label || "PIN"}" length={${item.props.length || 6}} groupSize={${item.props.groupSize || 3}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <PinInput label="${escapeJsx(item.props.label || "PIN")}" length={${finiteNumber(item.props.length, 6)}} groupSize={${finiteNumber(item.props.groupSize, 3)}} />\n    </div>`
           );
           break;
         case "slider":
           usedImports.add("Slider");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <Slider label="${item.props.label || "Level"}" orientation="${item.props.orientation || "horizontal"}" defaultValue={${item.props.defaultValue ?? 50}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <Slider label="${escapeJsx(item.props.label || "Level")}" orientation="${escapeJsx(item.props.orientation || "horizontal")}" defaultValue={${finiteNumber(item.props.defaultValue, 50)}} />\n    </div>`
           );
           break;
         case "range-slider":
           usedImports.add("RangeSlider");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <RangeSlider label="${item.props.label || "Range"}" orientation="${item.props.orientation || "horizontal"}" defaultValue={${JSON.stringify(item.props.defaultValue || [20, 80])}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <RangeSlider label="${escapeJsx(item.props.label || "Range")}" orientation="${escapeJsx(item.props.orientation || "horizontal")}" defaultValue={${JSON.stringify(item.props.defaultValue || [20, 80])}} />\n    </div>`
           );
           break;
         case "switch":
           usedImports.add("Switch");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Switch label="${item.props.label || "Toggle"}" defaultChecked={${!!item.props.defaultChecked}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Switch label="${escapeJsx(item.props.label || "Toggle")}" defaultChecked={${!!item.props.defaultChecked}} />\n    </div>`
           );
           break;
         case "checkbox":
           usedImports.add("Checkbox");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Checkbox label="${item.props.label || "Option"}" defaultChecked={${!!item.props.defaultChecked}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Checkbox label="${escapeJsx(item.props.label || "Option")}" defaultChecked={${!!item.props.defaultChecked}} />\n    </div>`
           );
           break;
         case "radio-group":
           usedImports.add("RadioGroup");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <RadioGroup legend="${item.props.label || "Select"}" name="screen-radio" options={${JSON.stringify((item.props.options || ["Opt 1", "Opt 2"]).map((o: string) => ({ value: o, label: o })))}} defaultValue="${item.props.defaultValue || "Opt 1"}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <RadioGroup legend="${escapeJsx(item.props.label || "Select")}" name="screen-radio" options={${JSON.stringify((item.props.options || ["Opt 1", "Opt 2"]).map((o: string) => ({ value: o, label: o })))}} defaultValue="${escapeJsx(item.props.defaultValue || "Opt 1")}" />\n    </div>`
           );
           break;
         case "color-picker":
           usedImports.add("ColorPicker");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ColorPicker label="${item.props.label || "Color"}" defaultValue="${item.props.defaultValue || "#1F5FA8"}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <ColorPicker label="${escapeJsx(item.props.label || "Color")}" defaultValue="${escapeJsx(item.props.defaultValue || "#1F5FA8")}" />\n    </div>`
           );
           break;
         case "file-dropzone":
           usedImports.add("FileDropzone");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 320 }}>\n      <FileDropzone label="${item.props.label || "File upload"}" accept="${item.props.accept || "*/*"}" maxFiles={${item.props.maxFiles || 4}} maxSize={${item.props.maxSize || 5242880}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 320 }}>\n      <FileDropzone label="${escapeJsx(item.props.label || "File upload")}" accept="${escapeJsx(item.props.accept || "*/*")}" maxFiles={${finiteNumber(item.props.maxFiles, 4)}} maxSize={${finiteNumber(item.props.maxSize, 5242880)}} />\n    </div>`
           );
           break;
         case "rating":
           usedImports.add("Rating");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Rating label="${item.props.label || "Rating"}" max={${item.props.max || 5}} defaultValue={${item.props.defaultValue || 5}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Rating label="${escapeJsx(item.props.label || "Rating")}" max={${finiteNumber(item.props.max, 5)}} defaultValue={${finiteNumber(item.props.defaultValue, 5)}} />\n    </div>`
           );
           break;
         case "badge":
           usedImports.add("Badge");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Badge tone="${item.props.tone || "accent"}">\n        ${item.props.label || "Badge"}\n      </Badge>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Badge tone="${escapeJsx(item.props.tone || "accent")}">\n        ${escapeJsx(item.props.label || "Badge")}\n      </Badge>\n    </div>`
           );
           break;
         case "stat-card":
           usedImports.add("StatCard");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 260 }}>\n      <StatCard label="${item.props.label || "Metric"}" value="${item.props.value || "0"}" delta={${item.props.delta || 0}} deltaLabel="${item.props.deltaLabel || ""}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 260 }}>\n      <StatCard label="${escapeJsx(item.props.label || "Metric")}" value="${escapeJsx(item.props.value || "0")}" delta={${finiteNumber(item.props.delta, 0)}} deltaLabel="${escapeJsx(item.props.deltaLabel || "")}" />\n    </div>`
           );
           break;
         case "chip":
           usedImports.add("Chip");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Chip selected={${!!item.props.selected}}>\n        ${item.props.label || "Chip"}\n      </Chip>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Chip selected={${!!item.props.selected}}>\n        ${escapeJsx(item.props.label || "Chip")}\n      </Chip>\n    </div>`
           );
           break;
         case "avatar":
           usedImports.add("Avatar");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Avatar name="${item.props.name || "User"}" size="${item.props.size || "md"}" variant="${item.props.variant || "art"}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Avatar name="${escapeJsx(item.props.name || "User")}" size="${escapeJsx(item.props.size || "md")}" variant="${escapeJsx(item.props.variant || "marble")}" />\n    </div>`
           );
           break;
         case "pie-chart":
           usedImports.add("PieChart");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 280 }}>\n      <PieChart title="${item.props.title || "Distribution"}" data={${JSON.stringify(item.props.data || [])}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 280 }}>\n      <PieChart title="${escapeJsx(item.props.title || "Distribution")}" data={${JSON.stringify(item.props.data || [])}} />\n    </div>`
           );
           break;
         case "sparkline":
           usedImports.add("Sparkline");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <Sparkline label="${item.props.label || "Trend"}" data={${JSON.stringify(item.props.data || [10, 20, 15, 30])}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <Sparkline label="${escapeJsx(item.props.label || "Trend")}" data={${JSON.stringify(item.props.data || [10, 20, 15, 30])}} />\n    </div>`
           );
           break;
         case "progress":
           usedImports.add("Progress");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <Progress label="${item.props.label || "Progress"}" value={${item.props.value || 50}} />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 240 }}>\n      <Progress label="${escapeJsx(item.props.label || "Progress")}" value={${finiteNumber(item.props.value, 50)}} />\n    </div>`
           );
           break;
         case "spinner":
           usedImports.add("Spinner");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Spinner size="${item.props.size || "md"}" />\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y} }}>\n      <Spinner size="${escapeJsx(item.props.size || "md")}" />\n    </div>`
           );
           break;
         case "callout":
           usedImports.add("Callout");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 340 }}>\n      <Callout title="${item.props.title || "Note"}" tone="${item.props.tone || "note"}">\n        ${item.props.message || ""}\n      </Callout>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 340 }}>\n      <Callout title="${escapeJsx(item.props.title || "Note")}" tone="${escapeJsx(item.props.tone || "note")}">\n        ${escapeJsx(item.props.message || "")}\n      </Callout>\n    </div>`
           );
           break;
         case "card":
           usedImports.add("Card");
           elementsCode.push(
-            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 300 }}>\n      <Card>\n        <h3>${item.props.title || "Card"}</h3>\n        <p>${item.props.description || ""}</p>\n      </Card>\n    </div>`
+            `    <div style={{ position: "absolute", left: ${item.x}, top: ${item.y}, width: 300 }}>\n      <Card>\n        <h3>${escapeJsx(item.props.title || "Card")}</h3>\n        <p>${escapeJsx(item.props.description || "")}</p>\n      </Card>\n    </div>`
           );
           break;
       }
@@ -1001,15 +1014,17 @@ export function DesignStudio() {
 
     const importsString = Array.from(usedImports).sort().join(", ");
 
-    return `import React, { useState } from "react";
-import { ${importsString} } from "@orlo/react";
-import { createTheme } from "@orlo/tokens";
+    return `import { ${importsString} } from "@orlo/react";
+import { createTheme, themeToCss } from "@orlo/tokens";
+import "@orlo/tokens/css";
+import "@orlo/react/styles.css";
+
+const screenTheme = createTheme(${JSON.stringify(accent)});
 
 export function GeneratedScreen() {
-  const theme = createTheme("${accent}");
-
   return (
-    <OrloProvider theme="${mode}" material="${material}" density="${density}">
+    <OrloProvider className="generated-screen" theme="${mode}" material="${material}" density="${density}">
+      <style>{themeToCss(screenTheme, ".generated-screen")}</style>
       <div
         style={{
           position: "relative",
@@ -1017,7 +1032,7 @@ export function GeneratedScreen() {
           minBlockSize: "680px",
           background: "var(--orlo-color-canvas)",
           color: "var(--orlo-color-fg)",
-          padding: "2rem",
+          padding: "var(--orlo-space-8)",
           overflow: "auto",
         }}
       >
@@ -1551,6 +1566,7 @@ ${elementsCode.join("\n\n")}
                   material={material}
                   density={density}
                 >
+                  <style>{themeToCss(theme, ".design-studio__device-frame")}</style>
                   {items.map((item) => {
                     const isSelected = item.id === selectedId;
                     return (
@@ -1944,7 +1960,7 @@ ${elementsCode.join("\n\n")}
               </div>
             )}
 
-            {/* --- THEME TAB: Palettes, Contrast, WCAG 2.2 AA --- */}
+            {/* --- THEME TAB: Palettes and scoped accent-pair contrast --- */}
             {activeRightTab === "theme" && (
               <div className="design-studio__inspector-pane">
                 <ColorPicker
@@ -2001,11 +2017,11 @@ ${elementsCode.join("\n\n")}
                   ]}
                 />
 
-                {/* Real-time WCAG 2.2 AA Contrast Guardrail */}
+                  {/* These two pairings are a useful check, not a conformance audit. */}
                 <div className="design-studio__contrast-card">
                   <div className="design-studio__contrast-head">
                     <Icons.Shield size={16} />
-                    <strong>WCAG 2.2 AA Contrast Analysis</strong>
+                      <strong>Accent contrast checks</strong>
                   </div>
 
                   <div className="design-studio__contrast-row">
@@ -2026,8 +2042,8 @@ ${elementsCode.join("\n\n")}
                     tone={fillContrast >= 4.5 && textContrast >= 4.5 ? "success" : "warning"}
                   >
                     {fillContrast >= 4.5 && textContrast >= 4.5
-                      ? "Passes WCAG 2.2 AA (Normal Text)"
-                      : "Lightness adjustment required"}
+                      ? "Both checked pairings meet 4.5:1"
+                      : "Review accent contrast"}
                   </Badge>
 
                   {fillContrast < 4.5 && (
@@ -2150,6 +2166,7 @@ ${elementsCode.join("\n\n")}
             {/* --- CODE TAB: Clean Idiomatic TSX --- */}
             {activeRightTab === "code" && (
               <div className="design-studio__inspector-pane">
+                <p className="orlo-hint">Exports TSX for a React project using the local Orlo workspace packages. Review layout and behaviour in your app before shipping.</p>
                 <Stack direction="row" gap={2}>
                   <Button variant="solid" size="sm" onClick={copyCode}>
                     <Icons.Copy size={15} />
@@ -2215,7 +2232,7 @@ ${elementsCode.join("\n\n")}
             <div className="design-studio__modal-header">
               <div>
                 <strong>Design Studio Templates Library</strong>
-                <p>1-Click accelerators for full-screen production workflows</p>
+                <p>Starting points to arrange, edit, test and export</p>
               </div>
               <button
                 type="button"
@@ -2310,6 +2327,7 @@ function renderStudioComponent(
       return (
         <ToggleGroup
           label={item.props.label || "Format"}
+          type="single"
           value={[item.props.value || "Bold"]}
           onValueChange={(v) => updateProp("value", v[0])}
           items={(item.props.options || ["A", "B"]).map((o: string) => ({ value: o, label: o }))}
@@ -2460,7 +2478,7 @@ function renderStudioComponent(
         <Avatar
           name={item.props.name || "Varun"}
           size={item.props.size || "md"}
-          variant={item.props.variant || "art"}
+          variant={item.props.variant || "marble"}
         />
       );
     case "pie-chart":
