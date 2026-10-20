@@ -60,6 +60,7 @@ export function App({ route, page }: { route: string; page: PageRender }) {
   });
   const section = sectionOf(route);
   const home = section === "home";
+  const isStudio = section === "design-studio" || route === "design-studio";
 
   useEffect(() => {
     const el = sideRef.current;
@@ -209,40 +210,42 @@ export function App({ route, page }: { route: string; page: PageRender }) {
         </div>
       </header>
 
-      <div className="layout" data-home={home || undefined}>
-        {!home && <aside ref={sideRef} className="layout__side">{sidebar}</aside>}
-        <main id="main" tabIndex={-1} className="layout__main">
-          <div className="article" data-section={section}>
+      <div className={`layout ${isStudio ? "layout--studio" : ""}`} data-home={home || undefined} data-studio={isStudio || undefined}>
+        {!home && !isStudio && <aside ref={sideRef} className="layout__side">{sidebar}</aside>}
+        <main id="main" tabIndex={-1} className={`layout__main ${isStudio ? "layout__main--studio" : ""}`}>
+          <div className={`article ${isStudio ? "article--studio" : ""}`} data-section={section}>
             {page({ root, tab })}
-            {!home && idx >= 0 && (
+            {!home && !isStudio && idx >= 0 && (
               <nav className="pager" aria-label="Previous and next">
                 {prev ? <a href={href(prev.path)}><span>Previous</span><strong><Icons.ChevronLeft size={16} aria-hidden="true" />{titleOf(prev)}</strong></a> : <span />}
                 {next ? <a href={href(next.path)} data-next=""><span>Next</span><strong>{titleOf(next)}<Icons.ChevronRight size={16} aria-hidden="true" /></strong></a> : <span />}
               </nav>
             )}
           </div>
-          {!home && <aside className="layout__toc"><PageToc dep={route} /></aside>}
+          {!home && !isStudio && <aside className="layout__toc"><PageToc dep={route} /></aside>}
         </main>
       </div>
 
-      <footer className="footer">
-        <div className="footer__inner">
-          <div className="footer__brand">
-            <Wordmark height={20} />
-            <p>Open-source design framework for React, designed by Varun Karthic. Pre-release: packages are not on npm yet.</p>
-            <BuiltWithOrlo layout="inline" tone="outline" size="sm" href={href("brand")} kind="designed" />
+      {!isStudio && (
+        <footer className="footer">
+          <div className="footer__inner">
+            <div className="footer__brand">
+              <Wordmark height={20} />
+              <p>Open-source design framework for React, designed by Varun Karthic. Pre-release: packages are not on npm yet.</p>
+              <BuiltWithOrlo layout="inline" tone="outline" size="sm" href={href("brand")} kind="designed" />
+            </div>
+            <div className="footer__cols">
+              <div><p>Learn</p><a href={href("start")}>Get started</a><a href={href("foundations")}>Foundations</a><a href={href("styles")}>Styles</a></div>
+              <div><p>Build</p><a href={href("components")}>Components</a><a href={href("develop")}>Develop</a><a href={href("design-studio")}>Design Studio</a></div>
+              <div><p>Project</p><a href={href("brand")}>Brand</a><a href={href("brand/badges")}>Embed badges</a><a href={href("brand/licensing")}>Licensing & credits</a><a href="https://github.com/varunkarthic/orlo">GitHub</a></div>
+            </div>
           </div>
-          <div className="footer__cols">
-            <div><p>Learn</p><a href={href("start")}>Get started</a><a href={href("foundations")}>Foundations</a><a href={href("styles")}>Styles</a></div>
-            <div><p>Build</p><a href={href("components")}>Components</a><a href={href("develop")}>Develop</a><a href={href("design-studio")}>Design Studio</a></div>
-            <div><p>Project</p><a href={href("brand")}>Brand</a><a href={href("brand/badges")}>Embed badges</a><a href={href("brand/licensing")}>Licensing & credits</a><a href="https://github.com/varunkarthic/orlo">GitHub</a></div>
+          <div className="footer__legal">
+            <span>Designed by Varun Karthic. Licensed under MIT.</span>
+            {rtd && <span className="footer__version">Version: {rtd.versions.length > 1 ? rtd.versions.map((v, i) => <span key={v.slug}>{i ? " · " : ""}{v.slug === rtd.version ? <strong>{v.slug}</strong> : <a href={v.url}>{v.slug}</a>}</span>) : <strong>{rtd.version}</strong>} · Hosted on Read the Docs</span>}
           </div>
-        </div>
-        <div className="footer__legal">
-          <span>Designed by Varun Karthic. Licensed under MIT.</span>
-          {rtd && <span className="footer__version">Version: {rtd.versions.length > 1 ? rtd.versions.map((v, i) => <span key={v.slug}>{i ? " · " : ""}{v.slug === rtd.version ? <strong>{v.slug}</strong> : <a href={v.url}>{v.slug}</a>}</span>) : <strong>{rtd.version}</strong>} · Hosted on Read the Docs</span>}
-        </div>
-      </footer>
+        </footer>
+      )}
       <CommandPalette commands={commands} open={searchOpen} onOpenChange={setSearchOpen} placeholder="Search components and guides" />
     </OrloProvider>
   );

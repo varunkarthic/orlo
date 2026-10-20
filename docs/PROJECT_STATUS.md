@@ -49,6 +49,23 @@ All engineering verification gates pass completely on macOS and GitHub Actions C
 
 ---
 
+## Design Studio (`/design-studio/`)
+
+The documentation-hosted mini-application has been completely redesigned into a full-screen creative workspace filling the entire viewport (`100vw × calc(100dvh - var(--header))`).
+
+### Features & Capabilities:
+- **Component Palette:** 24 interactive Orlo components across 5 categories with real-time fuzzy filtering.
+- **Application Templates:** 6 one-click blueprints (Settings Form, Feedback Modal, Media Toolbar, Dashboard Card, Authentication Form, Checkout Summary).
+- **Infinite Canvas:** 50%–200% zoom, pan camera with spacebar/middle-click drag, and 8pt dot-grid snapping.
+- **Device Frames:** Live switching between Desktop (1440px), Tablet (768px), Mobile (375px), and Responsive fluid layouts with orientation controls.
+- **Design Mode vs. Live Test Mode:** Instant toggle between visual canvas manipulation and live, interactive component execution.
+- **Deep Typed Prop Inspector:** Directly modifies real TypeScript component props with immediate visual reflection.
+- **Real-Time WCAG 2.2 AA Contrast Analyzer:** Continuous contrast checks on all foreground/background pairings with 1-click auto-correction.
+- **Harmonic Oscillator Physics Tuner:** Live spring mass, stiffness, and damping customization with an interactive physics test bed.
+- **Production Code Generator & Portability:** Exports clean, idiomatic React + TypeScript code importing only from `@orlo/react` and `@orlo/tokens`. Supports versioned JSON project import/export and draft auto-saving.
+
+---
+
 ## Component Catalogue & Maturity
 
 The component manifest ([`packages/react/src/manifest.ts`](file:///Users/varun/Library/CloudStorage/OneDrive-Personal/orlo/packages/react/src/manifest.ts)) contains **131 components**, all documented with interactive code playgrounds, accessibility notes, keyboard specifications, and live props in `apps/docs/src/registry/`.
@@ -62,3 +79,5 @@ The component manifest ([`packages/react/src/manifest.ts`](file:///Users/varun/L
 
 - **Documentation Engine:** Read the Docs configuration serves prerendered static assets from `apps/docs/dist/` under `/en/latest/`.
 - **Repository Guidelines:** See [`ORLO_DESIGN_RULES.md`](file:///Users/varun/Library/CloudStorage/OneDrive-Personal/orlo/ORLO_DESIGN_RULES.md) and [`AGENTS.md`](file:///Users/varun/Library/CloudStorage/OneDrive-Personal/orlo/AGENTS.md) for contribution rules, CSS cascade layer rules, and token boundaries.
+- **Context Governance:** Detailed architecture, implementation status, and verification ledgers are maintained under `/context/` ([`context/DESIGN_STUDIO.md`](file:///Users/varun/Library/CloudStorage/OneDrive-Personal/orlo/context/DESIGN_STUDIO.md), [`context/MASTER_IMPLEMENTATION_STATUS.md`](file:///Users/varun/Library/CloudStorage/OneDrive-Personal/orlo/context/MASTER_IMPLEMENTATION_STATUS.md), [`context/PLAN_V3.md`](file:///Users/varun/Library/CloudStorage/OneDrive-Personal/orlo/context/PLAN_V3.md)).
+
