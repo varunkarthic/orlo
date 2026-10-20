@@ -1,7 +1,29 @@
 import { useState } from "react";
-import { Badge, StatusDot, Avatar, AvatarGroup, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime, Button, Stack, TextField, EmptyState, Icons, Card } from "@orlo/react";
+import { Badge, StatusDot, Avatar, AvatarGroup, Table, AnimatedNumber, Kbd, Chip, DataList, Timeline, Sparkline, Meter, Highlight, RelativeTime, Button, Stack, TextField, EmptyState, Icons, Card, FeatureMatrix } from "@orlo/react";
 import { people, sampleImage } from "./shared.tsx";
 import type { Doc } from "./types.ts";
+
+function FeatureMatrixDemo() {
+  return (
+    <div style={{ inlineSize: "100%" }}>
+      <FeatureMatrix
+        tiers={[
+          { id: "free", title: "Free", price: "€0", period: "/ month", description: "For individual tinkerers." },
+          { id: "pro", title: "Pro", price: "€19", period: "/ month", description: "For professionals and fast teams.", highlighted: true, badge: "Most popular" },
+          { id: "enterprise", title: "Enterprise", price: "Custom", period: "/ seat", description: "For organizations with dedicated support." },
+        ]}
+        rows={[
+          { title: "Components", category: "Core Features", values: { free: "50+ basic", pro: "All 80+ components", enterprise: "Full framework + studio" } },
+          { title: "Custom themes", category: "Core Features", values: { free: true, pro: true, enterprise: true } },
+          { title: "Design Studio export", category: "Core Features", values: { free: false, pro: true, enterprise: true } },
+          { title: "SLA guarantee", category: "Support & Security", values: { free: false, pro: "99.9%", enterprise: "99.99% dedicated" } },
+          { title: "SSO & SAML", category: "Support & Security", values: { free: false, pro: false, enterprise: true } },
+          { title: "Audit logs", category: "Support & Security", values: { free: false, pro: "30 days", enterprise: "Unlimited" } },
+        ]}
+      />
+    </div>
+  );
+}
 
 const rows = [{ id: "1", name: "Linen notebook", stock: 42, price: 18 }, { id: "2", name: "Brass pen", stock: 7, price: 64 }, { id: "3", name: "Archive box", stock: 0, price: 29 }, { id: "4", name: "Ink, sepia", stock: 120, price: 12 }];
 function TableDemo() {
@@ -80,4 +102,25 @@ export const data: Record<string, Doc> = {
     ],
     semantics: ["role=status with accessible name communicating tone and state."],
   },
+  "feature-matrix": {
+    demo: () => <FeatureMatrixDemo />,
+    code: `<FeatureMatrix\n  tiers={[\n    { id: "starter", title: "Starter", price: "Free" },\n    { id: "pro", title: "Pro", price: "€19/mo", highlighted: true, badge: "Popular" },\n  ]}\n  rows={[\n    { title: "Unlimited exports", category: "Features", values: { starter: false, pro: true } },\n  ]}\n/>`,
+    props: [
+      ["tiers", "FeatureMatrixTier[]", "Array of tier headers with id, title, price, period, description, highlighted state, badge, and action."],
+      ["rows", "FeatureMatrixRow[]", "Array of comparison rows with title, description, category grouping, and values map per tier id."],
+      ["caption", "string", "Accessible table caption (defaults to 'Feature comparison')."],
+    ],
+    notes: [
+      "Semantic table structure with accessible column/row headers and hidden caption.",
+      "Tiers can be highlighted to emphasize primary or recommended options.",
+      "Values support booleans (rendered as accessible checkmark or en-dash) or custom ReactNode labels.",
+    ],
+    specs: [
+      ["Header padding", "--orlo-space-4"],
+      ["Row border", "--orlo-color-border"],
+      ["Highlighted tier", "Accent tinted background"],
+    ],
+    semantics: ["Semantic <table> with scope=col and scope=row headers and aria-labelledby caption."],
+  },
 };
+

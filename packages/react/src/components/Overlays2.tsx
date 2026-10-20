@@ -129,6 +129,7 @@ export type TourProps = { steps: TourStep[]; open: boolean; onOpenChange: (o: bo
 export function Tour({ steps, open, onOpenChange }: TourProps) {
   const [i, setI] = useState(0);
   const [rect, setRect] = useState<DOMRect | null>(null);
+  const [radius, setRadius] = useState(8);
   const card = useRef<HTMLDivElement>(null);
   const id = useId();
   const { transition } = useOrloMotion();
@@ -139,7 +140,11 @@ export function Tour({ steps, open, onOpenChange }: TourProps) {
     if (!open || !step) return;
     const el = document.querySelector(step.target) as HTMLElement;
     el.scrollIntoView({ block: "center", behavior: "smooth" });
-    const upd = () => setRect(el.getBoundingClientRect());
+    const upd = () => {
+      setRect(el.getBoundingClientRect());
+      const r = parseFloat(window.getComputedStyle(el).borderRadius);
+      setRadius(Number.isFinite(r) ? r : 8);
+    };
     upd(); const t = setTimeout(upd, 400);
     window.addEventListener("scroll", upd, true); window.addEventListener("resize", upd);
     return () => { clearTimeout(t); window.removeEventListener("scroll", upd, true); window.removeEventListener("resize", upd); };
@@ -152,7 +157,20 @@ export function Tour({ steps, open, onOpenChange }: TourProps) {
   return (
     <Portal>
       <div className="orlo-tour" aria-hidden="false">
-        {rect && <motion.div className="orlo-tour__spot" initial={false} animate={{ left: rect.left - pad, top: rect.top - pad, width: rect.width + pad * 2, height: rect.height + pad * 2 }} transition={transition("shared")} />}
+        {rect && (
+          <motion.div
+            className="orlo-tour__spot"
+            initial={false}
+            animate={{
+              left: rect.left - pad,
+              top: rect.top - pad,
+              width: rect.width + pad * 2,
+              height: rect.height + pad * 2,
+              borderRadius: Math.max(4, radius + pad / 2),
+            }}
+            transition={transition("shared")}
+          />
+        )}
         <motion.div ref={card} role="dialog" aria-modal="false" aria-labelledby={`${id}-t`} className="orlo-popover orlo-tour__card" key={i}
           style={rect ? { left: Math.max(8, Math.min(rect.left, window.innerWidth - 328)), top: below ? rect.bottom + 14 : Math.max(8, rect.top - 14 - 180) } : undefined}
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0, transition: transition("reveal") }}>

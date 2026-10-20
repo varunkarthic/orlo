@@ -176,3 +176,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Collapsible](components/collapsible/): Animated single-item disclosure panel with spring physics and accessible semantics.
 - [StatusDot](components/status-dot/): Live status indicator dot with tone mapping, accessible label and pulse ring.
 - [DateRangePicker](components/date-range-picker/): Dual-date range picker with popover calendar, formatted range preview and keyboard navigation.
+- [Wizard](components/wizard/): Multistep form wizard with typed step schema, step validation, back/next navigation, and draft state.
+- [FilterBuilder](components/filter-builder/): Multi-condition filter builder with typed fields, comparison operators, and conjunction toggles.
+- [FeatureMatrix](components/feature-matrix/): Pricing and feature comparison matrix with highlighted tiers and accessible indications.
+- [OtpVerification](components/otp-verification/): Complete OTP verification flow with PIN input, live resend cooldown, and error recovery.

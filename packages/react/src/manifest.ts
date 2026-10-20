@@ -142,5 +142,9 @@ export const manifest: ManifestEntry[] = [
   { name: "Collapsible", slug: "collapsible", family: "Disclosure", maturity: "beta", summary: "Animated single-item disclosure panel with spring physics and accessible semantics.", tested: ["unit", "keyboard"] },
   { name: "StatusDot", slug: "status-dot", family: "Data display", maturity: "beta", summary: "Live status indicator dot with tone mapping, accessible label and pulse ring.", tested: ["unit"] },
   { name: "DateRangePicker", slug: "date-range-picker", family: "Pickers", maturity: "beta", summary: "Dual-date range picker with popover calendar, formatted range preview and keyboard navigation.", tested: ["unit"] },
+  { name: "Wizard", slug: "wizard", family: "Forms", maturity: "beta", summary: "Multistep form wizard with typed step schema, step validation, back/next navigation, and draft state.", tested: ["unit", "keyboard"] },
+  { name: "FilterBuilder", slug: "filter-builder", family: "Forms", maturity: "beta", summary: "Multi-condition filter builder with typed fields, comparison operators, and conjunction toggles.", tested: ["unit", "keyboard"] },
+  { name: "FeatureMatrix", slug: "feature-matrix", family: "Data display", maturity: "beta", summary: "Pricing and feature comparison matrix with highlighted tiers and accessible indications.", tested: ["unit"] },
+  { name: "OtpVerification", slug: "otp-verification", family: "Forms", maturity: "beta", summary: "Complete OTP verification flow with PIN input, live resend cooldown, and error recovery.", tested: ["unit", "keyboard"] },
 ];
 export const families: ManifestEntry["family"][] = ["Actions", "Forms", "Pickers", "Navigation", "Overlays", "Disclosure", "Layout", "Typography", "Data display", "Charts", "Feedback", "Media", "Editors", "AI", "Workspace", "Specialty"];

@@ -555,5 +555,212 @@ describe("Generalized Dnd Primitives", () => {
   });
 });
 
+describe("Rating polish", () => {
+  it("renders with size variants sm, md, lg", () => {
+    const { container } = wrap(<Orlo.Rating label="Small rating" size="sm" defaultValue={3} />);
+    const group = container.querySelector(".orlo-rating");
+    expect(group).toHaveAttribute("data-size", "sm");
+  });
+
+  it("supports custom icon render function", () => {
+    const { container } = wrap(
+      <Orlo.Rating
+        label="Heart rating"
+        defaultValue={2}
+        icon={(active) => <span data-testid="heart">{active ? "❤️" : "🤍"}</span>}
+      />
+    );
+    const hearts = container.querySelectorAll("[data-testid='heart']");
+    expect(hearts).toHaveLength(5);
+    expect(hearts[0]).toHaveTextContent("❤️");
+    expect(hearts[1]).toHaveTextContent("❤️");
+    expect(hearts[2]).toHaveTextContent("🤍");
+  });
+});
+
+describe("CommandPalette shortcuts and icons", () => {
+  it("renders command icon and keyboard shortcut", () => {
+    wrap(
+      <Orlo.CommandPalette
+        open={true}
+        onOpenChange={() => {}}
+        commands={[
+          {
+            id: "copy",
+            label: "Copy link",
+            icon: <span data-testid="cmd-icon">📋</span>,
+            shortcut: "⌘C",
+            onSelect: () => {},
+          },
+        ]}
+      />
+    );
+    expect(screen.getByTestId("cmd-icon")).toBeInTheDocument();
+    expect(screen.getByText("⌘C")).toBeInTheDocument();
+  });
+});
+
+describe("Wizard component", () => {
+  it("renders steps, navigates with validation, and submits on completion", async () => {
+    const onComplete = vi.fn();
+    wrap(
+      <Orlo.Wizard
+        title="Setup Account"
+        steps={[
+          {
+            id: "step1",
+            title: "Account",
+            content: ({ data, updateData, errors }) => (
+              <div>
+                <input
+                  aria-label="Username"
+                  value={(data.username as string) || ""}
+                  onChange={(e) => updateData({ username: e.target.value })}
+                />
+                {errors.username && <span role="alert">{errors.username}</span>}
+              </div>
+            ),
+            validate: (d) => {
+              if (!d.username) return { username: "Username required" };
+              return true;
+            },
+          },
+          {
+            id: "step2",
+            title: "Profile",
+            content: ({ data, updateData }) => (
+              <div>
+                <input
+                  aria-label="City"
+                  value={(data.city as string) || ""}
+                  onChange={(e) => updateData({ city: e.target.value })}
+                />
+              </div>
+            ),
+          },
+        ]}
+        onComplete={onComplete}
+      />
+    );
+
+    expect(screen.getByText("Setup Account")).toBeInTheDocument();
+    expect(screen.getByText("Account")).toBeInTheDocument();
+    expect(screen.getByText("Profile")).toBeInTheDocument();
+
+    // Clicking Next without username triggers validation error
+    const nextBtn = screen.getByRole("button", { name: "Next" });
+    await userEvent.click(nextBtn);
+    expect(screen.getByRole("alert")).toHaveTextContent("Username required");
+    expect(onComplete).not.toHaveBeenCalled();
+
+    // Type username and advance
+    const input = screen.getByRole("textbox", { name: "Username" });
+    await userEvent.type(input, "ada");
+    await userEvent.click(nextBtn);
+
+    // Now on step 2, button is "Complete"
+    const completeBtn = screen.getByRole("button", { name: "Complete" });
+    expect(completeBtn).toBeInTheDocument();
+    await userEvent.click(completeBtn);
+    expect(onComplete).toHaveBeenCalledWith(expect.objectContaining({ username: "ada" }));
+  });
+});
+
+describe("FilterBuilder component", () => {
+  it("renders empty state, adds rule, toggles conjunction, and removes rule", async () => {
+    const onChange = vi.fn();
+    wrap(
+      <Orlo.FilterBuilder
+        fields={[
+          { id: "status", label: "Status", options: [{ label: "Active", value: "active" }, { label: "Inactive", value: "inactive" }] },
+          { id: "age", label: "Age", type: "number" },
+        ]}
+        defaultValue={{ conjunction: "and", rules: [] }}
+        onValueChange={onChange}
+      />
+    );
+
+    expect(screen.getByText(/No active filters/i)).toBeInTheDocument();
+    const addBtn = screen.getByRole("button", { name: /Add condition/i });
+    await userEvent.click(addBtn);
+
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        conjunction: "and",
+        rules: expect.arrayContaining([expect.objectContaining({ field: "status" })]),
+      })
+    );
+  });
+});
+
+describe("FeatureMatrix component", () => {
+  it("renders tiers, categories, and handles boolean/text values with accessible marks", () => {
+    wrap(
+      <Orlo.FeatureMatrix
+        tiers={[
+          { id: "free", title: "Free Tier", price: "$0" },
+          { id: "pro", title: "Pro Tier", price: "$20", highlighted: true, badge: "Best Value" },
+        ]}
+        rows={[
+          {
+            title: "API Access",
+            category: "Platform",
+            values: { free: true, pro: true },
+          },
+          {
+            title: "Custom Domain",
+            category: "Platform",
+            values: { free: false, pro: "Unlimited" },
+          },
+        ]}
+      />
+    );
+
+    expect(screen.getByText("Free Tier")).toBeInTheDocument();
+    expect(screen.getByText("Pro Tier")).toBeInTheDocument();
+    expect(screen.getByText("Best Value")).toBeInTheDocument();
+    expect(screen.getByText("Platform")).toBeInTheDocument();
+    expect(screen.getByText("API Access")).toBeInTheDocument();
+    expect(screen.getByText("Unlimited")).toBeInTheDocument();
+    expect(screen.getByLabelText("Included in Free Tier")).toBeInTheDocument();
+    expect(screen.getByLabelText("Not included in Free Tier")).toBeInTheDocument();
+  });
+});
+
+describe("OtpVerification component", () => {
+  it("renders pin inputs, supports resend, and verifies on code completion", async () => {
+    const onVerify = vi.fn().mockResolvedValue(true);
+    const onResend = vi.fn().mockResolvedValue(undefined);
+
+    wrap(
+      <Orlo.OtpVerification
+        length={4}
+        deliveryTarget="user@test.com"
+        onVerify={onVerify}
+        onResend={onResend}
+        resendCooldown={0}
+      />
+    );
+
+    expect(screen.getByText(/user@test.com/i)).toBeInTheDocument();
+    const boxes = screen.getAllByRole("textbox");
+    expect(boxes).toHaveLength(4);
+
+    // Test resend code before completion
+    const resendBtn = screen.getByRole("button", { name: "Resend code" });
+    await userEvent.click(resendBtn);
+    expect(onResend).toHaveBeenCalled();
+
+    // Type full code
+    await userEvent.type(boxes[0], "1");
+    await userEvent.type(boxes[1], "2");
+    await userEvent.type(boxes[2], "3");
+    await userEvent.type(boxes[3], "4");
+
+    expect(onVerify).toHaveBeenCalledWith("1234");
+    expect(await screen.findByText(/Code verified successfully/i)).toBeInTheDocument();
+  });
+});
+
 
 

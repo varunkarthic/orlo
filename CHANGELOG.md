@@ -36,6 +36,13 @@
   - `extended.css`: Changed `.orlo-reltime` cursor from `help` to `default`.
   - `SignaturePad.tsx` & `specialty.tsx`: Removed "Type instead" and preserved pure high-DPI drawing/undo/clear. Guarded canvas 2D context in `SignaturePad.tsx` for jsdom/headless resilience.
   - `Media3.tsx` & `extended2.css`: Added speed toggle to `VideoPlayer`. Added Orlo-owned controls (paging, zoom, rotate, print, viewport scale) to `DocumentViewer`.
+  - `Rating.tsx`: Added `size="sm" | "md" | "lg"` and custom `icon` render callback `(active: boolean) => ReactNode`.
+  - `CommandPalette.tsx`: Extended `Command` item schema with `icon?: ReactNode` and `shortcut?: string` (rendered with styled `<kbd>`).
+  - `Overlays2.tsx`: Updated `Tour` spotlight cutout geometry to dynamically query and animate to the target element's computed `borderRadius`.
+  - `Wizard.tsx`: Added multistep form wizard with typed step schema, step validation, back/next navigation, draft state, async submit/retry, and accessible error summary.
+  - `FilterBuilder.tsx`: Added multi-condition query filter builder with typed fields, comparison operators, AND/OR conjunction toggles, and live summary.
+  - `FeatureMatrix.tsx`: Added feature comparison matrix and pricing table with category grouping, highlighted tiers, and accessible check/en-dash indications.
+  - `OtpVerification.tsx`: Added complete OTP verification flow assembly with PIN input, live resend cooldown timer, delivery target display, and stale error clearance.
 
 - **Generalized Drag-and-Drop Primitives (`@orlo/react`):**
   - Implemented `DndContext`, `useDraggable`, `useDroppable`, `useSortable`, `SortableContext`, `DragOverlay` (spring physics via `transition("drag")`), and `DropIndicator`.

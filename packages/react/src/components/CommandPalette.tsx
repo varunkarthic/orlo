@@ -5,7 +5,16 @@ import { Portal } from "../internal/Portal.tsx";
 import { useControllable, useDismiss, useFocusScope, useInertOutside, useScrollLock } from "../internal/hooks.ts";
 import { Icons } from "../internal/icons.tsx";
 
-export type Command = { id: string; label: string; group?: string; hint?: ReactNode; keywords?: string; onSelect: () => void };
+export type Command = {
+  id: string;
+  label: string;
+  group?: string;
+  hint?: ReactNode;
+  keywords?: string;
+  icon?: ReactNode;
+  shortcut?: string;
+  onSelect: () => void;
+};
 
 /** Subsequence match with a preference for word starts and contiguous runs. Returns -1 when it does not match. */
 export function score(query: string, text: string): number {
@@ -100,8 +109,10 @@ function Palette({ commands, placeholder, empty, onClose }: { commands: Command[
           {results.map((c, i) => (
             <li key={c.id} id={`${id}-o${i}`} role="option" aria-selected={i === active} data-active={i === active || undefined} className="orlo-menu__item"
               onPointerMove={() => setActive(i)} onPointerDown={(e) => e.preventDefault()} onClick={() => run(c)}>
-              <span className="orlo-menu__text">{c.label}</span>
-              {(c.hint ?? c.group) && <span className="orlo-hint">{c.hint ?? c.group}</span>}
+              {c.icon && <span className="orlo-menu__icon" aria-hidden="true" style={{ display: "inline-flex", marginInlineEnd: 8 }}>{c.icon}</span>}
+              <span className="orlo-menu__text" style={{ flex: 1 }}>{c.label}</span>
+              {(c.hint ?? c.group) && <span className="orlo-hint" style={{ marginInlineEnd: c.shortcut ? 8 : 0 }}>{c.hint ?? c.group}</span>}
+              {c.shortcut && <kbd className="orlo-kbd" style={{ fontSize: "0.75rem", padding: "1px 4px" }}>{c.shortcut}</kbd>}
             </li>
           ))}
         </ul>

@@ -1236,6 +1236,53 @@
         "unit"
       ],
       "docs": "components/date-range-picker/"
+    },
+    {
+      "name": "Wizard",
+      "slug": "wizard",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Multistep form wizard with typed step schema, step validation, back/next navigation, and draft state.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/wizard/"
+    },
+    {
+      "name": "FilterBuilder",
+      "slug": "filter-builder",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Multi-condition filter builder with typed fields, comparison operators, and conjunction toggles.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/filter-builder/"
+    },
+    {
+      "name": "FeatureMatrix",
+      "slug": "feature-matrix",
+      "family": "Data display",
+      "maturity": "beta",
+      "summary": "Pricing and feature comparison matrix with highlighted tiers and accessible indications.",
+      "tested": [
+        "unit"
+      ],
+      "docs": "components/feature-matrix/"
+    },
+    {
+      "name": "OtpVerification",
+      "slug": "otp-verification",
+      "family": "Forms",
+      "maturity": "beta",
+      "summary": "Complete OTP verification flow with PIN input, live resend cooldown, and error recovery.",
+      "tested": [
+        "unit",
+        "keyboard"
+      ],
+      "docs": "components/otp-verification/"
     }
   ]
 }

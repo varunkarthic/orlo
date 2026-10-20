@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Slider, PasswordField, NumberField, SearchField, Combobox, TagInput, PinInput, RadioCards, RangeSlider, Rating, Stack, Icons, Highlight } from "@orlo/react";
+import { TextField, TextArea, Select, Checkbox, RadioGroup, Switch, Slider, PasswordField, NumberField, SearchField, Combobox, TagInput, PinInput, RadioCards, RangeSlider, Rating, Stack, Icons, Highlight, Button, Wizard, FilterBuilder, OtpVerification, type FilterGroup } from "@orlo/react";
 import { controlSpecs, type Doc } from "./types.ts";
 
 function EmailField() {
@@ -36,6 +36,134 @@ function Indeterminate() {
   const all = items.every(Boolean), none = !items.some(Boolean);
   return <Stack gap={2}><Checkbox label="All notifications" checked={all} indeterminate={!all && !none} onChange={() => setItems(items.map(() => !all))} />
     <div style={{ paddingInlineStart: 28, display: "grid", gap: 8 }}>{["Replies", "Mentions", "Weekly digest"].map((l, i) => <Checkbox key={l} label={l} checked={items[i]} onChange={() => setItems(items.map((x, j) => (j === i ? !x : x)))} />)}</div></Stack>;
+}
+
+function WizardDemo() {
+  const [finished, setFinished] = useState(false);
+  return (
+    <div style={{ inlineSize: "min(100%, 32rem)" }}>
+      {finished ? (
+        <div style={{ padding: 24, textAlign: "center" }}>
+          <Icons.CheckCircle size={32} style={{ color: "var(--orlo-color-success)", margin: "0 auto 8px" }} />
+          <h4>Registration complete!</h4>
+          <Button variant="subtle" size="sm" onClick={() => setFinished(false)}>Restart wizard</Button>
+        </div>
+      ) : (
+        <Wizard
+          title="Create account"
+          steps={[
+            {
+              id: "profile",
+              title: "Profile",
+              description: "Basic info",
+              content: ({ data, updateData, errors }) => (
+                <Stack gap={3}>
+                  <TextField
+                    label="Full name"
+                    value={(data.name as string) || ""}
+                    onChange={(e) => updateData({ name: e.target.value })}
+                    error={errors.name}
+                  />
+                  <TextField
+                    label="Email"
+                    type="email"
+                    value={(data.email as string) || ""}
+                    onChange={(e) => updateData({ email: e.target.value })}
+                    error={errors.email}
+                  />
+                </Stack>
+              ),
+              validate: (d) => {
+                const errs: Record<string, string> = {};
+                if (!d.name) errs.name = "Name is required.";
+                if (!d.email || !/^\S+@\S+\.\S+$/.test(d.email as string)) errs.email = "Valid email is required.";
+                return Object.keys(errs).length ? errs : true;
+              },
+            },
+            {
+              id: "preferences",
+              title: "Preferences",
+              description: "Usage & notifications",
+              content: ({ data, updateData }) => (
+                <Stack gap={3}>
+                  <Checkbox
+                    label="Receive monthly product updates"
+                    checked={!!data.newsletter}
+                    onChange={(e) => updateData({ newsletter: (e.target as HTMLInputElement).checked })}
+                  />
+                  <Checkbox
+                    label="Enable two-factor authentication"
+                    checked={!!data.twoFactor}
+                    onChange={(e) => updateData({ twoFactor: (e.target as HTMLInputElement).checked })}
+                  />
+                </Stack>
+              ),
+            },
+            {
+              id: "review",
+              title: "Review",
+              description: "Confirm details",
+              content: ({ data }) => (
+                <Stack gap={2}>
+                  <p className="orlo-hint">Please review your information before completing setup.</p>
+                  <div><strong>Name:</strong> {String(data.name || "–")}</div>
+                  <div><strong>Email:</strong> {String(data.email || "–")}</div>
+                  <div><strong>Updates:</strong> {data.newsletter ? "Yes" : "No"}</div>
+                </Stack>
+              ),
+            },
+          ]}
+          onComplete={async () => {
+            await new Promise((r) => setTimeout(r, 600));
+            setFinished(true);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function FilterBuilderDemo() {
+  const [filter, setFilter] = useState<FilterGroup>({
+    conjunction: "and",
+    rules: [
+      { id: "1", field: "status", operator: "equals", value: "active" },
+      { id: "2", field: "role", operator: "equals", value: "admin" },
+    ],
+  });
+  return (
+    <div style={{ inlineSize: "min(100%, 36rem)" }}>
+      <FilterBuilder
+        fields={[
+          { id: "status", label: "Status", options: [{ label: "Active", value: "active" }, { label: "Pending", value: "pending" }, { label: "Suspended", value: "suspended" }] },
+          { id: "role", label: "Role", options: [{ label: "Admin", value: "admin" }, { label: "Editor", value: "editor" }, { label: "Viewer", value: "viewer" }] },
+          { id: "department", label: "Department", type: "text" },
+          { id: "logins", label: "Login count", type: "number" },
+        ]}
+        value={filter}
+        onValueChange={setFilter}
+      />
+    </div>
+  );
+}
+
+function OtpVerificationDemo() {
+  return (
+    <div style={{ inlineSize: "min(100%, 28rem)" }}>
+      <OtpVerification
+        length={6}
+        deliveryTarget="ada@example.com"
+        onVerify={async (code) => {
+          await new Promise((r) => setTimeout(r, 500));
+          return code === "123456";
+        }}
+        onResend={async () => {
+          await new Promise((r) => setTimeout(r, 400));
+        }}
+        resendCooldown={30}
+      />
+    </div>
+  );
 }
 
 export const forms: Record<string, Doc> = {
@@ -180,4 +308,58 @@ export const forms: Record<string, Doc> = {
     notes: ["Hover previews only on fine pointers, so touch never sticks.", "Read-only mode clips stars precisely (3.6 shows 60% of the fourth star)."],
     keyboard: [["← → ↑ ↓", "Change rating"]], semantics: ["Interactive: radiogroup of radios. Read-only: a single img with “3.6 out of 5”."],
   },
+  wizard: {
+    demo: () => <WizardDemo />,
+    code: `<Wizard\n  steps={[\n    { id: "info", title: "Info", content: ({ data, updateData }) => <TextField ... /> },\n    { id: "confirm", title: "Confirm", content: ({ data }) => <Review data={data} /> }\n  ]}\n  onComplete={handleSubmit}\n/>`,
+    props: [
+      ["steps", "WizardStep[]", "Array of step definitions with id, title, description, content, and optional validate function."],
+      ["initialData", "T", "Optional initial data record."],
+      ["onComplete", "(data: T) => void | Promise<void>", "Callback invoked when final step is submitted."],
+      ["onCancel", "() => void", "Optional callback for cancel button."],
+      ["title", "string", "Optional wizard header title."],
+    ],
+    notes: [
+      "Validates per step before allowing navigation forward; per-step error messages are rendered in an accessible error summary.",
+      "Transitions between steps use smooth coordinate-aware sliding with AnimatePresence.",
+      "Footer buttons automatically update from Next to Complete on the final step.",
+    ],
+    keyboard: [["Tab / Shift+Tab", "Navigate between fields and actions"], ["Enter", "Submit current step"]],
+    semantics: ["role=region with accessible label; step progress is a semantic <nav> containing an ordered list (<ol>)."],
+  },
+  "filter-builder": {
+    demo: () => <FilterBuilderDemo />,
+    code: `<FilterBuilder\n  fields={[\n    { id: "status", label: "Status", options: [...] },\n    { id: "name", label: "Name", type: "text" },\n  ]}\n  value={filter}\n  onValueChange={setFilter}\n/>`,
+    props: [
+      ["fields", "FilterField[]", "Field definitions with id, label, type, and optional predefined options."],
+      ["value / defaultValue / onValueChange", "FilterGroup", "Controlled or uncontrolled filter group containing conjunction ('and' | 'or') and rules array."],
+      ["label", "string", "Accessible label for the filter region."],
+    ],
+    notes: [
+      "Allows composing arbitrary multi-rule queries with AND/OR match conjunction toggling.",
+      "Supports text, number, and select fields with context-aware operator lists.",
+      "Empty state provides an explicit affordance to begin adding filter conditions.",
+    ],
+    keyboard: [["Tab / Shift+Tab", "Navigate rules, fields, and operators"], ["Enter / Space", "Toggle conjunction or add rule"]],
+    semantics: ["role=region with aria-label; selects and inputs have unique accessible labels."],
+  },
+  "otp-verification": {
+    demo: () => <OtpVerificationDemo />,
+    code: `<OtpVerification\n  length={6}\n  deliveryTarget="ada@example.com"\n  onVerify={verifyCode}\n  onResend={resendCode}\n/>`,
+    props: [
+      ["length", "4 | 6 | 8", "Number of digits (defaults to 6)."],
+      ["deliveryTarget", "string", "Optional destination text, e.g. masked email or phone number."],
+      ["onVerify", "(code: string) => boolean | Promise<boolean>", "Callback verifying code; returning false shows error."],
+      ["onResend", "() => void | Promise<void>", "Optional callback to trigger code resend."],
+      ["resendCooldown", "number", "Cooldown duration in seconds before resend is re-enabled (default 30)."],
+      ["autoSubmit", "boolean", "Automatically trigger verification when code length is reached (default true)."],
+    ],
+    notes: [
+      "Assembles a PinInput, live resend cooldown timer, and error recovery in one coherent flow.",
+      "Editing an invalid code clears stale error messages immediately.",
+      "Full keyboard navigation with automatic digit advance and backspace reverse.",
+    ],
+    keyboard: [["Digits", "Enter code and advance"], ["Backspace", "Clear and move to previous box"]],
+    semantics: ["Fieldset with live status and alert regions for verification outcomes."],
+  },
 };
+

@@ -111,3 +111,20 @@ export {
   type DragOverlayProps,
   type DropIndicatorProps,
 } from "./components/Dnd.tsx";
+export { Wizard, type WizardStep, type WizardProps } from "./components/Wizard.tsx";
+export {
+  FilterBuilder,
+  type FilterFieldType,
+  type FilterField,
+  type FilterOperator,
+  type FilterRule,
+  type FilterGroup,
+  type FilterBuilderProps,
+} from "./components/FilterBuilder.tsx";
+export {
+  FeatureMatrix,
+  type FeatureMatrixTier,
+  type FeatureMatrixRow,
+  type FeatureMatrixProps,
+} from "./components/FeatureMatrix.tsx";
+export { OtpVerification, type OtpVerificationProps } from "./components/OtpVerification.tsx";
