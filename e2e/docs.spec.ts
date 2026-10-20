@@ -244,7 +244,7 @@ test("home hero uses the page width and its own display typography", async ({ pa
 test("Brand badge studio updates the preview and embed code", async ({ page }) => {
   await page.goto("brand/badges/");
   const studio = page.locator(".badge-studio");
-  await expect(studio.getByRole("img", { name: "Orlo — open-source design framework for React by Varun Karthic" })).toBeVisible();
+  await expect(studio.getByRole("img", { name: "Orlo – open-source design framework for React by Varun Karthic" })).toBeVisible();
   await studio.getByRole("radio", { name: "Accent" }).click();
   await studio.getByRole("radio", { name: "Inline" }).click();
   await expect(studio.locator(".orlo-bwo")).toHaveAttribute("data-tone", "accent");

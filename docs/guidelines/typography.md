@@ -1,12 +1,12 @@
 # Typography Guidelines
 
-_Orlo Human Interface Guidelines — Typographic Hierarchy & Dynamic Type_
+_Orlo Design Guidelines – Typographic Hierarchy & Dynamic Type_
 
 ---
 
 ## 1. Typographic Philosophy
 
-Typography in Orlo follows Apple's Human Interface Guidelines core mandate: **text must be effortlessly legible at any scale, harmonious across platforms, and clearly structured to guide comprehension.**
+Typography in Orlo follows a clear mandate: **text must be effortlessly legible at any scale, harmonious across platforms, and clearly structured to guide comprehension.**
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -29,9 +29,9 @@ Typography in Orlo follows Apple's Human Interface Guidelines core mandate: **te
 
 ## 2. Typographic Scale & Token Mappings
 
-The Orlo typographic scale provides a comprehensive hierarchy mapped to Apple HIG classifications:
+The Orlo typographic scale provides a comprehensive hierarchy mapped across interface roles:
 
-| HIG Style Role | Token | Font Size | Relative Line Height | Weight Token | Tracking Token | Intended Use Case |
+| Style Role | Token | Font Size | Relative Line Height | Weight Token | Tracking Token | Intended Use Case |
 |---|---|---|---|---|---|---|
 | **Large Title** | `--orlo-text-3xl` | `32px – 48px` (fluid) | `1.1` (`--orlo-leading-tight`) | `semibold` (`600`) | `-0.045em` | Hero titles, landing page headlines |
 | **Title 1** | `--orlo-text-2xl` | `24px – 32px` | `1.2` (`--orlo-leading-tight`) | `semibold` (`600`) | `-0.035em` | Primary page headings (`h1`), modal titles |
@@ -65,7 +65,7 @@ Letter spacing (tracking) and optical weights are calibrated to maintain optimal
 
 ## 4. Tabular Figures & Numeric Alignment
 
-In data-heavy interfaces—such as financial dashboards, timers, progress counters, and data tables—proportional numerals cause jumping text as numbers fluctuate.
+In data-heavy interfaces (such as financial dashboards, timers, progress counters, and data tables), proportional numerals cause jumping text as numbers fluctuate.
 
 Orlo enforces tabular numeric formatting:
 ```css

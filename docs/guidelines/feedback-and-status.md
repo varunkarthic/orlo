@@ -1,12 +1,12 @@
 # Feedback & Status Guidelines
 
-_Orlo Human Interface Guidelines — Multi-Channel Communication, Callouts & Asynchronous Lifecycles_
+_Orlo Design Guidelines – Multi-Channel Communication, Callouts & Asynchronous Lifecycles_
 
 ---
 
 ## 1. Feedback Philosophy
 
-In Orlo, feedback is the conversational dialogue between user and application. Following Apple's Human Interface Guidelines on Feedback: **the system should communicate status clearly and promptly, keeping users informed without causing unnecessary distraction or anxiety.**
+In Orlo, feedback is the conversational dialogue between user and application: **the system should communicate status clearly and promptly, keeping users informed without causing unnecessary distraction or anxiety.**
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐

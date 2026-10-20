@@ -22,7 +22,7 @@ const badgeDir = join(root, "dist/brand-badges");
 mkdirSync(badgeDir, { recursive: true });
 for (const [tone, color] of Object.entries(brandBadge)) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 108" role="img" aria-labelledby="title desc">
-<title id="title">Orlo — open-source design framework for React by Varun Karthic</title>
+<title id="title">Orlo – open-source design framework for React by Varun Karthic</title>
 <desc id="desc">${tone} signature badge</desc>
 <rect x="0.5" y="0.5" width="359" height="107" rx="${radius.lg}" fill="${color.bg}" stroke="${color.border}"/>
 <svg x="20" y="16" width="86" height="36" viewBox="318 355 808 342" fill="${color.fg}" aria-hidden="true"><g>${paths}</g></svg>

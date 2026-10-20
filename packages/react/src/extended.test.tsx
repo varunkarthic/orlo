@@ -290,7 +290,7 @@ describe("BuiltWithOrlo", () => {
   it("credits the framework and its designer in the signature layout", async () => {
     const { BuiltWithOrlo } = await import("./index.ts");
     render(<BuiltWithOrlo layout="signature" href={null} />);
-    const badge = screen.getByRole("img", { name: "Orlo — open-source design framework for React by Varun Karthic" });
+    const badge = screen.getByRole("img", { name: "Orlo – open-source design framework for React by Varun Karthic" });
     expect(badge).toHaveTextContent("Open-source design framework for React");
     expect(badge).toHaveTextContent("by Varun Karthic");
   });

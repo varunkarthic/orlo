@@ -1,6 +1,6 @@
 # Attributions & Intellectual Property
 
-_Orlo Design System — Open Source Licences, Origins & Attributions_
+_Orlo Design System – Open Source Licences, Origins & Attributions_
 
 ---
 

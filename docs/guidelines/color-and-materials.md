@@ -1,12 +1,12 @@
 # Color & Materials Guidelines
 
-_Orlo Human Interface Guidelines — Semantic Roles, Frosted Glass Vibrancy & Contrast_
+_Orlo Design Guidelines – Semantic Roles, Frosted Glass Vibrancy & Contrast_
 
 ---
 
 ## 1. Color & Materials Philosophy
 
-Color and materials in Orlo follow Apple's Human Interface Guidelines principles: **color imparts vitality, provides cognitive cues, and enhances navigation without distracting from content; materials provide physical depth, orientation, and context through realistic translucency.**
+In Orlo: **color imparts vitality, provides cognitive cues, and enhances navigation without distracting from content; materials provide physical depth, orientation, and context through realistic translucency.**
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -59,10 +59,10 @@ The color system in [`packages/tokens/src/tokens.ts`](file:///Users/varun/Librar
 
 ## 3. Materials & Frosted Glass Vibrancy
 
-Translucency in Orlo is implemented with strict Apple HIG material vibrancy standards:
+Translucency in Orlo is implemented with strict material vibrancy standards:
 
 ```css
-/* Apple HIG Frosted Glass Vibrancy Surface */
+/* Frosted Glass Vibrancy Surface */
 .orlo-material-vibrancy {
   background: rgba(var(--orlo-canvas-rgb, 255, 255, 255), 0.75);
   backdrop-filter: blur(20px) saturate(180%);

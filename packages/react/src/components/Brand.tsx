@@ -45,7 +45,7 @@ const CAPTION = { built: "Built with", designed: "Designed with", made: "Made wi
  * It is one link with a plain-text name, so screen readers don't spell out the artwork.
  */
 export function BuiltWithOrlo({ kind = "built", tone = "dark", size = "md", layout = "stacked", href = "https://orlo-react.readthedocs.io/", className }: BuiltWithOrloProps) {
-  const name = layout === "signature" ? "Orlo — open-source design framework for React by Varun Karthic" : `${CAPTION[kind]} Orlo`;
+  const name = layout === "signature" ? "Orlo – open-source design framework for React by Varun Karthic" : `${CAPTION[kind]} Orlo`;
   const inner = layout === "inline"
     ? <><Mark aria-hidden="true" role={undefined} className="orlo-bwo__mark" /><span className="orlo-bwo__caption">{CAPTION[kind]}</span><Wordmark aria-hidden="true" role={undefined} className="orlo-bwo__word" /></>
     : layout === "signature"

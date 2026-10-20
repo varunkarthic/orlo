@@ -19,6 +19,7 @@
   - `ComponentDocs.tsx`: Removed promotional badges (`Beta`, `Multi-platform`, `M3 Expressive`) while retaining Source links.
   - `Home.tsx`: Replaced marketing claims with verified counts (`manifest.length`, `families.length`, WCAG 2.2 AA).
   - `Start.tsx`: Upgraded `About()` with a positive design philosophy.
+  - `docs/guidelines/*`: Polished documentation voice, removed external framework marketing claims, and standardized typography to use en-dashes and hyphens instead of em-dashes.
 
 - **Component Refinements:**
   - `TextArea.tsx`: Added `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, and `resize` locks with logical properties.

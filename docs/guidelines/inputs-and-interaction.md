@@ -1,6 +1,6 @@
 # Inputs & Interaction Guidelines
 
-_Orlo Human Interface Guidelines — Direct Manipulation, Pointer Ergonomics & Focus Rings_
+_Orlo Design Guidelines – Direct Manipulation, Pointer Ergonomics & Focus Rings_
 
 ---
 
@@ -8,7 +8,7 @@ _Orlo Human Interface Guidelines — Direct Manipulation, Pointer Ergonomics & F
 
 Interaction in Orlo is grounded in **direct manipulation, immediate tactile feedback, and ergonomic input handling.**
 
-Following Apple's Human Interface Guidelines on Inputs: **controls should behave predictably, acknowledge user intent instantly, and gracefully adapt between high-precision desktop pointers and natural finger touch gestures.**
+In Orlo: **controls should behave predictably, acknowledge user intent instantly, and gracefully adapt between high-precision desktop pointers and natural finger touch gestures.**
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -17,7 +17,7 @@ Following Apple's Human Interface Guidelines on Inputs: **controls should behave
 │                                                                        │
 │   1. IMMEDIATE ACKNOWLEDGEMENT                                         │
 │      Every click, tap, or keystroke produces instant tactile feedback │
-│      (Material 3 squash: scale 0.97, focus ring, or active highlight). │
+│      (tactile squash: scale 0.98, focus ring, or active highlight).   │
 │                                                                        │
 │   2. DUAL POINTER ERGONOMICS                                           │
 │      Fine desktop pointers enjoy hover elevation; touch devices receive│

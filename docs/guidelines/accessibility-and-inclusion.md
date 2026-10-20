@@ -1,12 +1,12 @@
 # Accessibility & Inclusion Guidelines
 
-_Orlo Human Interface Guidelines — Universal Design, Assistive Technologies & WCAG 2.2 AA_
+_Orlo Design Guidelines – Universal Design, Assistive Technologies & WCAG 2.2 AA_
 
 ---
 
 ## 1. Accessibility Philosophy
 
-In Orlo, accessibility is not a compliance checklist or an afterthought—it is the foundational architecture of the library. Following Apple's Human Interface Guidelines on Accessibility: **great design is inclusive design; software should empower everyone, regardless of physical, sensory, or cognitive differences.**
+In Orlo, accessibility is not a compliance checklist or an afterthought – it is the foundational architecture of the library: **great design is inclusive design; software should empower everyone, regardless of physical, sensory, or cognitive differences.**
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -44,9 +44,9 @@ Orlo manages modal interactions, popovers, and layered surfaces using dedicated 
 
 ## 3. Touch Affordance & Tap Target Sizing
 
-Apple Human Interface Guidelines mandate that touch-based interfaces accommodate natural finger pads:
+Accessible touch interfaces must accommodate natural finger pads:
 
-- **44 × 44 pt Minimum Target:** Every interactive control—including checkboxes, radio inputs, switch thumbs, pagination pills, and icon buttons—must provide an effective hit-testing boundary of at least **44 × 44 CSS pixels** on touch viewports (`@media (pointer: coarse)`).
+- **44 × 44 pt Minimum Target:** Every interactive control (including checkboxes, radio inputs, switch thumbs, pagination pills, and icon buttons) must provide an effective hit-testing boundary of at least **44 × 44 CSS pixels** on touch viewports (`@media (pointer: coarse)`).
 - **Hit-Box Expansion:** For small visual indicators (such as a 16px checkbox or 20px status dot), the touch target is invisibly expanded using pseudo-elements (`::before` / `::after` with negative margins) to satisfy the 44px hitbox requirement without altering visual aesthetics.
 - **Adjacent Clearance:** Interactive touch elements must maintain at least **8px** of separation to prevent accidental adjacent activation.
 

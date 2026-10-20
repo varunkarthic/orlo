@@ -38,7 +38,7 @@ export const feedback: Record<string, Doc> = {
       ["action", "ReactNode", "Optional trailing action button."],
     ],
     notes: [
-      "Inspired by Apple HIG editorial notes and Material 3 callouts.",
+      "Provides clear, accessible editorial notes and contextual callouts.",
       "Uses semantic token tints with high-contrast text and tone icons.",
       "Clear visual hierarchy with 4px tone indicator bar.",
     ],

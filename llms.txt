@@ -26,7 +26,7 @@ Orlo ships tokens (@orlo/tokens), a spring motion system (@orlo/motion) and comp
 - [Overview](styles/): 
 - [Color](styles/color/): Palette, roles and measured contrast.
 - [Typography](styles/typography/): Type scale, rhythm and numerals.
-- [Spacing & layout](styles/spacing/): 8pt grid, element rhythm, tab bars, touch targets, and spatial hierarchy inspired by Apple HIG and Material 3.
+- [Spacing & layout](styles/spacing/): 8pt grid, element rhythm, tab bars, touch targets, and spatial hierarchy.
 - [Shape](styles/shape/): Radii, strokes and corners.
 - [Elevation](styles/elevation/): Surfaces, shadows and scrims.
 - [Materials](styles/materials/): Solid and frosted glass, with a readability guard.

@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADRs)
 
-_Orlo Design System — Formal Architecture Decision Records_
+_Orlo Design System – Formal Architecture Decision Records_
 
 ---
 

@@ -1,6 +1,6 @@
 # Accessibility & Conformance Matrix
 
-_Orlo Engineering Research — WCAG 2.2 Level AA Verification & Assistive Technology Protocols_
+_Orlo Engineering Research – WCAG 2.2 Level AA Verification & Assistive Technology Protocols_
 
 ---
 

@@ -1,6 +1,6 @@
 # Navigation & Hierarchy Guidelines
 
-_Orlo Human Interface Guidelines — Structural Architecture, Navigation Bars, Hover Physics & Modal Layers_
+_Orlo Design Guidelines – Structural Architecture, Navigation Bars, Hover Physics & Modal Layers_
 
 ---
 
@@ -8,7 +8,7 @@ _Orlo Human Interface Guidelines — Structural Architecture, Navigation Bars, H
 
 Navigation in Orlo is designed to **keep users oriented, minimize cognitive load, and provide predictable pathways between views.**
 
-Following Apple's Human Interface Guidelines on Navigation: **an app’s structure should feel natural and effortless; users should always know where they are, how they got there, and how to return.**
+In Orlo: **an app’s structure should feel natural and effortless; users should always know where they are, how they got there, and how to return.**
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -18,10 +18,10 @@ Following Apple's Human Interface Guidelines on Navigation: **an app’s structu
 │   1. HIERARCHICAL        Drill-down structures (Category -> Item).    │
 │                          Always provide a clear return pathway.        │
 │                                                                        │
-│   2. FLAT / PARALLEL     Co-equal views switched via Apple HIG         │
-│                          Segmented Pill Tabs or persistent Rails.      │
+│   2. FLAT / PARALLEL     Co-equal views switched via Segmented         │
+│                          Pill Tabs or persistent Rails.                │
 │                                                                        │
-│   3. CONTENT-DRIVEN      Spotlight Command Palette (⌘K) and deep links │
+│   3. CONTENT-DRIVEN      Command Palette (⌘K) and deep links           │
 │                          for rapid direct access to any destination.   │
 │                                                                        │
 └────────────────────────────────────────────────────────────────────────┘
@@ -31,11 +31,11 @@ Following Apple's Human Interface Guidelines on Navigation: **an app’s structu
 
 ## 2. Top Navigation Bar (Global Header)
 
-The top navigation bar provides the primary architectural orientation across the application. Grounded in Apple HIG translucent materials and Google Material 3 expressive physics, it anchors the page hierarchy while remaining visually unobtrusive.
+The top navigation bar provides the primary architectural orientation across the application. Built with translucent materials and spring physics, it anchors the page hierarchy while remaining visually unobtrusive.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ [Logo] [HIG]    ╭─ (✦) Start  (▤) Foundations  (🎨) Styles  (▦) Components  (⌨) Develop ─╮   [🔍] [⚙] │
+│ [Logo]          ╭─ (✦) Start  (▤) Foundations  (🎨) Styles  (▦) Components  (⌨) Develop ─╮   [🔍] [⚙] │
 └────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -43,7 +43,7 @@ The top navigation bar provides the primary architectural orientation across the
 - **Translucent Backdrop:** The bar floats with `position: sticky; inset-block-start: 0;`, utilizing frosted acrylic materials (`backdrop-filter: blur(20px) saturate(180%)`) with `color-mix(in srgb, var(--orlo-color-canvas) 80%, transparent)`.
 - **Capsule Navigation Track:** Desktop navigation links are housed inside a unified capsule container (`border-radius: var(--orlo-radius-full); background: color-mix(in srgb, var(--orlo-color-surface) 60%, transparent); border: 1px solid var(--orlo-color-border)`).
 - **Interface Icons:** Every top-level destination is paired with a distinct 15–18px interface icon (`Compass`, `Layers`, `Palette`, `Grid`, `Code`, `Sparkles`) to enhance visual scanning and universal recognition.
-- **Action Endcap:** Houses global utilities: Spotlight Command Palette search pill (`⌘K`), Theme mode cycle toggle, and the Preferences / Display Control Center popover.
+- **Action Endcap:** Houses global utilities: Command Palette search pill (`⌘K`), Theme mode cycle toggle, and the Preferences / Display Control Center popover.
 
 ---
 
@@ -74,7 +74,7 @@ When the viewport narrows below the primary breakpoint (`< 1100px`):
 
 ---
 
-## 5. Segmented Pill Tab Bars (Apple HIG)
+## 5. Segmented Pill Tab Bars
 
 For switching between parallel, co-equal views (such as the Overview, API, Styles, and Code tabs of a component), Orlo utilizes floating segmented pill controls:
 
@@ -94,18 +94,18 @@ Layered navigation must match the urgency and scope of the task:
 | **Modal Dialog** | Yes (focus trapped, inert background) | `Escape`, Cancel button, Scrim click (if non-critical) | Destructive action confirmation, critical alerts, high-stakes decisions |
 | **Sliding Sheet / Drawer**| Contextual | `Escape`, swipe gesture, outside tap | Mobile navigation menus, complex filter drawers, inspector sidebars |
 | **Popover** | No | Outside click, `Escape`, trigger toggle | Contextual menu actions, color pickers, date picker calendars |
-| **Command Palette (`⌘K`)** | Yes | `Escape`, selecting an item | Global spotlight search, quick-action runner, recent history jump |
+| **Command Palette (`⌘K`)** | Yes | `Escape`, selecting an item | Global command search, quick-action runner, recent history jump |
 
 ---
 
-## 7. Spotlight Command Palette (`⌘K`)
+## 7. Command Palette (`⌘K`)
 
 The command palette provides high-velocity keyboard navigation across the entire application:
 
 - **Trigger:** Accessible via global hotkey (`⌘K` on macOS, `Ctrl+K` on Windows/Linux) or a persistent search pill button in the top navigation bar.
 - **Instant Filtering:** Real-time fuzzy filtering over components, guideline pages, foundations, and external links.
 - **Focus Hand-Off:** Opening the palette immediately focuses the search input. Up/Down arrow keys highlight results; `Enter` executes the navigation.
-- **Visual Presentation:** Floats centrally over a frosted glass backdrop scrim with Apple HIG rounded corners (`var(--orlo-radius-xl, 20px)`).
+- **Visual Presentation:** Floats centrally over a frosted glass backdrop scrim with smooth rounded corners (`var(--orlo-radius-xl, 20px)`).
 
 ---
 

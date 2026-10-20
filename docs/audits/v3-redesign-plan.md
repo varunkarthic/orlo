@@ -1,6 +1,6 @@
 # Orlo Design System Strategic Milestone Plan
 
-_Orlo Engineering Roadmap — Architecture, Implementation & Verification Milestones_
+_Orlo Engineering Roadmap – Architecture, Implementation & Verification Milestones_
 
 ---
 

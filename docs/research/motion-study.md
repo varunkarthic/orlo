@@ -1,6 +1,6 @@
 # Motion & Oscillator Study
 
-_Orlo Engineering Research — Damped Harmonic Oscillators & Spring Physics_
+_Orlo Engineering Research – Damped Harmonic Oscillators & Spring Physics_
 
 ---
 

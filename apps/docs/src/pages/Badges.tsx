@@ -5,7 +5,7 @@ import { Code, H2, PageHeader } from "../kit.tsx";
 const tones = ["dark", "light", "accent", "outline"] as const;
 const layouts = ["signature", "stacked", "inline"] as const;
 const sizes = ["sm", "md", "lg"] as const;
-const badgeAlt = "Orlo — open-source design framework for React by Varun Karthic";
+const badgeAlt = "Orlo – open-source design framework for React by Varun Karthic";
 
 export function BadgesPage({ root }: { root: string }) {
   const [tone, setTone] = useState<BuiltWithOrloProps["tone"]>("dark");

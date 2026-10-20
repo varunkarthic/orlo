@@ -14,7 +14,7 @@ export function StylesOverview({ root }: { root: string }) {
       <CardGrid>
         <LinkCard href={`${root}styles/color/`} title="Color" body="Warm graphite neutrals and one persimmon accent, contrast-tested." art={<div className="swatchrow">{["fg", "fg-muted", "surface-selected", "accent"].map((c) => <span key={c} style={{ background: `var(--orlo-color-${c})` }} />)}</div>} />
         <LinkCard href={`${root}styles/typography/`} title="Typography" body="Generous hierarchy, clear numerals, fluid display sizes." art={<span style={{ fontSize: 34, fontWeight: 700, letterSpacing: "-0.03em" }}>Aa 123</span>} />
-        <LinkCard href={`${root}styles/spacing/`} title="Spacing & layout" body="8pt grid, component rhythm, tab bars and touch targets from Apple HIG and Material 3." art={<Stack direction="row" gap={2} align="center"><span style={{ inlineSize: 8, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /><span style={{ inlineSize: 16, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /><span style={{ inlineSize: 24, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /></Stack>} />
+        <LinkCard href={`${root}styles/spacing/`} title="Spacing & layout" body="8pt grid, component rhythm, tab bars and touch targets." art={<Stack direction="row" gap={2} align="center"><span style={{ inlineSize: 8, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /><span style={{ inlineSize: 16, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /><span style={{ inlineSize: 24, blockSize: 28, background: "var(--orlo-color-accent)", borderRadius: 2 }} /></Stack>} />
         <LinkCard href={`${root}styles/shape/`} title="Shape" body="A small, related set of radii that follow hierarchy." art={<Stack direction="row" gap={2}>{["xs", "sm", "md", "lg"].map((r) => <span key={r} style={{ inlineSize: 36, blockSize: 36, borderRadius: `var(--orlo-radius-${r})`, background: "var(--orlo-color-surface-selected)", border: "1px solid var(--orlo-color-border-control)" }} />)}</Stack>} />
         <LinkCard href={`${root}styles/elevation/`} title="Elevation" body="Depth from surface tone and occlusion before shadow." icon={<Icons.Layers size={22} />} />
         <LinkCard href={`${root}styles/motion/`} title="Motion" body="Springs, presets, policies and the MotionLab." icon={<Icons.Activity size={22} />} />
@@ -157,7 +157,7 @@ export function SpacingAndLayout() {
       <PageHeader
         eyebrow="Styles"
         title="Spacing & Layout"
-        lead="Predictable spatial rhythm built on an 8pt primary grid with a 4pt subgrid. Consistent hierarchy from micro intra-control gaps to section divisions, inspired by Apple Human Interface Guidelines and Material Design 3."
+        lead="Predictable spatial rhythm built on an 8pt primary grid with a 4pt subgrid. Consistent hierarchy from micro intra-control gaps to section divisions."
       />
 
       <H2>The 8pt & 4pt Spatial Grid</H2>
@@ -254,16 +254,16 @@ export function SpacingAndLayout() {
       </p>
       <ul className="notes">
         <li>
-          <strong>Segmented Pill Tabs (Apple HIG):</strong> Container inset is exactly <code>4px</code> (<code>--orlo-inset-tab</code>), inter-tab gap is <code>4px</code> (<code>--orlo-gap-tab</code>), and each tab has <code>16px</code> horizontal padding (<code>--orlo-space-4</code>) with full border-radius.
+          <strong>Segmented Pill Tabs:</strong> Container inset is exactly <code>4px</code> (<code>--orlo-inset-tab</code>), inter-tab gap is <code>4px</code> (<code>--orlo-gap-tab</code>), and each tab has <code>16px</code> horizontal padding (<code>--orlo-space-4</code>) with full border-radius.
         </li>
         <li>
-          <strong>Line Tabs (Material 3):</strong> <code>8px</code> minimum gap between tab labels, with an active indicator bar spanning either the label or full tab width, anchored <code>1px</code> over the bottom border.
+          <strong>Line Tabs:</strong> <code>8px</code> minimum gap between tab labels, with an active indicator bar spanning either the label or full tab width, anchored <code>1px</code> over the bottom border.
         </li>
         <li>
           <strong>Panel Clearance:</strong> The active tab panel must sit at least <code>24px</code> (<code>--orlo-space-6</code>) below the tablist so content never crowds the navigation affordance.
         </li>
         <li>
-          <strong>Touch Target Minimum:</strong> On touch devices, every tab and interactive control enforces at least <code>44×44 pt</code> tap geometry per Apple Human Interface Guidelines and WCAG 2.5.5. On fine pointers (mouse), height scales comfortably to <code>32–40 px</code>.
+          <strong>Touch Target Minimum:</strong> On touch devices, every tab and interactive control enforces at least <code>44×44 pt</code> tap geometry per WCAG 2.5.5. On fine pointers (mouse), height scales comfortably to <code>32–40 px</code>.
         </li>
       </ul>
 
@@ -279,8 +279,8 @@ export function SpacingAndLayout() {
                 value={tabVariant}
                 onValueChange={(v) => setTabVariant(v as "pill" | "line")}
                 options={[
-                  { value: "pill", label: "Apple Pill" },
-                  { value: "line", label: "M3 Line" },
+                  { value: "pill", label: "Capsule Pill" },
+                  { value: "line", label: "Underline" },
                 ]}
               />
             </div>

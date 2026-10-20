@@ -1,6 +1,6 @@
 # Spacing, Rhythm & Layout Guidelines
 
-_Orlo Human Interface Guidelines — Normative Spatial Specification_
+_Orlo Design Guidelines – Normative Spatial Specification_
 
 ---
 
@@ -8,7 +8,7 @@ _Orlo Human Interface Guidelines — Normative Spatial Specification_
 
 Space is not emptiness; in Orlo, space is an active design material. Proximity and visual rhythm communicate cognitive relationships, grouping, and hierarchy before a single word is read.
 
-Following Apple's Human Interface Guidelines and Google's Material 3 specifications:
+In Orlo's spatial design grammar:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -28,7 +28,7 @@ Following Apple's Human Interface Guidelines and Google's Material 3 specificati
 ```
 
 1. **The 8pt Macro-Grid:** All structural containers, card grids, section intervals, page margins, and dialog bounds snap to multiples of **8px** (`8`, `16`, `24`, `32`, `40`, `48`, `64px`).
-2. **The 4pt Micro-Subgrid:** Fine-grained alignment—such as segmented pill tab insets, optical icon alignment, badge paddings, and control borders—snaps to a **4px** subgrid (`4`, `12`, `20px`).
+2. **The 4pt Micro-Subgrid:** Fine-grained alignment (such as segmented pill tab insets, optical icon alignment, badge paddings, and control borders) snaps to a **4px** subgrid (`4`, `12`, `20px`).
 3. **No Arbitrary Numbers:** All layout rules MUST reference an Orlo token (`var(--orlo-space-*)` or semantic `--orlo-gap-*`). Ad-hoc values like `margin-top: 13px` are strictly prohibited.
 4. **Logical Properties for Internationalization:** All directional spacing uses CSS logical properties (`margin-block`, `margin-inline`, `padding-block`, `padding-inline`) to ensure automatic, seamless adaptation across left-to-right (LTR) and right-to-left (RTL) locales.
 
@@ -82,7 +82,7 @@ Consistent rhythm creates visual calm and allows users to scan complex interface
 
 ---
 
-## 4. Segmented Navigation & Floating Pill Tabs (Apple HIG)
+## 4. Segmented Navigation & Floating Pill Tabs
 
 Segmented tab controls provide primary view-switching and must adhere to exact geometric parameters:
 
@@ -107,9 +107,9 @@ Segmented tab controls provide primary view-switching and must adhere to exact g
 
 ## 5. Touch Affordance & Tap Target Sizing
 
-Touch interactions are inherently less precise than pointer cursors. Orlo strictly enforces Apple HIG touch target guidelines:
+Touch interactions are inherently less precise than pointer cursors. Orlo strictly enforces accessible touch target guidelines:
 
-- **Touch Viewports (`@media (pointer: coarse)`):** Every interactive button, tab, checkbox, toggle, and icon trigger MUST provide a minimum hit-testing dimension of **44 × 44 pt** (CSS px) per Apple HIG and WCAG 2.5.5 Target Size.
+- **Touch Viewports (`@media (pointer: coarse)`):** Every interactive button, tab, checkbox, toggle, and icon trigger MUST provide a minimum hit-testing dimension of **44 × 44 pt** (CSS px) per WCAG 2.5.5 / 2.5.8 Target Size.
 - **Fine Pointers (`@media (pointer: fine)`):** On desktop viewports with mice or trackpads, compact control heights between **32px and 40px** are permitted, backed by generous bounding box margins.
 - **Target Separation:** Adjacent touch targets must maintain at least **8px** clearance to prevent accidental touches.
 

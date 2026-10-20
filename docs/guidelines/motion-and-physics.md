@@ -1,6 +1,6 @@
 # Motion & Physics Guidelines
 
-_Orlo Human Interface Guidelines — Damped Harmonic Springs & Material 3 Expressive Physics_
+_Orlo Design Guidelines – Damped Harmonic Springs & Motion Dynamics_
 
 ---
 
@@ -8,7 +8,7 @@ _Orlo Human Interface Guidelines — Damped Harmonic Springs & Material 3 Expres
 
 Motion in Orlo is grounded in physical reality. Interfaces feel responsive, alive, and predictable when digital objects possess weight, momentum, and elasticity rather than mechanical, linear timing curves.
 
-By fusing **Apple's fluid spring physics** with **Google's Material 3 Expressive motion**, Orlo delivers tactile feedback that guides attention without causing visual fatigue.
+In Orlo's motion model, spring physics and tactile feedback guide attention naturally without causing visual fatigue.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -30,7 +30,7 @@ By fusing **Apple's fluid spring physics** with **Google's Material 3 Expressive
 ```
 
 1. **Physical Continuity:** Elements do not appear or disappear arbitrarily. Modal sheets slide smoothly up from screen bounds, popovers emerge from their anchor targets, and expanding cards morph continuously.
-2. **Tactile Material 3 Feedback:** Interactive surfaces acknowledge pointer down and touch press events through immediate physical compression (`scale(0.96) - scale(0.98)`), followed by an elastic release.
+2. **Tactile Feedback:** Interactive surfaces acknowledge pointer down and touch press events through immediate physical compression (`scale(0.97)` to `scale(0.98)`), followed by an elastic release.
 3. **Respect for Reduced Motion:** Every animation respects the user's sensory preferences. When `prefers-reduced-motion: reduce` is active, spatial travel is replaced by a gentle 150ms opacity fade.
 
 ---
@@ -69,7 +69,7 @@ Orlo provides seven calibrated harmonic spring presets in [`packages/motion/src/
 
 ---
 
-## 4. Material 3 Expressive Tactile Physics
+## 4. Tactile Physics & Active States
 
 In CSS and React component implementations, interactive elements feature calibrated hover elevations and active compression:
 

@@ -1,6 +1,6 @@
 # Orlo Design System Comprehensive Audit
 
-_Orlo Engineering Audits — Conformance Against Apple HIG & Orlo System Rules_
+_Orlo Engineering Audits – Conformance Against Apple HIG & Orlo System Rules_
 
 ---
 
