@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Design Studio Elevation (v3.1)
+- Redesigned and expanded all application templates into 8 production blueprints: Settings Form, SaaS Analytics Dashboard, Auth & OTP Verification Modal, Pricing Matrix, Feedback Survey, File Upload Center, Smart Home Environment Hub, and Project Sprint & Team Tasks.
+- Added Auto-Layout Flow mode alongside Freeform Canvas, enabling fluid responsive stacking for mobile, tablet, and desktop testing.
+- Added a 1-click Canvas Alignment Bar with Align Left, Align Center, Distribute Vertically, and Auto-Tidy Grid tools.
+- Expanded Component Palette to 34 production items including Breadcrumbs, Tabs, Accordion, StatusDot, Kbd, DataList, HoldToConfirm, and Callout with typed prop schemas and code generation.
+- Added a dedicated Accessibility & Guardrails tab providing automated real-time WCAG 2.2 AA contrast auditing, touch target validation (>=44pt), missing label detection, and 1-click Auto-Fix.
+- Introduced 8 curated designer color harmonies (Oceanic, Violet, Emerald, Crimson, Amber, Cyan, Midnight, Teal) with 1-click application.
+- Added tactile interactive feedback across all components in Test Mode (toasts, async state machine morphs, rating star updates, dropzone file callbacks).
+
 ### Documentation and Design Studio reachability
 - Fixed the Studio opening with an off-screen canvas on narrow viewports. Fixed-size device previews now fit their available pane; Components, Canvas and Inspector remain reachable on smaller screens, and selected-node actions stay within the viewport.
 - Scoped the Studio device canvas to the preview theme so light-preview labels remain legible when the documentation is dark.
@@ -11,6 +20,7 @@
 - Corrected Studio exports for the built-in Settings and Feedback templates: Avatar now uses a public variant, Segmented Control emits typed options, Toggle Group is single-select, and Number Field uses an interactive default value. Exported TSX includes scoped accent tokens and Orlo styles; inspector text is escaped. A browser-driven TypeScript compilation check covers all six templates, Toggle Group and edited text/theme cases.
 - Reworded the Studio contrast indicator to describe only the two accent pairings it checks, rather than claiming complete WCAG conformance.
 - Gave the existing multi-page forced-colours axe scan a scoped parallel-run timeout after confirming the scan passes twice in isolation.
+- Restored Studio drafts on reload instead of merely writing them. Versioned local drafts and JSON imports now validate component types, prop shapes, coordinates, theme and motion values before changing the canvas; older Avatar and Button Studio values migrate to public variants. Save status reports storage failures instead of always claiming success. Browser tests cover mobile/desktop reload, invalid import preservation, JSON round-trip, legacy draft migration and corrupt storage recovery.
 
 The implementation notes below describe code changes, not a blanket release, accessibility or cross-browser verification claim. See [`docs/IMPLEMENTATION_LEDGER.md`](docs/IMPLEMENTATION_LEDGER.md) for current evidence and open work.
 
