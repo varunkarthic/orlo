@@ -222,9 +222,16 @@ export function RelativeTime({ date, locale: localeProp }: { date: Date; locale?
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), abs < 60 ? 1000 : abs < 3600 ? 30000 : 600000); return () => clearInterval(t); }, [abs]);
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const [n, u]: [number, Intl.RelativeTimeFormatUnit] = abs < 45 ? [Math.round(diff), "second"] : abs < 2700 ? [Math.round(diff / 60), "minute"] : abs < 79200 ? [Math.round(diff / 3600), "hour"] : abs < 2592000 ? [Math.round(diff / 86400), "day"] : abs < 31536000 ? [Math.round(diff / 2592000), "month"] : [Math.round(diff / 31536000), "year"];
-  const exact = new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "medium" }).format(date);
-  // Before mount, show the absolute date: the server can't know "now", so relative text would mismatch on hydration.
-  return <time dateTime={date.toISOString()} title={exact} className="orlo-reltime">{mounted ? rtf.format(n, u) : exact}</time>;
+  const exact = mounted
+    ? new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "medium" }).format(date)
+    : new Intl.DateTimeFormat(locale, { dateStyle: "full", timeStyle: "medium", timeZone: "UTC" }).format(date);
+  const fallback = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(date);
+  // Before mount, show the deterministic UTC date: the server can't know the viewer's local timezone, so relative text and local timezone would mismatch on hydration.
+  return (
+    <time dateTime={date.toISOString()} title={exact} className="orlo-reltime" suppressHydrationWarning>
+      {mounted ? rtf.format(n, u) : fallback}
+    </time>
+  );
 }
 
 /** Live countdown. Ticks visually every second but announces only at meaningful moments, and never goes negative. */
